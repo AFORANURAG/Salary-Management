@@ -6,7 +6,7 @@ Task breakdowns derived from specs in [`../specs/`](../specs/). Each plan define
 
 | Plan | Spec | Status |
 |---|---|---|
-| [scaffolding.md](./scaffolding.md) | [specs/scaffolding.md](../specs/scaffolding.md) | In progress |
+| [scaffolding.md](./scaffolding.md) | [specs/scaffolding.md](../specs/scaffolding.md) | Complete |
 
 ## How to read a plan
 
