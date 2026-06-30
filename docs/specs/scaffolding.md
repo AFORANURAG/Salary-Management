@@ -40,12 +40,12 @@ Scaffolding produces exactly the tree defined in the root spec — see [Project 
 
 ## Success Criteria
 
-- [ ] Monorepo boots: `pnpm install` then `pnpm dev` runs web + api in parallel via Turbo.
-- [ ] `docker compose up --build` yields a healthy db + api + web from a clean checkout.
-- [ ] Root `pnpm typecheck && pnpm lint && pnpm test` all pass on the scaffold.
-- [ ] Migration and seed commands run against the compose Postgres without error.
-- [ ] All five domain module folders exist under `apps/api/src/` as empty, importable placeholders.
-- [ ] `packages/types`, `packages/config`, `packages/money` exist and are consumable by the apps.
+- [x] Monorepo boots: `pnpm install` then `pnpm dev` runs web + api in parallel via Turbo.
+- [x] `docker compose up --build` yields a healthy db + api + web from a clean checkout.
+- [x] Root `pnpm typecheck && pnpm lint && pnpm test` all pass on the scaffold.
+- [x] Migration and seed commands run against the compose Postgres without error.
+- [x] All five domain module folders exist under `apps/api/src/` as empty, importable placeholders.
+- [x] `packages/types`, `packages/config`, `packages/money` exist and are consumable by the apps.
 
 ## Out of Scope
 

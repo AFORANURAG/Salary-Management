@@ -171,10 +171,10 @@ Tax filings/statutory compliance, variable CTC (bonuses/incentives), statutory e
 
 ## Open Questions
 
-1. **Package manager** — pnpm assumed. Confirm vs npm/yarn?
-2. **Component library** — shadcn/ui assumed over MUI. Confirm?
+1. ~~**Package manager** — pnpm assumed. Confirm vs npm/yarn?~~ **Resolved:** [ADR-0001](decisions/ADR-0001-pnpm-turborepo-monorepo.md)
+2. ~~**Component library** — shadcn/ui assumed over MUI. Confirm?~~ **Resolved:** [ADR-0002](decisions/ADR-0002-shadcn-ui-component-library.md)
 3. **Multi-currency aggregates** — sum per-currency (no FX) assumed. Is a base-currency conversion ever needed for the "payroll cost by department" view? (see [`specs/reporting.md`](./specs/reporting.md))
 4. **Cost center** — requirements mention "cost center" in a question but it's not in the employee fields list. Add `costCenter` to the model? (see [`specs/employees.md`](./specs/employees.md))
 5. **Coverage target** — is ~80% on core domain the right bar, or do you want a specific repo-wide number?
 6. **Deployment target** — docker-compose for local assumed; is there a specific cloud/host to design Dockerfiles for?
-7. **Test runner for backend** — Vitest or stick with Jest (NestJS default)?
+7. ~~**Test runner for backend** — Vitest or stick with Jest (NestJS default)?~~ **Resolved:** [ADR-0003](decisions/ADR-0003-vitest-backend-test-runner.md)
