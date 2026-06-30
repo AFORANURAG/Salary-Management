@@ -1,0 +1,12 @@
+{
+  "extends": "@salary-mgmt/config/typescript/node",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "@salary-mgmt/types": ["../../packages/types/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*"]
+}
