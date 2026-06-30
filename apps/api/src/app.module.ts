@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { CommonModule } from "./common/common.module";
+import { DatabaseModule } from "./database/database.module";
 import { EmployeesModule } from "./employees/employees.module";
 import { HealthModule } from "./health/health.module";
 import { PayrollModule } from "./payroll/payroll.module";
@@ -10,6 +11,7 @@ import { SalaryModule } from "./salary/salary.module";
 @Module({
   imports: [
     HealthModule,
+    DatabaseModule,
     CommonModule,
     EmployeesModule,
     SalaryModule,
