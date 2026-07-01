@@ -61,7 +61,7 @@ Locked choices from [requirements.md](./requirements.md) and [spec.md](./spec.md
 | **Component library** | shadcn/ui via `@salary-mgmt/ui` (Radix + Tailwind) | Shared package; composable primitives | [ADR-0002](./decisions/ADR-0002-shadcn-ui-component-library.md), [ADR-0004](./decisions/ADR-0004-shared-fe-packages.md) |
 | **Client data layer** | TanStack Query + Zustand (`@salary-mgmt/store`) | Server state + local UI state | [ADR-0004](./decisions/ADR-0004-shared-fe-packages.md) |
 | **Styling** | Tailwind CSS | Utility-first styling aligned with shadcn/ui | — |
-| **Backend framework** | NestJS 10+ | Modular architecture, DI, testable domain modules | — |
+| **Backend framework** | NestJS 10+ | Modular architecture, DI, SOLID-friendly domain modules, testable services | [ADR-0005](./decisions/ADR-0005-nestjs-backend-framework.md) |
 | **Database** | PostgreSQL 16 | ACID, relational payroll data, indexing at 10k scale | — |
 | **ORM** | TypeORM 0.3+ | NestJS integration, migrations, entity-driven modeling | — |
 | **Containerization** | Docker + docker-compose | Reproducible local/CI/deploy environments | — |

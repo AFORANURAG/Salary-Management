@@ -13,7 +13,7 @@ NestJS backend for the Employee Salary Management System.
 - `src/common/` — shared pipes, filters, money utils
 - `src/health/` — health check (scaffolding only)
 
-Root spec: [`docs/spec.md`](../../docs/spec.md) · Scaffolding: [`docs/specs/scaffolding.md`](../../docs/specs/scaffolding.md)
+Root spec: [`docs/spec.md`](../../docs/spec.md) · Scaffolding: [`docs/specs/scaffolding.md`](../../docs/specs/scaffolding.md) · ADR: [`docs/decisions/ADR-0005-nestjs-backend-framework.md`](../../docs/decisions/ADR-0005-nestjs-backend-framework.md)
 
 ## Stack
 

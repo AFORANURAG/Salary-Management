@@ -12,6 +12,7 @@ Stand up an empty-but-runnable monorepo matching the root spec: pnpm + Turborepo
 - [ADR-0002](../decisions/ADR-0002-shadcn-ui-component-library.md) — shadcn/ui
 - [ADR-0003](../decisions/ADR-0003-vitest-backend-test-runner.md) — Vitest for backend
 - [ADR-0004](../decisions/ADR-0004-shared-fe-packages.md) — shared FE packages (errors, store, ui)
+- [ADR-0005](../decisions/ADR-0005-nestjs-backend-framework.md) — NestJS backend
 
 ## Task list
 

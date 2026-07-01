@@ -10,6 +10,7 @@ Significant technical decisions for the Employee Salary Management System. Each 
 | [ADR-0002](./ADR-0002-shadcn-ui-component-library.md) | shadcn/ui component library | Accepted | 2026-06-30 |
 | [ADR-0003](./ADR-0003-vitest-backend-test-runner.md) | Vitest backend test runner | Accepted | 2026-06-30 |
 | [ADR-0004](./ADR-0004-shared-fe-packages.md) | Shared FE packages (errors, store, ui) | Accepted | 2026-07-02 |
+| [ADR-0005](./ADR-0005-nestjs-backend-framework.md) | NestJS backend framework | Accepted | 2026-07-02 |
 
 ## Lifecycle
 

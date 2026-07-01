@@ -37,7 +37,7 @@ Replace ACME's spreadsheet-based salary management with a web system that lets a
 | Frontend | Next.js (App Router) + shared `@salary-mgmt/ui` (shadcn/ui) + Tailwind | Next 14+ |
 | Client data layer | TanStack Query + Zustand (`@salary-mgmt/store`) | Query 5, Zustand 5 |
 | Shared errors | `@salary-mgmt/errors` | — |
-| Backend | NestJS | 10+ |
+| Backend | NestJS | 10+ | [ADR-0005](decisions/ADR-0005-nestjs-backend-framework.md) |
 | Database | PostgreSQL | 16 |
 | ORM | TypeORM | 0.3+ |
 | Containerization | Docker + docker-compose | — |
