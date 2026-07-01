@@ -1,6 +1,6 @@
 # Implementation Plans
 
-Task breakdowns derived from specs in [`../specs/`](../specs/). Each plan defines ordered tasks, acceptance criteria, checkpoints, and the intended commit sequence for one spec.
+Task breakdowns derived from specs in [`../specs/`](../specs/). See [`../README.md`](../README.md) for how plans fit into the overall documentation layout.
 
 ## Plans index
 
@@ -23,11 +23,4 @@ Task breakdowns derived from specs in [`../specs/`](../specs/). Each plan define
 4. Create a matching trace file at [`../../traces/<spec-name>.md`](../../traces/scaffolding.md).
 5. Commit plan + trace template together: `docs: add plan for <spec-name>`.
 
-## Relationship to other docs
-
-| Artifact | Location | Purpose |
-|---|---|---|
-| Spec | `docs/specs/*.md` | **What** to build (requirements, rules, success criteria) |
-| Plan | `docs/plans/*.md` | **How** to build it (tasks, order, commits) |
-| Trace | `traces/*.md` | **What happened** during agent execution |
-| ADR | `docs/decisions/ADR-*.md` | **Why** a technical choice was made |
+See [`../README.md`](../README.md) for the full documentation map (specs, plans, ADRs, traces).

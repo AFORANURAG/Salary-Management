@@ -37,6 +37,7 @@ traces/      → agent execution logs
 
 ## Documentation
 
+- [Documentation index](docs/README.md)
 - [Root spec](docs/spec.md)
 - [Scaffolding spec](docs/specs/scaffolding.md)
 - [Implementation plan](docs/plans/scaffolding.md)
