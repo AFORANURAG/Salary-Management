@@ -58,7 +58,8 @@ Locked choices from [requirements.md](./requirements.md) and [spec.md](./spec.md
 | **Language** | TypeScript (strict) | Shared types across FE/BE; type-safe domain logic | — |
 | **Monorepo** | pnpm 9 + Turborepo 2 | Shared packages, cached parallel tasks, fast iteration | [ADR-0001](./decisions/ADR-0001-pnpm-turborepo-monorepo.md) |
 | **Frontend framework** | Next.js 14+ (App Router) | Production React framework, routing, SSR for HR UI | — |
-| **Component library** | shadcn/ui (Radix + Tailwind) | Composable primitives, Tailwind-native, copy-into-repo | [ADR-0002](./decisions/ADR-0002-shadcn-ui-component-library.md) |
+| **Component library** | shadcn/ui via `@salary-mgmt/ui` (Radix + Tailwind) | Shared package; composable primitives | [ADR-0002](./decisions/ADR-0002-shadcn-ui-component-library.md), [ADR-0004](./decisions/ADR-0004-shared-fe-packages.md) |
+| **Client data layer** | TanStack Query + Zustand (`@salary-mgmt/store`) | Server state + local UI state | [ADR-0004](./decisions/ADR-0004-shared-fe-packages.md) |
 | **Styling** | Tailwind CSS | Utility-first styling aligned with shadcn/ui | — |
 | **Backend framework** | NestJS 10+ | Modular architecture, DI, testable domain modules | — |
 | **Database** | PostgreSQL 16 | ACID, relational payroll data, indexing at 10k scale | — |
@@ -68,7 +69,7 @@ Locked choices from [requirements.md](./requirements.md) and [spec.md](./spec.md
 | **BE testing** | Vitest + `@nestjs/testing` | Unified test runner across monorepo | [ADR-0003](./decisions/ADR-0003-vitest-backend-test-runner.md) |
 | **CI** | GitHub Actions | install → typecheck → lint → test → build on PR/push | — |
 
-**Shared packages:** `@salary-mgmt/types` (FE↔BE contracts), `@salary-mgmt/config` (tsconfig/eslint/prettier/tailwind presets), `@salary-mgmt/money` (integer minor-unit helpers).
+**Shared packages:** `@salary-mgmt/types` (FE↔BE contracts), `@salary-mgmt/config` (tsconfig/eslint/prettier/tailwind presets), `@salary-mgmt/money` (integer minor-unit helpers), `@salary-mgmt/errors` (shared error types/messages), `@salary-mgmt/store` (TanStack Query + API client + Zustand), `@salary-mgmt/ui` (shadcn/ui components).
 
 **Key conventions:** money stored as integer minor units (never floats); Conventional Commits; specs are source of truth before code changes.
 

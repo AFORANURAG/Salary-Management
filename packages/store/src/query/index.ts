@@ -1,0 +1,26 @@
+export { createQueryClient, getQueryClient, STALE_TIMES, CACHE_TIMES } from "./client";
+export { QueryProvider } from "./provider";
+export { queryKeys } from "./keys";
+export { useOptimisticMutation, type OptimisticMutationOptions } from "./mutations";
+export { ApiError } from "../api/client";
+
+// Re-export the most commonly used TanStack Query hooks so consumers
+// only need to import from @salary-mgmt/store/query
+export {
+  useQuery,
+  useMutation,
+  useInfiniteQuery,
+  useSuspenseQuery,
+  dehydrate,
+  HydrationBoundary,
+  useQueryClient,
+  useIsFetching,
+  useIsMutating,
+  QueryClient,
+  QueryObserver,
+  type UseQueryOptions,
+  type UseMutationOptions,
+  type UseInfiniteQueryOptions,
+  type QueryKey,
+  type InfiniteData,
+} from "@tanstack/react-query";

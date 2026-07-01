@@ -11,11 +11,14 @@ operations. pnpm + Turborepo monorepo.
 
 | Path | Stack |
 |---|---|
-| `apps/web` | Next.js (App Router) + shadcn/ui + Tailwind |
+| `apps/web` | Next.js (App Router) + `@salary-mgmt/ui` + `@salary-mgmt/store` |
 | `apps/api` | NestJS + TypeORM + PostgreSQL |
 | `packages/config` | Shared tsconfig / eslint / prettier presets |
 | `packages/types` | Shared TypeScript types (built workspace package) |
 | `packages/money` | Minor-unit (integer) money helpers |
+| `packages/errors` | Shared error types and core messages (FE) |
+| `packages/store` | TanStack Query, API client, Zustand helpers (FE) |
+| `packages/ui` | Shared shadcn/ui component library (FE) |
 | `docs/` | Specs, plans, ADRs |
 | `traces/` | Agent execution logs |
 
@@ -78,6 +81,8 @@ Full detail: `.ai/rules/spec-driven-workflow.md`.
   `await import()` / `import("pkg").Type` for types).
 - Import `@salary-mgmt/types` from the built workspace package — do not
   tsconfig-path into another app/package `src/` (breaks `rootDir` checks).
+- React FE packages (`errors`, `store`, `ui`) export TypeScript source; Next.js
+  transpiles via `transpilePackages` — do not tsconfig-path into their `src/`.
 - `@salary-mgmt/config` packages need noop turbo scripts (`build`, `lint`,
   `typecheck`, `test`) to participate in the pipeline.
 - Use `next.config.mjs` (not `.ts`) on Next.js 14; keep `output: "standalone"`
@@ -98,7 +103,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 ```
 
 - Types: `feat`, `fix`, `chore`, `docs`, `ci`, `test`, `refactor`.
-- Scopes match repo layout: `(web)`, `(api)`, `(config)`, `(types)`, `(money)`;
+- Scopes match repo layout: `(web)`, `(api)`, `(config)`, `(types)`, `(money)`, `(errors)`, `(store)`, `(ui)`;
   omit for repo-wide changes.
 - One logical unit per commit; no per-file micro-commits. Keep each commit
   working (install/build where possible).

@@ -9,6 +9,7 @@ Significant technical decisions for the Employee Salary Management System. Each 
 | [ADR-0001](./ADR-0001-pnpm-turborepo-monorepo.md) | pnpm + Turborepo monorepo tooling | Accepted | 2026-06-30 |
 | [ADR-0002](./ADR-0002-shadcn-ui-component-library.md) | shadcn/ui component library | Accepted | 2026-06-30 |
 | [ADR-0003](./ADR-0003-vitest-backend-test-runner.md) | Vitest backend test runner | Accepted | 2026-06-30 |
+| [ADR-0004](./ADR-0004-shared-fe-packages.md) | Shared FE packages (errors, store, ui) | Accepted | 2026-07-02 |
 
 ## Lifecycle
 

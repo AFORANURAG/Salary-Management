@@ -35,6 +35,9 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/) for all comm
 - `(config)` — `packages/config`
 - `(types)` — `packages/types`
 - `(money)` — `packages/money`
+- `(errors)` — `packages/errors`
+- `(store)` — `packages/store`
+- `(ui)` — `packages/ui`
 
 Omit scope for repo-wide changes (root turbo, docker-compose, gitignore).
 
@@ -50,6 +53,7 @@ Omit scope for repo-wide changes (root turbo, docker-compose, gitignore).
 
 ```
 root → turbo → packages/config → packages/types → packages/money
+  → packages/errors → packages/ui → packages/store
   → apps/api (feat) → apps/api db (chore) → apps/web (feat)
   → docker → ci → docs
 ```

@@ -34,7 +34,9 @@ Replace ACME's spreadsheet-based salary management with a web system that lets a
 |---|---|---|
 | Runtime | Node.js | 20 LTS |
 | Package manager / monorepo | pnpm + Turborepo | pnpm 9, turbo 2 |
-| Frontend | Next.js (App Router) + shadcn/ui + Tailwind | Next 14+ |
+| Frontend | Next.js (App Router) + shared `@salary-mgmt/ui` (shadcn/ui) + Tailwind | Next 14+ |
+| Client data layer | TanStack Query + Zustand (`@salary-mgmt/store`) | Query 5, Zustand 5 |
+| Shared errors | `@salary-mgmt/errors` | — |
 | Backend | NestJS | 10+ |
 | Database | PostgreSQL | 16 |
 | ORM | TypeORM | 0.3+ |
@@ -73,8 +75,7 @@ salary-mgmt/
 ├── apps/
 │   ├── web/                 → Next.js frontend (App Router)
 │   │   ├── app/             → routes (employees, payroll, payslips)
-│   │   ├── components/      → UI (shadcn-based)
-│   │   └── lib/             → client utils, API client
+│   │   └── lib/             → client utils, API wiring
 │   └── api/                 → NestJS backend
 │       └── src/
 │           ├── employees/   → employee module (entity, service, controller)
@@ -87,7 +88,10 @@ salary-mgmt/
 ├── packages/
 │   ├── types/               → shared DTO/contract types (FE ↔ BE)
 │   ├── config/              → shared tsconfig, eslint, tailwind presets
-│   └── money/               → minor-unit money helpers (shared)
+│   ├── money/               → minor-unit money helpers (shared)
+│   ├── errors/              → shared error types and core messages (FE)
+│   ├── store/               → TanStack Query, API client, Zustand helpers (FE)
+│   └── ui/                  → shared shadcn/ui component library (FE)
 ├── docs/                    → requirements.md, spec.md, specs/, ADRs
 ├── docker-compose.yml
 ├── turbo.json

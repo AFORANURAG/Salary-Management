@@ -1,0 +1,9 @@
+{
+  "extends": "@salary-mgmt/config/typescript/react-library",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules"]
+}

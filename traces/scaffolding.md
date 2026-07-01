@@ -48,19 +48,42 @@ Append-only agent execution log.
 
 ---
 
+### Phase 3 — Shared FE packages
+
+| Task | Description | Verification |
+|---|---|---|
+| T12 | Docs: spec/plan/ADR-0004/READMEs/AGENTS/commit-conventions | Scaffolding spec reopened with Phase 3 scope |
+| T13 | `packages/errors` | `ErrorLike`, `CORE_ERROR_MESSAGES`, `getRequestFailedMessage`; typechecks |
+| T14 | `packages/config` react-library preset + shadcn tailwind preset | `typescript/react-library.json` exported; tailwind tokens + animate plugin |
+| T15 | `packages/ui` | 14 shadcn components, globals.css, 6 Button Vitest tests pass |
+| T16 | `packages/store` | TanStack Query, API client, Zustand helpers, salary-mgmt query key stubs; typechecks |
+| T17 | `apps/web` wiring | QueryProvider in layout; Button from `@salary-mgmt/ui`; `createApiClient` for `/health`; local button removed; web build passes |
+| T18 | Trace closeout + learnings | This entry; `.ai/rules/scaffolding-learnings.md` updated |
+
+**Root verification (2026-07-02):** `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm --filter web build` — all pass.
+
+**Commit:** `a9f15ba` — feat: add shared FE packages and wire web (scaffolding Phase 3)
+
+**Learnings:** React FE packages export TS source + `transpilePackages` in Next.js (not `dist/` like `@salary-mgmt/types`); Tailwind `content` must scan `packages/ui/src/**`; `@types/node` required in store for `process.env`; ui tests need `jsdom` devDependency.
+
+---
+
 ## Spec closeout checklist
 
 | Criterion | Result | Notes |
 |---|---|---|
 | `docker compose up --build` brings up db + api + web | Partial | `db` verified; full stack build configured, not run end-to-end in session |
-| `GET /health` + web home reaches API | Pass | `/health` verified with DB; web build succeeds with dynamic home route |
+| `GET /health` + web home reaches API | Pass | `/health` verified with DB; web build succeeds |
 | `pnpm typecheck && pnpm lint && pnpm test` pass | Pass | All green from repo root |
 | `migration:run` and `seed` succeed against compose db | Pass | No-op seed; migrations table created |
 | `packages/types` importable by web and api | Pass | Workspace package consumed in health controller + web page |
 | Monorepo boots via `pnpm dev` | Pass | turbo dev wired |
 | Five domain module folders exist as placeholders | Pass | employees, salary, payroll, payslips, reporting |
 | packages/types, config, money consumable | Pass | Built and imported |
+| packages/errors, store, ui consumable by web | Pass | Wired in layout, page, api client |
+| apps/web wired to shared FE packages | Pass | QueryProvider + `@salary-mgmt/ui` Button; local shadcn removed |
+| `@salary-mgmt/errors` importable by store | Pass | API client uses core error messages |
 
 ## Learnings distilled to rules
 
-See `.cursor/rules/scaffolding-learnings.mdc`.
+See `.ai/rules/scaffolding-learnings.md`.

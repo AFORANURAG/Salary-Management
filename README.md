@@ -67,15 +67,15 @@ docs/
 ## Structure
 
 ```
-apps/web     → Next.js (App Router) + shadcn/ui + Tailwind
+apps/web     → Next.js (App Router) + @salary-mgmt/ui + @salary-mgmt/store
 apps/api     → NestJS + TypeORM + PostgreSQL
-packages/    → shared types, config presets, money helpers
+packages/    → types, config, money, errors, store, ui
 docs/        → specs, plans, ADRs
 traces/      → agent execution logs
 ```
 
 ## Tech stack
 
-Node 20 · pnpm · Turborepo · Next.js · NestJS · PostgreSQL 16 · TypeORM · Vitest
+Node 20 · pnpm · Turborepo · Next.js · TanStack Query · Zustand · NestJS · PostgreSQL 16 · TypeORM · Vitest
 
 See [ADR index](docs/decisions/README.md) for locked decisions.

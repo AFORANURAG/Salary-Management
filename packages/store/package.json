@@ -1,0 +1,39 @@
+{
+  "name": "@salary-mgmt/store",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./query": "./src/query/index.ts",
+    "./stores": "./src/stores/index.ts",
+    "./hooks": "./src/hooks/index.ts",
+    "./api": "./src/api/client.ts"
+  },
+  "scripts": {
+    "build": "node -e \"process.exit(0)\"",
+    "lint": "node -e \"process.exit(0)\"",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@salary-mgmt/errors": "workspace:*",
+    "@tanstack/react-query": "^5.65.1",
+    "@tanstack/react-query-devtools": "^5.65.1",
+    "immer": "^10.1.1",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@salary-mgmt/config": "workspace:*",
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "peerDependencies": {
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19"
+  }
+}

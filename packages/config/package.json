@@ -8,10 +8,15 @@
     "lint": "node -e \"process.exit(0)\"",
     "test": "node -e \"process.exit(0)\""
   },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17",
+    "tailwindcss-animate": "^1.0.7"
+  },
   "exports": {
     "./typescript/base": "./typescript/base.json",
     "./typescript/node": "./typescript/node.json",
     "./typescript/nextjs": "./typescript/nextjs.json",
+    "./typescript/react-library": "./typescript/react-library.json",
     "./eslint/base": "./eslint/base.js",
     "./prettier": "./prettier.config.js",
     "./tailwind": "./tailwind/preset.js"

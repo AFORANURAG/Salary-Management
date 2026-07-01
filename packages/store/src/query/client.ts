@@ -1,0 +1,61 @@
+import { QueryClient } from "@tanstack/react-query";
+
+/**
+ * Default stale times in milliseconds.
+ * Use these constants to keep query configs consistent across the app.
+ */
+export const STALE_TIMES = {
+  /** Data that rarely changes (user profile, config) */
+  STATIC: 1000 * 60 * 10, // 10 minutes
+  /** Standard data (lists, details) */
+  DEFAULT: 1000 * 60 * 2, // 2 minutes
+  /** Frequently changing data (notifications, feeds) */
+  FREQUENT: 1000 * 30, // 30 seconds
+  /** Never mark as stale (cache indefinitely until invalidation) */
+  INFINITE: Infinity,
+  DYNAMIC: 1000 * 60 * 1, // 1 minute
+} as const;
+
+export const CACHE_TIMES = {
+  SHORT: 1000 * 60 * 5, // 5 minutes
+  DEFAULT: 1000 * 60 * 10, // 10 minutes
+  LONG: 1000 * 60 * 60, // 1 hour
+} as const;
+
+export function createQueryClient(): QueryClient {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: STALE_TIMES.DEFAULT,
+        gcTime: CACHE_TIMES.DEFAULT,
+        retry: (failureCount, error) => {
+          // Don't retry on 4xx errors
+          if (error instanceof Error && "status" in error) {
+            const status = (error as Error & { status: number }).status;
+            if (status >= 400 && status < 500) return false;
+          }
+          return failureCount < 2;
+        },
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: true,
+      },
+      mutations: {
+        retry: false,
+      },
+    },
+  });
+}
+
+/** Singleton query client for use outside React (e.g. prefetching in server components) */
+let browserQueryClient: QueryClient | undefined;
+
+export function getQueryClient(): QueryClient {
+  if (typeof window === "undefined") {
+    // Server: always create a new client to avoid sharing state between requests
+    return createQueryClient();
+  }
+  if (!browserQueryClient) {
+    browserQueryClient = createQueryClient();
+  }
+  return browserQueryClient;
+}

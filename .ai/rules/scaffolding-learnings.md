@@ -25,7 +25,16 @@ Distilled from [`traces/scaffolding.md`](../../traces/scaffolding.md) closeout.
 ## Monorepo
 
 - Import `@salary-mgmt/types` from built workspace packages — do not tsconfig-path to `src/` in apps (breaks `rootDir` checks).
+- React FE packages (`errors`, `store`, `ui`) export TypeScript source; Next.js transpiles via `transpilePackages` — do not tsconfig-path into their `src/`.
 - `@salary-mgmt/config` packages need noop turbo scripts (`build`, `lint`, `typecheck`, `test`) to participate in the pipeline.
+- Tailwind preset in `@salary-mgmt/config/tailwind` includes shadcn CSS variable tokens; apps must scan `packages/ui/src/**` in Tailwind `content`.
+
+## Shared FE packages
+
+- `@salary-mgmt/ui` owns shadcn primitives — not `apps/web/components/ui/`.
+- `@salary-mgmt/store` infrastructure vs domain: scaffolding owns `query/`, `api/`, `stores/create-store.ts`, `hooks/`; domain specs add `features/<domain>/`.
+- UI component tests require `jsdom` in `@salary-mgmt/ui` devDependencies.
+- Store package needs `@types/node` for `process.env` in QueryProvider and Zustand devtools.
 
 ## Commits
 

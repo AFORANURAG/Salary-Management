@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "@salary-mgmt/ui/globals.css";
+import { Providers } from "@/components/providers";
 
 export const metadata: Metadata = {
   title: "Salary Management",
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>): React.JSX.Element {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
