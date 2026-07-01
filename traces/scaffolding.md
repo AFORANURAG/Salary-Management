@@ -62,7 +62,7 @@ Append-only agent execution log.
 
 **Root verification (2026-07-02):** `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm --filter web build` — all pass.
 
-**Commit:** `a9f15ba` — feat: add shared FE packages and wire web (scaffolding Phase 3)
+**Commit:** `fbddba5` — feat: add shared FE packages and wire web (scaffolding Phase 3)
 
 **Learnings:** React FE packages export TS source + `transpilePackages` in Next.js (not `dist/` like `@salary-mgmt/types`); Tailwind `content` must scan `packages/ui/src/**`; `@types/node` required in store for `process.env`; ui tests need `jsdom` devDependency.
 
