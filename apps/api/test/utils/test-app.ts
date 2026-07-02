@@ -12,6 +12,7 @@ export async function createTestApp(): Promise<INestApplication> {
   }).compile();
 
   const app = moduleRef.createNestApplication();
+  app.setGlobalPrefix("v1", { exclude: ["health"] });
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }),
   );
