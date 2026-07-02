@@ -11,27 +11,29 @@ commit as the task implementation (include the commit SHA).
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| ET1 | Shared employee contracts in `packages/types` | _pending_ | |
-| ET2 | Employee entity + first migration (schema — ask-first) | _pending_ | |
-| ET3 | Integration test harness | _pending_ | |
+| ET1 | Shared employee contracts in `packages/types` | `8e1df56` | types build + typecheck pass |
+| ET2 | Employee entity + first migration (schema — approved) | `8e1df56` | `migration:run` applied table, enum, 6 indexes, unique constraints |
+| ET3 | Integration test harness (Vitest + SWC + `@nestjs/testing`, auto-created `salary_mgmt_test`, per-test truncation) | `d254b9a` | harness smoke test green |
 
 ### Phase 2 — RED (failing test suite)
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| ET4 | Unit specs (DTO validation, list-query parsing) | _pending_ | |
-| ET5 | Integration specs (CRUD + list) | _pending_ | |
-| ET5b | Scale/perf specs (enabled after ET9) | _pending_ | |
+| ET4 | Unit specs (DTO validation, list-query parsing) | `d254b9a` | authored RED |
+| ET5 | Integration specs (CRUD + list) | `d254b9a` | authored RED |
+| ET5b | Scale/perf specs (enabled after ET9) | `d254b9a` | authored, `describe.skip` |
 
-**RED checkpoint:** _pending_ — confirm all fail for the right reason.
+**RED checkpoint:** reached — suite fails for the right reason (routes 404, parser throws, DTOs undecorated).
 
 ### Phase 3 — GREEN
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| ET6 | Create + fetch one | _pending_ | |
-| ET7 | Update + soft delete | _pending_ | |
-| ET8 | List (search/filter/paginate/sort) | _pending_ | |
+| ET6 | Create + fetch one | _this PR_ | create/fetch specs green |
+| ET7 | Update + soft delete | _this PR_ | update/soft-delete specs green |
+| ET8 | List (search/filter/paginate/sort) | _this PR_ | list specs green |
+
+**GREEN checkpoint:** 48 passed / 3 skipped; root `pnpm typecheck && pnpm lint && pnpm test` all green.
 
 ### Phase 4 — Data + refactor
 
