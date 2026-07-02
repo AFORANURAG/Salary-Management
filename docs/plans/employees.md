@@ -36,6 +36,8 @@ Per AGENTS.md, confirm with the user before executing these:
 
 ### Phase 1 — Foundation (test prerequisites, no CRUD logic)
 
+Branch: `feat/employees-pr1-db-models`
+
 | Task | Description | Commit |
 |---|---|---|
 | ET1 | `packages/types`: add `Employee`, `EmploymentStatus`, `EmployeeListQuery`, create/update DTO-shape contracts; reuse `PaginatedResponse` | `feat(types): add employee contracts` |
@@ -62,6 +64,8 @@ Per AGENTS.md, confirm with the user before executing these:
 - [ ] `pnpm typecheck && pnpm lint` clean; migration runs on compose db; harness test green.
 
 ### Phase 2 — RED (extensive failing test suite, before CRUD)
+
+Branch: `feat/employees-pr2-test-harness`
 
 The suite is the executable spec. Cover happy paths, every validation/error
 branch, and edge cases. Split into focused files (DAMP over DRY).
@@ -103,6 +107,8 @@ branch, and edge cases. Split into focused files (DAMP over DRY).
 
 ### Phase 3 — GREEN (implement to pass, minimal)
 
+Branch: `feat/employees-pr3-implementation`
+
 | Task | Description | Commit |
 |---|---|---|
 | ET6 | Module/service/controller + `class-validator` DTOs: `POST /employees`, `GET /employees/:id` | `feat(api): add employee create and fetch` |
@@ -114,7 +120,13 @@ branch, and edge cases. Split into focused files (DAMP over DRY).
 - [ ] ET8 turns list specs green.
 - [ ] Verification per task: `pnpm --filter api typecheck && pnpm --filter api lint && pnpm --filter api test`.
 
-### Phase 4 — Data + REFACTOR
+### Phase 4 — Versioning + housekeeping
+
+Branch: `feat/employees-pr4-versioning`
+
+- v1 global prefix (`/v1/employees`), CLAUDE.md, spec and test URL updates
+
+### Phase 5 — Data + REFACTOR
 
 | Task | Description | Commit |
 |---|---|---|
