@@ -116,6 +116,28 @@ Full detail: `.ai/rules/spec-driven-workflow.md`.
 
 More local-dev learnings: `.ai/rules/scaffolding-learnings.md`.
 
+## Branching Strategy
+
+Every spec/feature is implemented across **multiple stacked branches** — one per
+phase. No single branch should grow into a 30+ file PR.
+
+**Standard phase split for a backend spec:**
+
+| Branch suffix | Contains |
+|---|---|
+| `-pr1-db-models` | Entity, migration, shared type contracts, plan, trace template |
+| `-pr2-test-harness` | Vitest config, test setup, RED unit + integration specs |
+| `-pr3-implementation` | DTOs, service, controller, module — tests go GREEN |
+| `-pr4-<concern>` | Versioning, housekeeping, or cross-cutting concern |
+
+Frontend specs follow the same pattern (types → hooks → components → wiring).
+
+**Required: record the branch in the spec and plan.**
+
+- `docs/plans/<spec>.md` — add `Branch: \`<name>\`` under each phase heading.
+- `docs/specs/<spec>.md` — add an `## Implementation` section at the bottom
+  mapping each phase to its branch.
+
 ## Git and Commits
 
 Follow [Conventional Commits](https://www.conventionalcommits.org/):
