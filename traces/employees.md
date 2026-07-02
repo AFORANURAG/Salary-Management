@@ -29,9 +29,9 @@ commit as the task implementation (include the commit SHA).
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| ET6 | Create + fetch one | _this PR_ | create/fetch specs green |
-| ET7 | Update + soft delete | _this PR_ | update/soft-delete specs green |
-| ET8 | List (search/filter/paginate/sort) | _this PR_ | list specs green |
+| ET6 | Create + fetch one | `9abdb78` | create/fetch specs green |
+| ET7 | Update + soft delete | `9abdb78` | update/soft-delete specs green |
+| ET8 | List (search/filter/paginate/sort) | `9abdb78` | list specs green |
 
 **GREEN checkpoint:** 48 passed / 3 skipped; root `pnpm typecheck && pnpm lint && pnpm test` all green.
 
