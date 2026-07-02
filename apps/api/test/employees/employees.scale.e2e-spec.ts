@@ -27,7 +27,7 @@ describe.skip("Employees list at scale (e2e)", () => {
   });
 
   it("returns correct, stable, paginated search results over 10k rows", async () => {
-    const res = await http.get("/employees").query({ q: "ScaleUser", page: 1, pageSize: 25 });
+    const res = await http.get("/v1/employees").query({ q: "ScaleUser", page: 1, pageSize: 25 });
     expect(res.status).toBe(200);
     expect(res.body.total).toBe(SCALE / 2);
     expect(res.body.data).toHaveLength(25);
@@ -35,7 +35,7 @@ describe.skip("Employees list at scale (e2e)", () => {
 
   it("composes filters + search correctly at scale", async () => {
     const res = await http
-      .get("/employees")
+      .get("/v1/employees")
       .query({ q: "ScaleUser", department: "Engineering", country: "US" });
     expect(res.status).toBe(200);
     expect(res.body.total).toBeGreaterThan(0);
@@ -45,7 +45,7 @@ describe.skip("Employees list at scale (e2e)", () => {
     const samples: number[] = [];
     for (let n = 0; n < 20; n += 1) {
       const start = performance.now();
-      await http.get("/employees").query({ page: n + 1, pageSize: 25, sort: "name:asc" });
+      await http.get("/v1/employees").query({ page: n + 1, pageSize: 25, sort: "name:asc" });
       samples.push(performance.now() - start);
     }
     samples.sort((a, b) => a - b);

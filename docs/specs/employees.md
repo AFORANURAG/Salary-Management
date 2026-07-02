@@ -29,12 +29,14 @@ Salary structures are **not** embedded here — they live in [`salary-structure.
 
 ## API Surface
 
+All routes are served under the `/v1` API prefix (e.g. `/v1/employees`); `/health` is excluded from versioning.
+
 ```
-POST   /employees                 → create
-GET    /employees/:id             → fetch one
-PATCH  /employees/:id             → update
-DELETE /employees/:id             → soft-delete (set status, preserve history)
-GET    /employees                 → list (search + filter + paginate)
+POST   /v1/employees              → create
+GET    /v1/employees/:id          → fetch one
+PATCH  /v1/employees/:id          → update
+DELETE /v1/employees/:id          → soft-delete (set status, preserve history)
+GET    /v1/employees              → list (search + filter + paginate)
 ```
 
 `GET /employees` query params:
