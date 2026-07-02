@@ -42,12 +42,36 @@ This repo is spec-driven. Layers: **Specs** (`docs/specs/*.md`, source of truth)
 Per-task loop:
 
 1. Read the spec and the relevant plan task.
-2. Implement the smallest complete slice for that task.
-3. Verify: `pnpm typecheck && pnpm lint && pnpm test` (as applicable).
-4. Commit using Conventional Commits (see below).
-5. Append a trace entry to `traces/<spec>.md` **in the same commit** (include the
+2. Write failing test(s) for the slice first (RED) — see the test-driven-development skill.
+3. Implement the smallest complete slice to make them pass (GREEN).
+4. Verify: `pnpm typecheck && pnpm lint && pnpm test` (as applicable).
+5. Commit using Conventional Commits (see below).
+6. Append a trace entry to `traces/<spec>.md` **in the same commit** (include the
    commit SHA).
-6. At checkpoints, evaluate against spec intent — not just passing tests.
+7. At checkpoints, evaluate against spec intent — not just passing tests.
+
+### Workflow Lifecycle (skill-bound)
+
+Each phase below maps to a **mandatory** skill in `.ai/skills/`. Load and
+follow the skill before acting in that phase. Full skill index: [Skills](#skills).
+
+- **spec** — `.ai/skills/spec-driven-development/SKILL.md`
+- **plan** — `.ai/skills/planning-and-task-breakdown/SKILL.md`
+- **tasks** — `.ai/skills/planning-and-task-breakdown/SKILL.md`
+  (`references/definition-of-done.md`)
+- **test** — `.ai/skills/test-driven-development/SKILL.md`
+- **build** — `.ai/skills/security-and-hardening/SKILL.md` +
+  `.ai/skills/observability-and-instrumentation/SKILL.md`
+- **review** — `.ai/skills/code-review-and-quality/SKILL.md`
+- **commit** — `.ai/skills/git-workflow-and-versioning/SKILL.md`
+
+Tests come before build: write them first (RED), bound to the task/spec; `build`
+makes them pass (GREEN). Never reorder these two.
+
+Cross-cutting (apply when the work touches that domain):
+
+- **docs / ADRs** — `.ai/skills/documentation-and-adrs/SKILL.md`
+- **browser work** — `.ai/skills/browser-testing-with-devtools/SKILL.md`
 
 Full detail: `.ai/rules/spec-driven-workflow.md`.
 
@@ -133,7 +157,8 @@ Full detail: `.ai/rules/commit-conventions.md`.
 ## Skills
 
 Reusable, situational playbooks live in `.ai/skills/`. Load the relevant
-`SKILL.md` on demand (agentic tools can open these files directly).
+`SKILL.md` on demand (agentic tools can open these files directly). Phase
+ordering and mandatory bindings: [Workflow Lifecycle (skill-bound)](#workflow-lifecycle-skill-bound).
 
 | Skill | Use when | Path |
 |---|---|---|

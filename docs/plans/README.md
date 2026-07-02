@@ -7,6 +7,7 @@ Task breakdowns derived from specs in [`../specs/`](../specs/). See [`../README.
 | Plan | Spec | Status |
 |---|---|---|
 | [scaffolding.md](./scaffolding.md) | [specs/scaffolding.md](../specs/scaffolding.md) | Complete |
+| [employees.md](./employees.md) | [specs/employees.md](../specs/employees.md) | Planned |
 
 ## How to read a plan
 
