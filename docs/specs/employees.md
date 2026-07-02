@@ -69,3 +69,14 @@ Response: `{ data: Employee[], page, pageSize, total }`.
 
 - Add `costCenter` field? (root Open Question #4) — currently modeled as nullable pending confirmation.
 - Is `department` a free-text string or its own reference table?
+
+## Implementation
+
+| Phase | Branch |
+|---|---|
+| Entity, migration, shared type contracts | `feat/employees-pr1-db-models` |
+| Test harness + RED suite | `feat/employees-pr2-test-harness` |
+| CRUD + list implementation (GREEN) | `feat/employees-pr3-implementation` |
+| v1 prefix, CLAUDE.md, spec/test URL updates | `feat/employees-pr4-versioning` |
+
+Plan: [`docs/plans/employees.md`](../plans/employees.md) · Trace: [`traces/employees.md`](../../traces/employees.md)
