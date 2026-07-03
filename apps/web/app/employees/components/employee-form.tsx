@@ -1,8 +1,9 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input, Label, Button } from "@salary-mgmt/ui";
+import { Input, Label, Button, Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@salary-mgmt/ui";
+import { DEPARTMENTS } from "@salary-mgmt/types";
 import { employeeSchema, type EmployeeFormValues } from "../schemas/employee.schema";
 
 interface EmployeeFormProps {
@@ -20,6 +21,7 @@ export function EmployeeForm({
 }: EmployeeFormProps) {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<EmployeeFormValues>({
@@ -61,7 +63,24 @@ export function EmployeeForm({
 
       <div className="space-y-1">
         <Label htmlFor="department">Department</Label>
-        <Input id="department" {...register("department")} />
+        <Controller
+          name="department"
+          control={control}
+          render={({ field }) => (
+            <Select value={field.value ?? ""} onValueChange={field.onChange}>
+              <SelectTrigger id="department" aria-label="Department">
+                <SelectValue placeholder="Select department" />
+              </SelectTrigger>
+              <SelectContent>
+                {DEPARTMENTS.map((d) => (
+                  <SelectItem key={d} value={d}>
+                    {d}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
         {errors.department && (
           <p role="alert" className="text-destructive text-xs">
             {errors.department.message}

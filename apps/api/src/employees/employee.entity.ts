@@ -1,4 +1,4 @@
-import type { EmploymentStatus } from "@salary-mgmt/types";
+import type { Department, EmploymentStatus } from "@salary-mgmt/types";
 import {
   Column,
   CreateDateColumn,
@@ -33,7 +33,7 @@ export class EmployeeEntity {
 
   @Index("idx_employees_department")
   @Column({ type: "varchar", length: 128 })
-  department!: string;
+  department!: Department;
 
   @Column({ type: "varchar", length: 128 })
   designation!: string;

@@ -40,7 +40,7 @@ describe("EditEmployeeDialog", () => {
     expect(screen.getByLabelText(/employee code/i)).toHaveValue("EMP001");
     expect(screen.getByLabelText(/full name/i)).toHaveValue("Alice Smith");
     expect(screen.getByLabelText(/email/i)).toHaveValue("alice@example.com");
-    expect(screen.getByLabelText(/department/i)).toHaveValue("Engineering");
+    expect(screen.getByRole("combobox", { name: /department/i })).toHaveTextContent("Engineering");
     expect(screen.getByLabelText(/designation/i)).toHaveValue("Engineer");
     expect(screen.getByLabelText(/country/i)).toHaveValue("IN");
     expect(screen.getByLabelText(/currency/i)).toHaveValue("INR");

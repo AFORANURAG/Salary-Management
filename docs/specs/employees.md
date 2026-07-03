@@ -16,7 +16,7 @@ CRUD and discovery for employee records — the backbone entity the rest of the 
 | `employeeCode` | string, unique | human-facing code; indexed |
 | `name` | string | indexed for search |
 | `email` | string, unique | indexed for search |
-| `department` | string (or FK) | filterable; indexed |
+| `department` | enum: `Engineering` \| `Sales` \| `Finance` \| `HR` \| `Operations` | filterable; indexed; validated at API layer |
 | `designation` | string | |
 | `country` | string (ISO-3166) | filterable; indexed |
 | `currency` | string (ISO-4217) | per-employee; drives minor-unit scale |
@@ -152,7 +152,7 @@ Pages and components in `apps/web`. Client data layer via `@salary-mgmt/store`
 ## Open Questions
 
 - Add `costCenter` field? (root Open Question #4) — currently modeled as nullable pending confirmation.
-- Is `department` a free-text string or its own reference table?
+- ~~Is `department` a free-text string or its own reference table?~~ **Resolved:** controlled enum (`Engineering | Sales | Finance | HR | Operations`), validated at the API layer in the DTO. No reference table — adding departments requires a types + DTO change.
 
 ## Implementation
 

@@ -59,6 +59,13 @@ describe("Employees CRUD (e2e)", () => {
         .send({ ...buildEmployeeInput(), salaryMinor: 100000 });
       expect(res.status).toBe(400);
     });
+
+    it("returns 400 when department is not in the controlled list", async () => {
+      const res = await http
+        .post("/v1/employees")
+        .send({ ...buildEmployeeInput(), department: "IT" });
+      expect(res.status).toBe(400);
+    });
   });
 
   describe("GET /employees/:id", () => {
@@ -102,6 +109,14 @@ describe("Employees CRUD (e2e)", () => {
         .patch("/v1/employees/00000000-0000-0000-0000-000000000000")
         .send({ designation: "x" });
       expect(res.status).toBe(404);
+    });
+
+    it("returns 400 when updating department to an invalid value", async () => {
+      const emp = await persistEmployee();
+      const res = await http
+        .patch(`/v1/employees/${emp.id}`)
+        .send({ department: "IT" });
+      expect(res.status).toBe(400);
     });
 
     it("ignores or rejects attempts to change immutable fields", async () => {

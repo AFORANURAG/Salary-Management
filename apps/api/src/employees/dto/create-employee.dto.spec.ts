@@ -1,3 +1,4 @@
+import { DEPARTMENTS } from "@salary-mgmt/types";
 import { plainToInstance } from "class-transformer";
 import { validateSync } from "class-validator";
 import { describe, expect, it } from "vitest";
@@ -53,6 +54,16 @@ describe("CreateEmployeeDto", () => {
 
   it("rejects an employmentStatus outside the enum", () => {
     expect(validateInput({ ...validInput, employmentStatus: "RETIRED" }).length).toBeGreaterThan(0);
+  });
+
+  it("rejects a department outside the controlled list", () => {
+    expect(validateInput({ ...validInput, department: "IT" }).length).toBeGreaterThan(0);
+  });
+
+  it("accepts every valid department value", () => {
+    for (const dept of DEPARTMENTS) {
+      expect(validateInput({ ...validInput, department: dept })).toHaveLength(0);
+    }
   });
 
   it("rejects unknown fields (whitelist)", () => {

@@ -1,4 +1,4 @@
-import type { EmploymentStatus } from "@salary-mgmt/types";
+import { DEPARTMENTS, type Department, type EmploymentStatus } from "@salary-mgmt/types";
 import {
   IsDateString,
   IsEmail,
@@ -33,10 +33,8 @@ export class CreateEmployeeDto {
   @MaxLength(255)
   email!: string;
 
-  @IsString()
-  @MinLength(1)
-  @MaxLength(128)
-  department!: string;
+  @IsIn([...DEPARTMENTS])
+  department!: Department;
 
   @IsString()
   @MinLength(1)

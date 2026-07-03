@@ -22,7 +22,7 @@ each task commit.
 - List queries hit indexed columns only; deterministic ordering with a secondary
   `id` tiebreak for stable pagination.
 - Deferred open questions (do not block this plan): `costCenter` stays nullable;
-  `department` stays a free-text string. See Open Questions.
+  `department` is a controlled enum. See Open Questions.
 
 ## Ask-first boundaries in this plan
 
@@ -126,7 +126,17 @@ Branch: `feat/employees-pr4-versioning`
 
 - v1 global prefix (`/v1/employees`), CLAUDE.md, spec and test URL updates
 
-### Phase 5 — Data + REFACTOR
+### Phase 5 — Department enum + FE hardening
+
+Branch: `feat/employees-pr5-department-enum`
+
+| Task | Description | Commit |
+|---|---|---|
+| ET11 | `DEPARTMENTS` constant + `Department` type in `@salary-mgmt/types`; `@IsIn([...DEPARTMENTS])` in Create/Update DTOs; entity typed `Department`; FE schema, form (Select), filters updated; tests updated | `feat(types,api,web): enforce department enum` |
+
+- [x] ET11 complete. `pnpm typecheck && pnpm lint && pnpm test` green.
+
+### Phase 6 — Data + REFACTOR
 
 | Task | Description | Commit |
 |---|---|---|
@@ -154,4 +164,4 @@ Branch: `feat/employees-pr4-versioning`
 ## Open Questions
 
 - Add `costCenter`? (root Open Question #4) — modeled nullable, deferred.
-- Is `department` free-text or its own reference table? — free-text for now, deferred.
+- ~~Is `department` free-text or its own reference table?~~ **Resolved:** controlled enum, validated at API layer (ET11). No FK/reference table.
