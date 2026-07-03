@@ -1,14 +1,18 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useEmployees } from "@salary-mgmt/store";
-import type { EmployeeListQuery, EmploymentStatus } from "@salary-mgmt/types";
+import type { Employee, EmployeeListQuery, EmploymentStatus } from "@salary-mgmt/types";
 import { EMPLOYEE_PAGE_SIZE_DEFAULT } from "@salary-mgmt/types";
+import { Button } from "@salary-mgmt/ui";
 import { EmployeeList } from "./components/employee-list";
 import { EmployeeSearch } from "./components/employee-search";
 import { EmployeeFilters } from "./components/employee-filters";
 import { EmployeePagination } from "./components/employee-pagination";
+import { CreateEmployeeDialog } from "./components/create-employee-dialog";
+import { EditEmployeeDialog } from "./components/edit-employee-dialog";
+import { DeleteEmployeeDialog } from "./components/delete-employee-dialog";
 
 function parseQuery(params: URLSearchParams): EmployeeListQuery {
   return {
@@ -26,10 +30,17 @@ function parseQuery(params: URLSearchParams): EmployeeListQuery {
   };
 }
 
+type DialogState =
+  | { type: "none" }
+  | { type: "create" }
+  | { type: "edit"; employee: Employee }
+  | { type: "delete"; employee: Employee };
+
 export default function EmployeesPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const query = parseQuery(searchParams);
+  const [dialog, setDialog] = useState<DialogState>({ type: "none" });
 
   const { data, isLoading, isError } = useEmployees(query);
 
@@ -53,6 +64,7 @@ export default function EmployeesPage() {
     <div className="mx-auto max-w-7xl space-y-4 p-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">Employees</h1>
+        <Button onClick={() => setDialog({ type: "create" })}>Add Employee</Button>
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -84,6 +96,8 @@ export default function EmployeesPage() {
         isLoading={isLoading}
         isError={isError}
         onRowClick={(id) => router.push(`/employees/${id}`)}
+        onEdit={(employee) => setDialog({ type: "edit", employee })}
+        onDelete={(employee) => setDialog({ type: "delete", employee })}
       />
 
       {data && data.total > 0 && (
@@ -92,6 +106,28 @@ export default function EmployeesPage() {
           pageSize={query.pageSize ?? EMPLOYEE_PAGE_SIZE_DEFAULT}
           total={data.total}
           onPageChange={(page) => setParams({ page: String(page) })}
+        />
+      )}
+
+      <CreateEmployeeDialog
+        open={dialog.type === "create"}
+        onOpenChange={(open) => !open && setDialog({ type: "none" })}
+      />
+
+      {dialog.type === "edit" && (
+        <EditEmployeeDialog
+          open
+          onOpenChange={(open) => !open && setDialog({ type: "none" })}
+          employee={dialog.employee}
+        />
+      )}
+
+      {dialog.type === "delete" && (
+        <DeleteEmployeeDialog
+          open
+          onOpenChange={(open) => !open && setDialog({ type: "none" })}
+          employeeId={dialog.employee.id}
+          employeeName={dialog.employee.name}
         />
       )}
     </div>

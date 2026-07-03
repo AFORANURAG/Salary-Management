@@ -1,17 +1,20 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "../../../test/render";
 import userEvent from "@testing-library/user-event";
 import { CreateEmployeeDialog } from "../components/create-employee-dialog";
 
 const mockMutate = vi.fn();
-const mockUseCreateEmployee = vi.fn(() => ({
-  mutate: mockMutate,
-  isPending: false,
-}));
 
 vi.mock("@salary-mgmt/store", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@salary-mgmt/store")>();
-  return { ...actual, useCreateEmployee: mockUseCreateEmployee };
+  return {
+    ...actual,
+    useCreateEmployee: () => ({ mutate: mockMutate, isPending: false }),
+  };
+});
+
+beforeEach(() => {
+  mockMutate.mockClear();
 });
 
 describe("CreateEmployeeDialog", () => {
@@ -36,7 +39,6 @@ describe("CreateEmployeeDialog", () => {
 
   it("submitting with empty required fields shows validation errors and does not call the API", async () => {
     const user = userEvent.setup();
-    mockMutate.mockClear();
 
     render(<CreateEmployeeDialog open onOpenChange={vi.fn()} />);
 
