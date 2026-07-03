@@ -11,6 +11,8 @@ Significant technical decisions for the Employee Salary Management System. Each 
 | [ADR-0003](./ADR-0003-vitest-backend-test-runner.md) | Vitest backend test runner | Accepted | 2026-06-30 |
 | [ADR-0004](./ADR-0004-shared-fe-packages.md) | Shared FE packages (errors, store, ui) | Accepted | 2026-07-02 |
 | [ADR-0005](./ADR-0005-nestjs-backend-framework.md) | NestJS backend framework | Accepted | 2026-07-02 |
+| [ADR-0006](./ADR-0006-react-hook-form-zod-fe-forms.md) | react-hook-form + zod for frontend forms | Accepted | 2026-07-03 |
+| [ADR-0007](./ADR-0007-url-search-params-employee-filters.md) | URL search params for employee list state | Accepted | 2026-07-03 |
 
 ## Lifecycle
 
