@@ -8,11 +8,10 @@ export interface EmployeeFixture {
   department: string;
 }
 
-let _seq = 0;
-
-function seq(): string {
-  _seq += 1;
-  return String(_seq).padStart(4, "0");
+function uid(): string {
+  return `${Date.now()}-${Math.floor(Math.random() * 9999)
+    .toString()
+    .padStart(4, "0")}`;
 }
 
 export async function createEmployee(
@@ -23,11 +22,11 @@ export async function createEmployee(
     department: string;
   }> = {}
 ): Promise<EmployeeFixture> {
-  const s = seq();
+  const id = uid();
   const body = {
-    employeeCode: overrides.employeeCode ?? `E2E-${s}`,
-    name: overrides.name ?? `E2E Employee ${s}`,
-    email: overrides.email ?? `e2e-${s}@example.com`,
+    employeeCode: overrides.employeeCode ?? `E2E-${id}`,
+    name: overrides.name ?? `E2E Employee ${id}`,
+    email: overrides.email ?? `e2e-${id}@example.com`,
     department: overrides.department ?? "Engineering",
     designation: "Engineer",
     country: "IN",
