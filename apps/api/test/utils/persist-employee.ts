@@ -18,11 +18,13 @@ export async function persistEmployee(
   return repo.save(entity);
 }
 
-/** Insert many employees in one batch. */
+const BATCH_SIZE = 500;
+
+/** Insert many employees in chunked batches to stay within Postgres param limits. */
 export async function persistEmployees(
   count: number,
   overrides: (i: number) => Partial<CreateEmployeeInput> = () => ({}),
-): Promise<EmployeeEntity[]> {
+): Promise<void> {
   const ds = await initTestDataSource();
   const repo = ds.getRepository(EmployeeEntity);
   const rows = Array.from({ length: count }, (_, i) => {
@@ -33,5 +35,7 @@ export async function persistEmployees(
       costCenter: input.costCenter ?? null,
     });
   });
-  return repo.save(rows);
+  for (let i = 0; i < rows.length; i += BATCH_SIZE) {
+    await repo.insert(rows.slice(i, i + BATCH_SIZE));
+  }
 }

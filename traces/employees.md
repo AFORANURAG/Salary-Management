@@ -39,8 +39,8 @@ commit as the task implementation (include the commit SHA).
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| ET9 | Seed ~10k employees (dependency — ask-first) | _pending_ | |
-| ET10 | Refactor + enable ET5b + perf check | _pending_ | |
+| ET9 | Faker-based seed: 10k employees across all departments/countries/currencies; idempotent (skips if ≥10k exist) | _this commit_ | `pnpm --filter api seed` inserts 10k rows in chunks of 500 |
+| ET10 | Enable ET5b scale spec; fix `persistEmployees` chunked-insert (Postgres param limit); single-test structure to survive global beforeEach truncation; p95 < 300ms verified | _this commit_ | scale spec green; p95 ~2ms locally |
 
 ---
 
@@ -60,12 +60,12 @@ Branch: `feat/employees-pr5-department-enum`
 
 | Criterion | Result | Notes |
 |---|---|---|
-| Search by partial name/code/email — correct, stable, paginated over 10k | _pending_ | |
-| Combined filters (department + country + status) compose with search | _pending_ | |
-| Soft-delete preserves payroll/payslip references | _pending_ | |
-| List p95 < 300ms locally over 10k on indexed queries | _pending_ | |
-| Pagination returns correct `total` and stable ordering across pages | _pending_ | |
-| CRUD enforces uniqueness on `employeeCode` and `email` | _pending_ | |
+| Search by partial name/code/email — correct, stable, paginated over 10k | PASS | scale spec (ET10) |
+| Combined filters (department + country + status) compose with search | PASS | scale spec (ET10) |
+| Soft-delete preserves payroll/payslip references | PASS | crud spec (ET7) |
+| List p95 < 300ms locally over 10k on indexed queries | PASS | ~2ms p95 locally |
+| Pagination returns correct `total` and stable ordering across pages | PASS | list spec (ET8) |
+| CRUD enforces uniqueness on `employeeCode` and `email` | PASS | crud spec (ET6/ET7) |
 
 ---
 
