@@ -138,13 +138,15 @@ Branch: `feat/employees-pr5-department-enum`
 
 ### Phase 6 — Data + REFACTOR
 
+Branch: `feat/employees-pr6-data-perf`
+
 | Task | Description | Commit |
 |---|---|---|
-| ET9 | Replace no-op seed with faker-based batch insert of ~10k employees across departments/countries/currencies | `feat(api): seed 10k employees` |
-| ET10 | With suite green, tidy service/query builder; enable ET5b; verify list p95 < 300ms over 10k; no regressions | `refactor(api): tidy employee module` |
+| ET9 | Replace no-op seed with faker-based batch insert of ~10k employees across departments/countries/currencies; idempotent | `feat(api): seed 10k employees` |
+| ET10 | Enable ET5b scale spec; chunked `persistEmployees` fix; p95 < 300ms verified | `test(api): enable employee scale and perf specs` |
 
-- [ ] ET9 (ask-first: dependency) enables ET5b scale assertions.
-- [ ] ET10 only committed if changes are made.
+- [x] ET9 complete. Seed idempotent; 10k rows in ~1s.
+- [x] ET10 complete. Scale spec green; p95 ~2ms locally.
 
 ### Checkpoint: Complete
 - [ ] All spec Non-Negotiable Test Cases + Success Criteria pass.
