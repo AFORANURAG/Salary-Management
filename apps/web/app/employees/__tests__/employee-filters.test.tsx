@@ -39,7 +39,7 @@ describe("EmployeeFilters", () => {
     );
 
     await user.click(screen.getByRole("combobox", { name: /status/i }));
-    await user.click(screen.getByRole("option", { name: /active/i }));
+    await user.click(screen.getByRole("option", { name: "Active" }));
 
     expect(onFilterChange).toHaveBeenCalledWith(
       expect.objectContaining({ status: expect.arrayContaining(["ACTIVE"]) })
