@@ -26,9 +26,9 @@ commit as the task implementation (include the commit SHA).
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| SS6 | DTOs | _pending_ | |
-| SS7 | Service | _pending_ | |
-| SS8 | Controller + Module | _pending_ | |
+| SS6 | `UpsertSalaryStructureDto` + `ComponentDto` with class-validator (ISO-4217, SCREAMING_SNAKE code, integer ≥ 0, array min 1) | _this commit_ | DTO validation tests pass |
+| SS7 | `SalaryStructureService`: `upsert` (transactional supersede), `findCurrent`, `findHistory`; `closeVersion` + `resolveActiveVersion` pure helpers exported for unit tests | _this commit_ | all 10 unit specs green |
+| SS8 | `SalaryStructureController` under `employees/:employeeId/salary-structure`; `SalaryModule` wired with TypeORM repos; fix: `@JoinColumn({ name: "structure_id" })` on ManyToOne required for correct column aliasing | _this commit_ | 76/76 tests green |
 
 ---
 
