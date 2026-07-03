@@ -132,6 +132,17 @@ phase. No single branch should grow into a 30+ file PR.
 
 Frontend specs follow the same pattern (types → hooks → components → wiring).
 
+**Branch creation protocol (always follow this order):**
+
+1. `git checkout main && git pull origin main`
+2. If the new branch intentionally stacks on an unmerged branch (because it
+   depends on unreleased work), state the base branch and reason explicitly
+   before branching.
+3. `git checkout -b <branch-name>`
+
+Never create a branch from wherever the working tree happens to be without
+consciously deciding the base.
+
 **Required: record the branch in the spec and plan.**
 
 - `docs/plans/<spec>.md` — add `Branch: \`<name>\`` under each phase heading.

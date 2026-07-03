@@ -142,6 +142,17 @@ Frontend specs follow the same pattern (types → hooks → components → wirin
 This gives future agents (and reviewers) full traceability without digging
 through git log.
 
+**Branch creation protocol (always follow this order):**
+
+1. `git checkout main && git pull origin main`
+2. If the new branch intentionally stacks on an unmerged branch (because it
+   depends on unreleased work), explicitly state the base branch and the reason
+   before branching.
+3. `git checkout -b <branch-name>`
+
+Never create a branch from wherever the working tree happens to be without
+consciously deciding the base.
+
 ## Git and Commits
 
 Follow [Conventional Commits](https://www.conventionalcommits.org/):
