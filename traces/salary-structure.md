@@ -19,8 +19,8 @@ commit as the task implementation (include the commit SHA).
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| SS4 | Unit specs (effectiveTo calc, overlap guard, date resolution) | _pending_ | |
-| SS5 | Integration specs (PUT, GET current, GET history, invariant) | _pending_ | |
+| SS4 | Unit specs: `closeVersion` (date arithmetic), `resolveActiveVersion` (historical resolution) | _this commit_ | RED — file not found (service not yet written) |
+| SS5 | Integration specs: 6× PUT, 4× GET current, 3× GET history (incl. overlap invariant) | _this commit_ | RED — all routes 404 (missing impl) |
 
 ### Phase 3 — GREEN
 
