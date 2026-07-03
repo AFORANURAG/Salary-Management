@@ -1,7 +1,10 @@
 import { Client } from "pg";
 import { DataSource } from "typeorm";
 import { EmployeeEntity } from "../../src/employees/employee.entity";
+import { SalaryComponentEntity } from "../../src/salary/salary-component.entity";
+import { SalaryStructureEntity } from "../../src/salary/salary-structure.entity";
 import { CreateEmployees1751000000000 } from "../../src/database/migrations/1751000000000-CreateEmployees";
+import { CreateSalaryStructure1751100000000 } from "../../src/database/migrations/1751100000000-CreateSalaryStructure";
 
 const host = process.env.DB_HOST ?? "localhost";
 const port = Number(process.env.DB_PORT ?? 5432);
@@ -38,8 +41,8 @@ export async function setup(): Promise<void> {
     username,
     password,
     database: testDbName,
-    entities: [EmployeeEntity],
-    migrations: [CreateEmployees1751000000000],
+    entities: [EmployeeEntity, SalaryStructureEntity, SalaryComponentEntity],
+    migrations: [CreateEmployees1751000000000, CreateSalaryStructure1751100000000],
     synchronize: false,
     logging: false,
   });
