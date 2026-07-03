@@ -65,12 +65,72 @@ Response: `{ data: Employee[], page, pageSize, total }`.
 - [ ] Pagination returns correct `total` and stable ordering across pages.
 - [ ] CRUD enforces uniqueness on `employeeCode` and `email`.
 
+## Frontend
+
+Pages and components in `apps/web`. Client data layer via `@salary-mgmt/store`
+(TanStack Query + typed API client). UI primitives from `@salary-mgmt/ui`.
+
+### Pages
+
+| Route | Description |
+|---|---|
+| `/employees` | List view — search, filter by department/country/status, sort, paginate |
+| `/employees/[id]` | Detail view — read-only employee record |
+
+### Dialogs (rendered over the list page)
+
+- **Create employee** — full form, all required fields, validated before submit
+- **Edit employee** — same form pre-populated, partial update via `PATCH`
+- **Delete (soft)** — confirmation dialog; sets status to `TERMINATED`
+
+### UI components required
+
+| Component | Package | Notes |
+|---|---|---|
+| `Table` | `@salary-mgmt/ui` | Sortable column headers; row click navigates to detail |
+| `Select` | `@salary-mgmt/ui` | Multi-value selects for filter dropdowns |
+
+### Data layer (hooks in `@salary-mgmt/store`)
+
+| Hook | Used by |
+|---|---|
+| `useEmployees(query: EmployeeListQuery)` | List page |
+| `useEmployee(id: string)` | Detail page |
+| `useCreateEmployee()` | Create dialog |
+| `useUpdateEmployee()` | Edit dialog |
+| `useDeleteEmployee()` | Delete dialog |
+
+### Non-Negotiable Frontend Test Cases
+
+- Employee list renders correct column headings and row data for a page of results.
+- Search input is debounced; typing a partial name/code/email updates the list.
+- Department, country, and status filters each narrow the list independently and
+  compose correctly with each other and with the search text.
+- Pagination controls advance and retreat pages; `total` count stays stable across
+  page changes.
+- Loading skeleton renders while data is fetching.
+- Empty state renders when no results match the query.
+- Error state renders with a message when the API call fails.
+- Create dialog: submitting a valid form calls the API and invalidates the list cache.
+- Create dialog: submitting an invalid form shows field-level errors without calling the API.
+- Edit dialog: pre-populates all fields from the current employee record.
+- Delete confirmation: cancel leaves the record intact; confirm triggers the soft delete.
+
+### Frontend Success Criteria
+
+- [ ] `/employees` is interactive: search, filter, sort, and paginate work end-to-end
+      against the running API.
+- [ ] All non-negotiable frontend test cases pass.
+- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+
 ## Open Questions
 
 - Add `costCenter` field? (root Open Question #4) — currently modeled as nullable pending confirmation.
 - Is `department` a free-text string or its own reference table?
 
 ## Implementation
+
+### Backend
 
 | Phase | Branch |
 |---|---|
@@ -79,4 +139,13 @@ Response: `{ data: Employee[], page, pageSize, total }`.
 | CRUD + list implementation (GREEN) | `feat/employees-pr3-implementation` |
 | v1 prefix, CLAUDE.md, spec/test URL updates | `feat/employees-pr4-versioning` |
 
-Plan: [`docs/plans/employees.md`](../plans/employees.md) · Trace: [`traces/employees.md`](../../traces/employees.md)
+### Frontend
+
+| Phase | Branch |
+|---|---|
+| UI primitives (Table, Select) + store API fns + web testing infra | `feat/employees-fe-pr1-foundation` |
+| RED — all failing component + hook tests | `feat/employees-fe-pr2-red` |
+| GREEN — store hooks + list page + detail page | `feat/employees-fe-pr3-list` |
+| GREEN — create/edit/delete dialogs | `feat/employees-fe-pr4-forms` |
+
+Plan: [`docs/plans/employees.md`](../plans/employees.md) · Frontend plan: [`docs/plans/employees-fe.md`](../plans/employees-fe.md) · Trace: [`traces/employees.md`](../../traces/employees.md)
