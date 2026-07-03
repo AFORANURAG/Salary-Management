@@ -9,11 +9,12 @@ interface QueryProviderProps {
   children: ReactNode;
   /** Show React Query Devtools. Defaults to true in development. */
   devtools?: boolean;
+  /** Provide a pre-configured QueryClient (e.g. in tests). If omitted, one is created on mount. */
+  client?: QueryClient;
 }
 
-export function QueryProvider({ children, devtools }: QueryProviderProps) {
-  // Create the client once per component mount (avoids sharing between SSR requests)
-  const [queryClient] = useState<QueryClient>(() => createQueryClient());
+export function QueryProvider({ children, devtools, client }: QueryProviderProps) {
+  const [queryClient] = useState<QueryClient>(() => client ?? createQueryClient());
 
   const showDevtools = devtools ?? process.env.NODE_ENV === "development";
 

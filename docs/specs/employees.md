@@ -102,6 +102,7 @@ Pages and components in `apps/web`. Client data layer via `@salary-mgmt/store`
 
 ### Non-Negotiable Frontend Test Cases
 
+**Unit / component (mocked hooks, jsdom)**
 - Employee list renders correct column headings and row data for a page of results.
 - Search input is debounced; typing a partial name/code/email updates the list.
 - Department, country, and status filters each narrow the list independently and
@@ -116,12 +117,37 @@ Pages and components in `apps/web`. Client data layer via `@salary-mgmt/store`
 - Edit dialog: pre-populates all fields from the current employee record.
 - Delete confirmation: cancel leaves the record intact; confirm triggers the soft delete.
 
+**Integration (real hooks + MSW network interception, jsdom)** — See [ADR-0008](../decisions/ADR-0008-msw-integration-test-network-interception.md)
+- `/employees` list page renders rows fetched through the real `useEmployees` hook
+  with MSW intercepting `GET /v1/employees`.
+- Typing into the search input triggers a new request with the correct `q` param
+  (debounced; real hook + MSW).
+- Selecting a department filter triggers a new request with the correct `department`
+  param (real hook + MSW).
+- Opening the Create dialog, submitting a valid form, and confirming the POST to
+  `POST /v1/employees` causes the list to re-fetch (cache invalidation verified).
+- Opening the Edit dialog, submitting a valid form, and confirming the PATCH to
+  `PATCH /v1/employees/:id` causes the list and detail cache to re-fetch.
+- Opening the Delete dialog, clicking Confirm, and seeing the DELETE hit
+  `DELETE /v1/employees/:id` causes the list to re-fetch.
+- API error response (5xx from MSW) causes the error state to render on the list.
+
+**E2E (Playwright, full stack)**
+- `/employees` list page loads and displays employees returned by the running API.
+- Searching by partial name filters the list within the debounce window.
+- Selecting a department filter narrows the list.
+- Navigating to the next page shows a different set of rows.
+- Creating an employee via the dialog causes the new record to appear in the list.
+- Editing an employee via the dialog updates the displayed row.
+- Deleting an employee via the dialog removes the row from the list.
+
 ### Frontend Success Criteria
 
 - [ ] `/employees` is interactive: search, filter, sort, and paginate work end-to-end
       against the running API.
-- [ ] All non-negotiable frontend test cases pass.
+- [ ] All non-negotiable frontend test cases pass (unit + integration + E2E).
 - [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [ ] Playwright E2E suite passes against the running Docker stack.
 
 ## Open Questions
 
@@ -147,5 +173,7 @@ Pages and components in `apps/web`. Client data layer via `@salary-mgmt/store`
 | RED — all failing component + hook tests | `feat/employees-fe-pr2-red` |
 | GREEN — store hooks + list page + detail page | `feat/employees-fe-pr3-list` |
 | GREEN — create/edit/delete dialogs | `feat/employees-fe-pr4-forms` |
+| Integration tests — MSW + real hooks (jsdom) | `feat/employees-fe-pr5-integration` |
+| E2E tests — Playwright against running stack | `feat/employees-fe-pr6-e2e` |
 
 Plan: [`docs/plans/employees.md`](../plans/employees.md) · Frontend plan: [`docs/plans/employees-fe.md`](../plans/employees-fe.md) · Trace: [`traces/employees.md`](../../traces/employees.md)

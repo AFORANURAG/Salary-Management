@@ -6,7 +6,7 @@
 
 Employee list, detail, and CRUD dialogs for `apps/web`. Client data via
 TanStack Query hooks in `@salary-mgmt/store`; UI primitives in `@salary-mgmt/ui`
-(Table + Select need to be added). Four stacked branches — one per phase.
+(Table + Select need to be added). Six stacked branches — one per phase.
 
 Built **test-first**: RED suite authored before any page/component implementation
 (per CLAUDE.md lifecycle).
@@ -26,11 +26,17 @@ Built **test-first**: RED suite authored before any page/component implementatio
   + `router.replace`). See [ADR-0007](../decisions/ADR-0007-url-search-params-employee-filters.md).
 - No new runtime dependencies beyond what's already installed unless listed
   explicitly in a task and confirmed by the user (per CLAUDE.md ask-first).
+- Integration tests use **MSW v2** (`msw/node`) to intercept `fetch` at the
+  network layer, letting real hooks and API functions run without a live server.
+  See [ADR-0008](../decisions/ADR-0008-msw-integration-test-network-interception.md).
+- Each integration test creates a fresh `QueryClient` (`retry: false`) to prevent
+  TanStack Query cache bleed between tests.
 
 ## Ask-first boundaries in this plan
 
 - ~~Adding `react-hook-form` and `zod` to `apps/web`~~ **Resolved:** confirmed by user; see [ADR-0006](../decisions/ADR-0006-react-hook-form-zod-fe-forms.md).
 - ~~List state in URL search params vs local state~~ **Resolved:** URL search params confirmed; see [ADR-0007](../decisions/ADR-0007-url-search-params-employee-filters.md).
+- ~~Adding `msw` to `apps/web`~~ **Resolved:** confirmed by user; see [ADR-0008](../decisions/ADR-0008-msw-integration-test-network-interception.md).
 - Any change to `packages/types` contracts.
 
 ## Task List
@@ -159,6 +165,70 @@ Branch: `feat/employees-fe-pr4-forms`
 
 ---
 
+---
+
+### Phase 5 — Integration tests (MSW + real hooks, jsdom)
+
+Branch: `feat/employees-fe-pr5-integration`
+
+Install `msw` v2 as a dev dependency in `apps/web`. Add a shared MSW server
+setup (`apps/web/test/msw/server.ts` + `handlers/employees.ts`). Wire the
+server lifecycle into `vitest.setup.ts`. Tests live in
+`apps/web/app/employees/__tests__/integration/`.
+
+| Task | Description | Commit |
+|---|---|---|
+| EF17 | Install `msw` v2 (`apps/web`); add server + employee handler fixtures | `test(web): add MSW server and employee handlers` |
+| EF18 | Integration: list page — renders rows via real `useEmployees` hook + MSW `GET /v1/employees` | `test(web): integration — list page renders via real hook` |
+| EF19 | Integration: search — real hook re-queries with `q` param after debounce | `test(web): integration — search triggers re-query` |
+| EF20 | Integration: department filter — real hook re-queries with `department` param | `test(web): integration — filter triggers re-query` |
+| EF21 | Integration: Create dialog — POST intercepted by MSW; list re-fetches on success | `test(web): integration — create dialog invalidates list` |
+| EF22 | Integration: Edit dialog — PATCH intercepted by MSW; list + detail re-fetch on success | `test(web): integration — edit dialog invalidates list and detail` |
+| EF23 | Integration: Delete dialog — DELETE intercepted by MSW; list re-fetches on success | `test(web): integration — delete dialog invalidates list` |
+| EF24 | Integration: 5xx error response from MSW causes error state to render on list page | `test(web): integration — API error renders error state` |
+
+**EF17–EF24 acceptance**
+- [ ] All 7 integration test cases pass in jsdom without a running server.
+- [ ] MSW handlers are reset between tests (`server.resetHandlers()` in `afterEach`).
+- [ ] Verification: `pnpm --filter web test`.
+
+### Checkpoint: Integration green
+- [ ] All unit + integration tests pass: `pnpm --filter web test`.
+- [ ] `pnpm typecheck && pnpm lint && pnpm test` clean from repo root.
+
+---
+
+### Phase 6 — E2E tests (Playwright, full stack)
+
+Branch: `feat/employees-fe-pr6-e2e`
+
+Add Playwright as a dev dependency at workspace root. Config at
+`playwright.config.ts`. Tests in `apps/web/e2e/employees/`. Requires
+`docker compose up --build` (db + api + web) before running.
+
+| Task | Description | Commit |
+|---|---|---|
+| EF25 | Install `@playwright/test`; add `playwright.config.ts` at repo root | `test(e2e): add Playwright config` |
+| EF26 | E2E: list page loads; rows visible; column headings present | `test(e2e): employees list loads` |
+| EF27 | E2E: search by partial name filters displayed rows | `test(e2e): employees search filters list` |
+| EF28 | E2E: department filter narrows the list | `test(e2e): employees department filter` |
+| EF29 | E2E: next-page navigation shows a different result set | `test(e2e): employees pagination` |
+| EF30 | E2E: create employee via dialog — new row appears in list | `test(e2e): employees create flow` |
+| EF31 | E2E: edit employee via dialog — updated row visible in list | `test(e2e): employees edit flow` |
+| EF32 | E2E: delete (soft) employee via dialog — row removed from list | `test(e2e): employees delete flow` |
+
+**EF25–EF32 acceptance**
+- [ ] All 7 E2E scenarios pass against `docker compose up --build`.
+- [ ] Tests are independent (each creates its own seed data or uses stable fixtures).
+- [ ] `pnpm test:e2e` (or `npx playwright test`) runs from repo root.
+
+### Checkpoint: E2E green
+- [ ] All E2E specs pass against the full Docker stack.
+- [ ] All spec Non-Negotiable Frontend Test Cases pass (unit + integration + E2E).
+- [ ] Ready for review.
+
+---
+
 ## Risks and Mitigations
 
 | Risk | Impact | Mitigation |
@@ -167,7 +237,9 @@ Branch: `feat/employees-fe-pr4-forms`
 | `react-hook-form` / `zod` not yet installed | Med | Ask-first (EF12); confirm before adding |
 | TQ cache invalidation misses after mutation | Med | Invalidate both `lists()` and the specific `detail(id)` key |
 | Filter select produces URL arrays — serialisation edge cases | Med | Encode arrays as repeated params (`?status=ACTIVE&status=INACTIVE`); test round-trip |
-| Test isolation — `msw` vs real fetch mocking | Med | Use `msw` for hook tests (real fetch, intercepted network); Testing Library for component tests with mocked hooks |
+| MSW v2 `fetch` interception in jsdom | Med | `msw/node` server + `vitest.setup.ts` lifecycle hooks; `server.resetHandlers()` in `afterEach` |
+| Playwright needs full Docker stack | High | Document `docker compose up --build` as prerequisite; skip in CI if stack unavailable |
+| E2E tests pollute shared database state | Med | Each E2E test creates its own employee via the UI; use `DELETE` teardown or a per-run seed |
 
 ## Open Questions
 

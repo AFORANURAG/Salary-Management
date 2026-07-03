@@ -22,14 +22,20 @@ export const CACHE_TIMES = {
   LONG: 1000 * 60 * 60, // 1 hour
 } as const;
 
-export function createQueryClient(): QueryClient {
+interface QueryOverrides {
+  queries?: {
+    retry?: boolean | number | ((failureCount: number, error: unknown) => boolean);
+    staleTime?: number;
+  };
+}
+
+export function createQueryClient(overrides?: QueryOverrides): QueryClient {
   return new QueryClient({
     defaultOptions: {
       queries: {
         staleTime: STALE_TIMES.DEFAULT,
         gcTime: CACHE_TIMES.DEFAULT,
         retry: (failureCount, error) => {
-          // Don't retry on 4xx errors
           if (error instanceof Error && "status" in error) {
             const status = (error as Error & { status: number }).status;
             if (status >= 400 && status < 500) return false;
@@ -38,6 +44,7 @@ export function createQueryClient(): QueryClient {
         },
         refetchOnWindowFocus: false,
         refetchOnReconnect: true,
+        ...overrides?.queries,
       },
       mutations: {
         retry: false,

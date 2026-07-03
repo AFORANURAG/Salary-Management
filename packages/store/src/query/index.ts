@@ -19,6 +19,7 @@ export {
   useIsFetching,
   useIsMutating,
   QueryClient,
+  QueryClientProvider,
   QueryObserver,
   type UseQueryOptions,
   type UseMutationOptions,

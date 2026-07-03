@@ -55,6 +55,33 @@ commit as the task implementation (include the commit SHA).
 | Pagination returns correct `total` and stable ordering across pages | _pending_ | |
 | CRUD enforces uniqueness on `employeeCode` and `email` | _pending_ | |
 
+---
+
+## Frontend — Phase 5: Integration tests (MSW + real hooks)
+
+Branch: `feat/employees-fe-pr5-integration`
+
+### Phase 5 — Integration tests
+
+| Task | Description | Commit | Verification |
+|---|---|---|---|
+| EF17 | Install `msw` v2; add server + employee handler fixtures; custom jsdom-patched vitest environment | _this commit_ | server, handlers, environment in place |
+| EF18 | Integration: list page renders rows via real `useEmployees` + MSW | _this commit_ | `list-page.integration.test.tsx` green |
+| EF19 | Integration: search triggers re-query with `q` param after debounce | _this commit_ | `search.integration.test.tsx` green |
+| EF20 | Integration: department filter triggers re-query with `department` param | _this commit_ | `filter.integration.test.tsx` green |
+| EF21 | Integration: Create dialog — POST intercepted; list re-fetches on success | _this commit_ | `create-dialog.integration.test.tsx` green |
+| EF22 | Integration: Edit dialog — PATCH intercepted; list re-fetches on success | _this commit_ | `edit-dialog.integration.test.tsx` green |
+| EF23 | Integration: Delete dialog — DELETE intercepted; list re-fetches on success | _this commit_ | `delete-dialog.integration.test.tsx` green |
+| EF24 | Integration: 5xx from MSW causes error state on list page | _this commit_ | `error-state.integration.test.tsx` green |
+| — | Fix: wrap `useSearchParams` in `<Suspense>` for Next.js 14 production build | _this commit_ | `docker compose up --build` succeeds |
+
+**Integration checkpoint:** 31 passed (19 test files); `pnpm typecheck && pnpm lint && pnpm --filter web test` all green.
+
+Key learnings from this phase:
+- jsdom's `AbortController` replaces the native one, breaking MSW's `fetchProxy` (`instanceof AbortSignal` check). Fix: custom vitest environment that restores native `AbortController`/`AbortSignal` after jsdom setup.
+- `isolate: false` causes `vi.mock()` leaks across test files — removed.
+- `useSearchParams` must be inside `<Suspense>` for Next.js 14 production static generation; dev mode is lenient, build is not.
+
 ## Learnings
 
 _To be distilled into `.ai/rules/` after the module closes out._
