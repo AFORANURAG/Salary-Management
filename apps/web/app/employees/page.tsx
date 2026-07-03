@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState, Suspense } from "react";
 import { useEmployees } from "@salary-mgmt/store";
-import type { Employee, EmployeeListQuery, EmploymentStatus } from "@salary-mgmt/types";
+import type { Department, Employee, EmployeeListQuery, EmploymentStatus } from "@salary-mgmt/types";
 import { EMPLOYEE_PAGE_SIZE_DEFAULT } from "@salary-mgmt/types";
 import { Button } from "@salary-mgmt/ui";
 import { EmployeeList } from "./components/employee-list";
@@ -17,7 +17,7 @@ import { DeleteEmployeeDialog } from "./components/delete-employee-dialog";
 function parseQuery(params: URLSearchParams): EmployeeListQuery {
   return {
     q: params.get("q") ?? undefined,
-    department: params.getAll("department").length ? params.getAll("department") : undefined,
+    department: params.getAll("department").length ? (params.getAll("department") as Department[]) : undefined,
     country: params.getAll("country").length ? params.getAll("country") : undefined,
     status: params.getAll("status").length
       ? (params.getAll("status") as EmploymentStatus[])

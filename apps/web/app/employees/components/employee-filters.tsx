@@ -7,18 +7,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@salary-mgmt/ui";
-import type { EmploymentStatus } from "@salary-mgmt/types";
-
-const DEPARTMENTS = [
-  "Engineering",
-  "Product",
-  "Design",
-  "Marketing",
-  "Sales",
-  "Finance",
-  "HR",
-  "Operations",
-];
+import { DEPARTMENTS, type Department, type EmploymentStatus } from "@salary-mgmt/types";
 
 const STATUSES: { value: EmploymentStatus; label: string }[] = [
   { value: "ACTIVE", label: "Active" },
@@ -27,7 +16,7 @@ const STATUSES: { value: EmploymentStatus; label: string }[] = [
 ];
 
 interface FilterState {
-  department: string[];
+  department: Department[];
   country: string[];
   status: EmploymentStatus[];
 }
@@ -45,7 +34,7 @@ export function EmployeeFilters({
     <div className="flex flex-wrap gap-2">
       <Select
         value={department[0] ?? ""}
-        onValueChange={(val) => onFilterChange({ department: val ? [val] : [] })}
+        onValueChange={(val) => onFilterChange({ department: val ? [val as Department] : [] })}
       >
         <SelectTrigger aria-label="Department" className="w-40">
           <SelectValue placeholder="Department" />

@@ -55,7 +55,8 @@ describe("EF21 – create dialog: POST intercepted; list re-fetches on success",
     await user.type(within(dialog).getByLabelText(/employee code/i), "EMP002");
     await user.type(within(dialog).getByLabelText(/full name/i), "Bob Jones");
     await user.type(within(dialog).getByLabelText(/email/i), "bob@example.com");
-    await user.type(within(dialog).getByLabelText(/department/i), "Product");
+    await user.click(within(dialog).getByRole("combobox", { name: /department/i }));
+    await user.click(screen.getByRole("option", { name: "Engineering" }));
     await user.type(within(dialog).getByLabelText(/designation/i), "PM");
     await user.type(within(dialog).getByLabelText(/country/i), "US");
     await user.type(within(dialog).getByLabelText(/currency/i), "USD");

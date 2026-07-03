@@ -26,7 +26,8 @@ describe("CreateEmployeeDialog", () => {
     await user.type(screen.getByLabelText(/employee code/i), "EMP001");
     await user.type(screen.getByLabelText(/full name/i), "Alice Smith");
     await user.type(screen.getByLabelText(/email/i), "alice@example.com");
-    await user.type(screen.getByLabelText(/department/i), "Engineering");
+    await user.click(screen.getByRole("combobox", { name: /department/i }));
+    await user.click(screen.getByRole("option", { name: "Engineering" }));
     await user.type(screen.getByLabelText(/designation/i), "Engineer");
     await user.type(screen.getByLabelText(/country/i), "IN");
     await user.type(screen.getByLabelText(/currency/i), "INR");

@@ -44,6 +44,18 @@ commit as the task implementation (include the commit SHA).
 
 ---
 
+## Backend — Phase 5: Department enum
+
+Branch: `feat/employees-pr5-department-enum`
+
+### Phase 5 — Department enum + FE hardening
+
+| Task | Description | Commit | Verification |
+|---|---|---|---|
+| ET11 | Resolved Open Question: `department` enum (`Engineering\|Sales\|Finance\|HR\|Operations`) in `@salary-mgmt/types`; `@IsIn` on Create/Update DTOs; entity typed `Department`; FE zod schema → `z.enum`, form Input → Select, filters use shared constant; 2 new BE unit tests + 2 integration tests; spec + plan updated | _this commit_ | 52 API tests + 27 web unit/integration tests green; typecheck + lint clean |
+
+---
+
 ## Spec closeout checklist
 
 | Criterion | Result | Notes |

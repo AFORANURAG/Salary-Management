@@ -12,12 +12,22 @@ export interface PaginatedResponse<T> {
 
 export type EmploymentStatus = "ACTIVE" | "INACTIVE" | "TERMINATED";
 
+export const DEPARTMENTS = [
+  "Engineering",
+  "Sales",
+  "Finance",
+  "HR",
+  "Operations",
+] as const;
+
+export type Department = (typeof DEPARTMENTS)[number];
+
 export interface Employee {
   readonly id: string;
   readonly employeeCode: string;
   readonly name: string;
   readonly email: string;
-  readonly department: string;
+  readonly department: Department;
   readonly designation: string;
   readonly country: string;
   readonly currency: string;
@@ -32,7 +42,7 @@ export interface CreateEmployeeInput {
   readonly employeeCode: string;
   readonly name: string;
   readonly email: string;
-  readonly department: string;
+  readonly department: Department;
   readonly designation: string;
   readonly country: string;
   readonly currency: string;
@@ -59,7 +69,7 @@ export type SortDirection = "asc" | "desc";
 
 export interface EmployeeListQuery {
   readonly q?: string;
-  readonly department?: readonly string[];
+  readonly department?: readonly Department[];
   readonly country?: readonly string[];
   readonly status?: readonly EmploymentStatus[];
   readonly page?: number;
