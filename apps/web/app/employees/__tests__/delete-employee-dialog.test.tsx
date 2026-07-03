@@ -49,6 +49,9 @@ describe("DeleteEmployeeDialog", () => {
 
     await user.click(screen.getByRole("button", { name: /confirm/i }));
 
-    expect(mockMutate).toHaveBeenCalledWith("11111111-1111-1111-1111-111111111111");
+    expect(mockMutate).toHaveBeenCalledWith(
+      "11111111-1111-1111-1111-111111111111",
+      expect.anything()
+    );
   });
 });
