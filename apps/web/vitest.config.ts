@@ -5,7 +5,7 @@ import path from "path";
 export default defineConfig({
   plugins: [react()],
   test: {
-    environment: "jsdom",
+    environment: "./test/vitest-environment-jsdom-patched.ts",
     globals: true,
     setupFiles: ["./vitest.setup.ts"],
     pool: "forks",

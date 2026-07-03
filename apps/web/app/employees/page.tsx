@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useState, Suspense } from "react";
 import { useEmployees } from "@salary-mgmt/store";
 import type { Employee, EmployeeListQuery, EmploymentStatus } from "@salary-mgmt/types";
 import { EMPLOYEE_PAGE_SIZE_DEFAULT } from "@salary-mgmt/types";
@@ -36,7 +36,7 @@ type DialogState =
   | { type: "edit"; employee: Employee }
   | { type: "delete"; employee: Employee };
 
-export default function EmployeesPage() {
+function EmployeesPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const query = parseQuery(searchParams);
@@ -131,5 +131,13 @@ export default function EmployeesPage() {
         />
       )}
     </div>
+  );
+}
+
+export default function EmployeesPage() {
+  return (
+    <Suspense>
+      <EmployeesPageContent />
+    </Suspense>
   );
 }
