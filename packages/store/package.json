@@ -13,7 +13,7 @@
     "build": "node -e \"process.exit(0)\"",
     "lint": "node -e \"process.exit(0)\"",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --config vitest.config.ts"
   },
   "dependencies": {
     "@salary-mgmt/errors": "workspace:*",
@@ -25,9 +25,13 @@
   },
   "devDependencies": {
     "@salary-mgmt/config": "workspace:*",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
     "@types/node": "^22.10.2",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^26.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "typescript": "^5.7.2",
