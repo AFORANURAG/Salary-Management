@@ -65,6 +65,15 @@ Verification run (2026-07-04): `pnpm typecheck` clean; `pnpm lint` clean; 76/76 
 | SF2 | `useSalaryStructure`, `useSalaryStructureHistory`, `useUpsertSalaryStructure` hooks; `salaryStructure` key family added to `queryKeys`; exported from store index | 7bff673 | store typecheck clean |
 | SF3 | RED specs: `salary-structure-card.test.tsx` (3 specs), `salary-structure-history.test.tsx` (1 spec), `upsert-salary-structure-dialog.test.tsx` (3 specs) — all fail with missing component import | 7bff673 | RED confirmed — 3 files fail for right reason |
 
+### Phase 5 — Frontend: components + page wiring
+
+| Task | Description | Commit | Verification |
+|---|---|---|---|
+| SF4 | `SalaryStructureCard` — loading skeleton (`data-slot="skeleton"`), empty state, data table with Badge+formatMinor | 1486027 | 34/34 web tests green |
+| SF5 | `SalaryStructureHistory` — collapsible version list (default expanded); effectiveFrom / effectiveTo / components per version | 1486027 | 34/34 web tests green |
+| SF6 | `UpsertSalaryStructureDialog` — react-hook-form + zod + zodResolver; useFieldArray for dynamic component rows; 409 → field error; `valueAsNumber: true` on amount input | 1486027 | 34/34 web tests green |
+| SF7 | `apps/web/app/employees/[id]/page.tsx` wired with salary structure section; `@salary-mgmt/money` added to web deps + transpilePackages | 1486027 | typecheck clean |
+
 ## Learnings
 
 _To be distilled into `.ai/rules/` after the module closes out._

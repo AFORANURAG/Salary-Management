@@ -13,6 +13,7 @@
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
     "@salary-mgmt/errors": "workspace:*",
+    "@salary-mgmt/money": "workspace:*",
     "@salary-mgmt/store": "workspace:*",
     "@salary-mgmt/types": "workspace:*",
     "@salary-mgmt/ui": "workspace:*",

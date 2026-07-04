@@ -27,7 +27,7 @@ describe("SalaryStructureCard", () => {
       data: mockStructure,
       isLoading: false,
       isError: false,
-    } as ReturnType<typeof useSalaryStructure>);
+    } as unknown as ReturnType<typeof useSalaryStructure>);
 
     render(<SalaryStructureCard employeeId="e1" />);
 
@@ -43,7 +43,7 @@ describe("SalaryStructureCard", () => {
       data: undefined,
       isLoading: true,
       isError: false,
-    } as ReturnType<typeof useSalaryStructure>);
+    } as unknown as ReturnType<typeof useSalaryStructure>);
 
     const { container } = render(<SalaryStructureCard employeeId="e1" />);
 
@@ -56,7 +56,7 @@ describe("SalaryStructureCard", () => {
       data: undefined,
       isLoading: false,
       isError: true,
-    } as ReturnType<typeof useSalaryStructure>);
+    } as unknown as ReturnType<typeof useSalaryStructure>);
 
     render(<SalaryStructureCard employeeId="e1" />);
 

@@ -1,8 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useEmployee } from "@salary-mgmt/store";
 import { Badge, Button, Skeleton } from "@salary-mgmt/ui";
+import { SalaryStructureCard } from "./components/salary-structure-card";
+import { SalaryStructureHistory } from "./components/salary-structure-history";
+import { UpsertSalaryStructureDialog } from "./components/upsert-salary-structure-dialog";
 
 const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive"> = {
   ACTIVE: "default",
@@ -23,6 +27,7 @@ export default function EmployeeDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const { data: employee, isLoading, isError } = useEmployee(id);
+  const [upsertOpen, setUpsertOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -66,6 +71,23 @@ export default function EmployeeDetailPage() {
         <Field label="Joining Date" value={employee.joiningDate} />
         <Field label="Cost Center" value={employee.costCenter} />
       </dl>
+
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base font-semibold">Salary Structure</h2>
+          <Button size="sm" onClick={() => setUpsertOpen(true)}>
+            Set Salary Structure
+          </Button>
+        </div>
+        <SalaryStructureCard employeeId={id} onSetStructure={() => setUpsertOpen(true)} />
+        <SalaryStructureHistory employeeId={id} />
+      </div>
+
+      <UpsertSalaryStructureDialog
+        employeeId={id}
+        open={upsertOpen}
+        onOpenChange={setUpsertOpen}
+      />
 
       <Button variant="outline" onClick={() => router.back()}>
         Back to employees
