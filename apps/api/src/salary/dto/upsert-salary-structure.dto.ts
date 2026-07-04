@@ -2,7 +2,6 @@ import type { ComponentKind } from "@salary-mgmt/types";
 import {
   ArrayMinSize,
   IsArray,
-  IsDateString,
   IsIn,
   IsISO4217CurrencyCode,
   IsInt,
@@ -12,15 +11,14 @@ import {
   ValidateNested,
 } from "class-validator";
 import { Type } from "class-transformer";
-
-const COMPONENT_KINDS: ComponentKind[] = ["EARNING", "DEDUCTION"];
+import { COMPONENT_KIND_VALUES } from "../salary-component.entity";
 
 export class ComponentDto {
   @IsString()
   @Matches(/^[A-Z][A-Z0-9_]*$/, { message: "code must be SCREAMING_SNAKE_CASE" })
   code!: string;
 
-  @IsIn(COMPONENT_KINDS)
+  @IsIn(COMPONENT_KIND_VALUES)
   kind!: ComponentKind;
 
   @IsInt()
@@ -29,7 +27,7 @@ export class ComponentDto {
 }
 
 export class UpsertSalaryStructureDto {
-  @IsDateString()
+  @Matches(/^\d{4}-\d{2}-\d{2}$/, { message: "effectiveFrom must be a date in YYYY-MM-DD format" })
   effectiveFrom!: string;
 
   @IsISO4217CurrencyCode()

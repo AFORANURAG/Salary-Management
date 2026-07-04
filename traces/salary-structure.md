@@ -36,11 +36,26 @@ commit as the task implementation (include the commit SHA).
 
 | Criterion | Result | Notes |
 |---|---|---|
-| Effective-dated resolution returns correct version for any date | _pending_ | |
-| History endpoint lists all versions in chronological order | _pending_ | |
-| At most one open (`effectiveTo = null`) version per employee | _pending_ | |
-| Prior version components byte-for-byte unchanged after supersede | _pending_ | |
-| No overlapping `[effectiveFrom, effectiveTo]` ranges | _pending_ | |
+| Effective-dated resolution returns correct version for any date | pass | unit spec `resolveActiveVersion` + integration `GET current` after update |
+| History endpoint lists all versions in chronological order | pass | integration spec `GET history` asserts ascending effectiveFrom order |
+| At most one open (`effectiveTo = null`) version per employee | pass | integration spec overlap invariant test confirms single open version |
+| Prior version components byte-for-byte unchanged after supersede | pass | integration spec asserts prior component rows untouched after PUT |
+| No overlapping `[effectiveFrom, effectiveTo]` ranges | pass | overlap guard in service + 409 integration spec + invariant test |
+
+Verification run (2026-07-04): `pnpm typecheck` clean; `pnpm lint` clean; 76/76 API tests pass. Web Playwright-via-Vitest failure is pre-existing on `main` (not a regression).
+
+### Phase 3 — Code review fixes
+
+| Fix | Description | Commit |
+|---|---|---|
+| R1 | `@IsDateString()` → `@Matches(/^\d{4}-\d{2}-\d{2}$/)`: rejects datetime strings that caused `closeVersion` to crash and overlap guard to be bypassed | _pending_ |
+| R2 | Pessimistic write lock on `findOne` for open version inside `upsert` transaction: prevents concurrent PUTs producing two open versions | _pending_ |
+| R3 | New migration `1751200000000-AddSalaryStructureOpenVersionIndex`: partial unique index on `(employee_id) WHERE effective_to IS NULL` as DB-level backstop | _pending_ |
+| R4 | `assertEmployeeExists` moved inside transaction in `upsert`: eliminates TOCTOU window between existence check and FK-constrained INSERT | _pending_ |
+| R5 | `null as unknown as string` → `IsNull()` from typeorm in both `findOne` queries | _pending_ |
+| R6 | `COMPONENT_KINDS` in DTO replaced with import of `COMPONENT_KIND_VALUES` from entity: single source of truth | _pending_ |
+| R7 | Unused `ConflictException` import and stale RED-phase comment removed from spec file | _pending_ |
+| R8 | `upsert` returns `{ structure, created }` discriminant; controller uses `@Res({ passthrough: true })` to send 201 on first create, 200 on supersede | _pending_ |
 
 ## Learnings
 

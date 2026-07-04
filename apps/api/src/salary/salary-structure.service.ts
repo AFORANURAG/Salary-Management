@@ -5,7 +5,7 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import type { SalaryStructure } from "@salary-mgmt/types";
-import { Repository } from "typeorm";
+import { IsNull, Repository } from "typeorm";
 import { EmployeeEntity } from "../employees/employee.entity";
 import { SalaryComponentEntity } from "./salary-component.entity";
 import { SalaryStructureEntity } from "./salary-structure.entity";
@@ -13,6 +13,19 @@ import type { UpsertSalaryStructureDto } from "./dto/upsert-salary-structure.dto
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+async function assertEmployeeExists(
+  repo: Repository<EmployeeEntity>,
+  employeeId: string,
+): Promise<void> {
+  if (!UUID_RE.test(employeeId)) {
+    throw new NotFoundException(`Employee ${employeeId} not found`);
+  }
+  const exists = await repo.existsBy({ id: employeeId });
+  if (!exists) {
+    throw new NotFoundException(`Employee ${employeeId} not found`);
+  }
+}
 
 /** Returns effectiveTo for the version being superseded: one day before newEffectiveFrom. */
 export function closeVersion(newEffectiveFrom: string): string {
@@ -46,17 +59,17 @@ export class SalaryStructureService {
   async upsert(
     employeeId: string,
     dto: UpsertSalaryStructureDto,
-  ): Promise<SalaryStructure> {
-    await this.assertEmployeeExists(employeeId);
-
+  ): Promise<{ structure: SalaryStructure; created: boolean }> {
     return this.structureRepo.manager.transaction(async (em) => {
       const structureRepo = em.getRepository(SalaryStructureEntity);
       const componentRepo = em.getRepository(SalaryComponentEntity);
+      const employeeRepo = em.getRepository(EmployeeEntity);
 
-      // Find the current open version
+      await assertEmployeeExists(employeeRepo, employeeId);
+
       const current = await structureRepo.findOne({
-        where: { employeeId, effectiveTo: null as unknown as string },
-        relations: ["components"],
+        where: { employeeId, effectiveTo: IsNull() },
+        lock: { mode: "pessimistic_write" },
       });
 
       if (current) {
@@ -87,15 +100,15 @@ export class SalaryStructureService {
       );
       const savedComponents = await componentRepo.save(components);
 
-      return toResponse(saved, savedComponents);
+      return { structure: toResponse(saved, savedComponents), created: !current };
     });
   }
 
   async findCurrent(employeeId: string): Promise<SalaryStructure> {
-    await this.assertEmployeeExists(employeeId);
+    await assertEmployeeExists(this.employeeRepo, employeeId);
 
     const structure = await this.structureRepo.findOne({
-      where: { employeeId, effectiveTo: null as unknown as string },
+      where: { employeeId, effectiveTo: IsNull() },
       relations: ["components"],
     });
 
@@ -108,7 +121,7 @@ export class SalaryStructureService {
   }
 
   async findHistory(employeeId: string): Promise<SalaryStructure[]> {
-    await this.assertEmployeeExists(employeeId);
+    await assertEmployeeExists(this.employeeRepo, employeeId);
 
     const structures = await this.structureRepo.find({
       where: { employeeId },
@@ -117,16 +130,6 @@ export class SalaryStructureService {
     });
 
     return structures.map((s) => toResponse(s, s.components));
-  }
-
-  private async assertEmployeeExists(employeeId: string): Promise<void> {
-    if (!UUID_RE.test(employeeId)) {
-      throw new NotFoundException(`Employee ${employeeId} not found`);
-    }
-    const exists = await this.employeeRepo.existsBy({ id: employeeId });
-    if (!exists) {
-      throw new NotFoundException(`Employee ${employeeId} not found`);
-    }
   }
 }
 
