@@ -62,8 +62,8 @@ Branch: `feat/payroll-fe-pr3-tests`
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| PF5 | MSW `payrollHandlers` + integration tests (4): hub and detail pages via real TanStack Query hooks | TBD | 4/4 GREEN |
-| PF6 | E2E tests (4 PF01–PF04): hub load, dialog run flow, 409 conflict, detail summary+results | TBD | 4/4 GREEN (see note) |
+| PF5 | MSW `payrollHandlers` + integration tests (4): hub and detail pages via real TanStack Query hooks | df120bc | 4/4 GREEN |
+| PF6 | E2E tests (4 PF01–PF04): hub load, dialog run flow, 409 conflict, detail summary+results | df120bc | 4/4 GREEN |
 
 **Note PF6**: E2E required two fixes after initial commit:
 1. Static assets (`.next/static/`) must be copied to `.next/standalone/apps/web/.next/static/` before running the standalone server — omitting this causes JS chunk 404s and React never hydrates, so click handlers don't fire.
