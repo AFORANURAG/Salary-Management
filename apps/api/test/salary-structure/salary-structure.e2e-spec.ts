@@ -55,7 +55,7 @@ describe("Salary Structure (e2e)", () => {
         .put(`/v1/employees/${emp.id}/salary-structure`)
         .send(second);
 
-      expect(res.status).toBe(201);
+      expect(res.status).toBe(200);
       expect(res.body.effectiveFrom).toBe("2024-07-01");
       expect(res.body.effectiveTo).toBeNull();
 

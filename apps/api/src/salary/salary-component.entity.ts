@@ -3,6 +3,7 @@ import {
   Column,
   Entity,
   Index,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
@@ -37,5 +38,6 @@ export class SalaryComponentEntity {
   @ManyToOne(() => SalaryStructureEntity, (s) => s.components, {
     onDelete: "CASCADE",
   })
+  @JoinColumn({ name: "structure_id" })
   structure!: SalaryStructureEntity;
 }

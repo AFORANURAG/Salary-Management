@@ -1,13 +1,4 @@
-import { ConflictException } from "@nestjs/common";
 import { describe, expect, it } from "vitest";
-
-/**
- * Pure-logic unit specs for salary-structure business rules.
- * These test the functions/methods in isolation — no DB, no Nest app.
- * RED: all specs fail until SalaryStructureService is implemented.
- */
-
-// Import the service (and helpers) we will implement in SS7.
 import { closeVersion, resolveActiveVersion } from "./salary-structure.service";
 
 describe("closeVersion", () => {
