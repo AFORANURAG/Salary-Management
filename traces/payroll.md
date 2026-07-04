@@ -35,8 +35,8 @@ commit as the task implementation (include the commit SHA).
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| PR10 | `persistPayrollSeed(count, effectiveFrom)` — bulk-inserts employees + salary structures (500-row batches) directly via TestDataSource | TBD | utility compiles, seeds 10k employees+structures in ~3s |
-| PR11 | `payroll.scale.e2e-spec.ts` — seeds 10k, POST /v1/payroll/runs, asserts processed=10000 and elapsed < 30s | TBD | GREEN: 4.9s (< 30s budget); 104/104 total tests GREEN |
+| PR10 | `persistPayrollSeed(count, effectiveFrom)` — bulk-inserts employees + salary structures (500-row batches) directly via TestDataSource | 63e4c79 | utility compiles, seeds 10k employees+structures in ~3s |
+| PR11 | `payroll.scale.e2e-spec.ts` — seeds 10k, POST /v1/payroll/runs, asserts processed=10000 and elapsed < 30s | 63e4c79 | GREEN: 4.9s (< 30s budget); 104/104 total tests GREEN |
 
 ---
 
