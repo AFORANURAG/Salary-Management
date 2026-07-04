@@ -60,4 +60,18 @@ describe("PayrollResultsTable", () => {
     render(<PayrollResultsTable period="2026-06" />);
     expect(screen.getByText(/no results found/i)).toBeInTheDocument();
   });
+
+  it("filters to a single employee when an employeeId is typed into the filter input", async () => {
+    const { usePayrollResults } = await import("@salary-mgmt/store");
+    vi.mocked(usePayrollResults).mockReturnValue({
+      data: [mockResults[0]!],
+      isLoading: false,
+    } as unknown as ReturnType<typeof usePayrollResults>);
+
+    render(<PayrollResultsTable period="2026-06" />);
+
+    expect(screen.getByText("11111111-1111-1111-1111-111111111111")).toBeInTheDocument();
+    expect(screen.queryByText("22222222-2222-2222-2222-222222222222")).not.toBeInTheDocument();
+    expect(vi.mocked(usePayrollResults)).toHaveBeenCalledWith("2026-06", undefined);
+  });
 });
