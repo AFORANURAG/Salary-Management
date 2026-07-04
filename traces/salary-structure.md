@@ -69,10 +69,10 @@ Verification run (2026-07-04): `pnpm typecheck` clean; `pnpm lint` clean; 76/76 
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| SF4 | `SalaryStructureCard` — loading skeleton (`data-slot="skeleton"`), empty state, data table with Badge+formatMinor | TBD | 34/34 web tests green |
-| SF5 | `SalaryStructureHistory` — collapsible version list (default expanded); effectiveFrom / effectiveTo / components per version | TBD | 34/34 web tests green |
-| SF6 | `UpsertSalaryStructureDialog` — react-hook-form + zod + zodResolver; useFieldArray for dynamic component rows; 409 → field error; `valueAsNumber: true` on amount input | TBD | 34/34 web tests green |
-| SF7 | `apps/web/app/employees/[id]/page.tsx` wired with salary structure section; `@salary-mgmt/money` added to web deps + transpilePackages | TBD | typecheck clean |
+| SF4 | `SalaryStructureCard` — loading skeleton (`data-slot="skeleton"`), empty state, data table with Badge+formatMinor | 1486027 | 34/34 web tests green |
+| SF5 | `SalaryStructureHistory` — collapsible version list (default expanded); effectiveFrom / effectiveTo / components per version | 1486027 | 34/34 web tests green |
+| SF6 | `UpsertSalaryStructureDialog` — react-hook-form + zod + zodResolver; useFieldArray for dynamic component rows; 409 → field error; `valueAsNumber: true` on amount input | 1486027 | 34/34 web tests green |
+| SF7 | `apps/web/app/employees/[id]/page.tsx` wired with salary structure section; `@salary-mgmt/money` added to web deps + transpilePackages | 1486027 | typecheck clean |
 
 ## Learnings
 
