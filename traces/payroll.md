@@ -38,6 +38,37 @@ commit as the task implementation (include the commit SHA).
 | PR10 | `persistPayrollSeed(count, effectiveFrom)` — bulk-inserts employees + salary structures (500-row batches) directly via TestDataSource | 63e4c79 | utility compiles, seeds 10k employees+structures in ~3s |
 | PR11 | `payroll.scale.e2e-spec.ts` — seeds 10k, POST /v1/payroll/runs, asserts processed=10000 and elapsed < 30s | 63e4c79 | GREEN: 4.9s (< 30s budget); 104/104 total tests GREEN |
 
+### Phase 5 — Frontend PR1: Store hooks + RED unit specs
+
+Branch: `feat/payroll-fe-pr1-hooks-red`
+
+| Task | Description | Commit | Verification |
+|---|---|---|---|
+| PF1 | `packages/store`: `runPayroll`, `getPayrollSummary`, `getPayrollResults` API calls; `usePayrollRuns`, `usePayrollSummary`, `usePayrollResults`, `useRunPayroll` TanStack Query hooks; payroll query keys (`summary`, `results`) | af2d3a0 | `pnpm --filter @salary-mgmt/store typecheck` pass |
+| PF4 | RED unit tests (8): `RunPayrollDialog`, `PayrollRunList`, `PayrollSummaryCard`, `PayrollResultsTable` — all mocked via `vi.mock`; fail because components not yet implemented | af2d3a0 | RED — component files not found |
+
+### Phase 6 — Frontend PR2: Components + pages (GREEN)
+
+Branch: `feat/payroll-fe-pr2-components`
+
+| Task | Description | Commit | Verification |
+|---|---|---|---|
+| PF2 | `apps/web/app/payroll/page.tsx` — hub page with Run Payroll button + `RunPayrollDialog` + `PayrollRunList` components | TBD | renders; 8/8 unit tests GREEN |
+| PF3 | `apps/web/app/payroll/[period]/page.tsx` — detail page with `PayrollSummaryCard` + `PayrollResultsTable` + employeeId filter | TBD | renders; typecheck pass |
+
+### Phase 7 — Frontend PR3: Integration + E2E tests
+
+Branch: `feat/payroll-fe-pr3-tests`
+
+| Task | Description | Commit | Verification |
+|---|---|---|---|
+| PF5 | MSW `payrollHandlers` + integration tests (4): hub and detail pages via real TanStack Query hooks | TBD | 4/4 GREEN |
+| PF6 | E2E tests (4 PF01–PF04): hub load, dialog run flow, 409 conflict, detail summary+results | TBD | 4/4 GREEN (see note) |
+
+**Note PF6**: E2E required two fixes after initial commit:
+1. Static assets (`.next/static/`) must be copied to `.next/standalone/apps/web/.next/static/` before running the standalone server — omitting this causes JS chunk 404s and React never hydrates, so click handlers don't fire.
+2. Periods derived from fixed dates collide across test sessions; replaced with `Date.now()`-based year (5000–9999 range) to ensure unique periods per run.
+
 ---
 
 ## Spec closeout checklist

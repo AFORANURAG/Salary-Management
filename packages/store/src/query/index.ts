@@ -9,6 +9,12 @@ export {
   useSalaryStructureHistory,
   useUpsertSalaryStructure,
 } from "./salary-structure";
+export {
+  usePayrollRuns,
+  usePayrollSummary,
+  usePayrollResults,
+  useRunPayroll,
+} from "./payroll";
 export { ApiError } from "../api/client";
 
 // Re-export the most commonly used TanStack Query hooks so consumers
