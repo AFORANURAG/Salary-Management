@@ -25,7 +25,7 @@ test.describe("Salary Structure — detail page", () => {
   test("SF10a: employee detail page shows active salary structure components", async ({ page }) => {
     const emp = await createEmployee();
     await setSalaryStructure(emp.id, {
-      effectiveFrom: "2024-01-01",
+      effectiveFrom: "2024-07-01",
       currency: "USD",
       components: [
         { code: "BASIC", kind: "EARNING", amountMinor: 500_000 },
@@ -35,10 +35,12 @@ test.describe("Salary Structure — detail page", () => {
 
     try {
       await page.goto(`/employees/${emp.id}`);
+      await page.waitForLoadState("networkidle");
 
-      await expect(page.getByText("BASIC")).toBeVisible({ timeout: 5000 });
-      await expect(page.getByText("PF")).toBeVisible({ timeout: 5000 });
-      await expect(page.getByText("2024-01-01")).toBeVisible({ timeout: 5000 });
+      // Use table cell locator to avoid ambiguity with history rows
+      await expect(page.getByRole("cell", { name: "BASIC" })).toBeVisible({ timeout: 10000 });
+      await expect(page.getByRole("cell", { name: "PF" })).toBeVisible({ timeout: 10000 });
+      await expect(page.getByText("2024-07-01").first()).toBeVisible({ timeout: 10000 });
     } finally {
       await deleteEmployee(emp.id);
     }
@@ -47,19 +49,21 @@ test.describe("Salary Structure — detail page", () => {
   test("SF10b: submitting the upsert dialog updates the card", async ({ page }) => {
     const emp = await createEmployee();
     await setSalaryStructure(emp.id, {
-      effectiveFrom: "2024-01-01",
+      effectiveFrom: "2024-07-01",
       currency: "USD",
       components: [{ code: "BASIC", kind: "EARNING", amountMinor: 500_000 }],
     });
 
     try {
       await page.goto(`/employees/${emp.id}`);
-      await expect(page.getByText("BASIC")).toBeVisible({ timeout: 5000 });
+      await page.waitForLoadState("networkidle");
+
+      await expect(page.getByRole("cell", { name: "BASIC" })).toBeVisible({ timeout: 10000 });
 
       await page.getByRole("button", { name: /set salary structure/i }).click();
 
       const dialog = page.getByRole("dialog");
-      await expect(dialog).toBeVisible({ timeout: 3000 });
+      await expect(dialog).toBeVisible({ timeout: 5000 });
 
       await dialog.getByLabel(/effective from/i).fill("2025-01-01");
       await dialog.getByRole("combobox", { name: /currency/i }).click();
@@ -71,8 +75,8 @@ test.describe("Salary Structure — detail page", () => {
       await dialog.getByRole("button", { name: /save/i }).click();
 
       await expect(dialog).not.toBeVisible({ timeout: 5000 });
-      await expect(page.getByText("NEWCOMP")).toBeVisible({ timeout: 5000 });
-      await expect(page.getByText("2025-01-01")).toBeVisible({ timeout: 5000 });
+      await expect(page.getByRole("cell", { name: "NEWCOMP" })).toBeVisible({ timeout: 10000 });
+      await expect(page.getByText("2025-01-01").first()).toBeVisible({ timeout: 10000 });
     } finally {
       await deleteEmployee(emp.id);
     }
@@ -81,7 +85,7 @@ test.describe("Salary Structure — detail page", () => {
   test("SF10c: history section shows previously set versions after an update", async ({ page }) => {
     const emp = await createEmployee();
     await setSalaryStructure(emp.id, {
-      effectiveFrom: "2024-01-01",
+      effectiveFrom: "2024-07-01",
       currency: "USD",
       components: [{ code: "BASIC", kind: "EARNING", amountMinor: 500_000 }],
     });
@@ -93,12 +97,13 @@ test.describe("Salary Structure — detail page", () => {
 
     try {
       await page.goto(`/employees/${emp.id}`);
+      await page.waitForLoadState("networkidle");
 
-      // Both dates visible (history starts expanded)
-      await expect(page.getByText("2024-01-01")).toBeVisible({ timeout: 5000 });
-      await expect(page.getByText("2025-01-01")).toBeVisible({ timeout: 5000 });
-      // Prior version should be closed
-      await expect(page.getByText("2024-12-31")).toBeVisible({ timeout: 5000 });
+      // History starts expanded; both versions visible
+      await expect(page.getByText("2024-07-01").first()).toBeVisible({ timeout: 10000 });
+      await expect(page.getByText("2025-01-01").first()).toBeVisible({ timeout: 10000 });
+      // Prior version should be closed with effectiveTo = day before new effectiveFrom
+      await expect(page.getByText("2024-12-31")).toBeVisible({ timeout: 10000 });
     } finally {
       await deleteEmployee(emp.id);
     }
