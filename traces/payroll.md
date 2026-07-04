@@ -35,8 +35,8 @@ commit as the task implementation (include the commit SHA).
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| PR10 | | | |
-| PR11 | | | |
+| PR10 | `persistPayrollSeed(count, effectiveFrom)` — bulk-inserts employees + salary structures (500-row batches) directly via TestDataSource | 63e4c79 | utility compiles, seeds 10k employees+structures in ~3s |
+| PR11 | `payroll.scale.e2e-spec.ts` — seeds 10k, POST /v1/payroll/runs, asserts processed=10000 and elapsed < 30s | 63e4c79 | GREEN: 4.9s (< 30s budget); 104/104 total tests GREEN |
 
 ---
 
@@ -44,11 +44,11 @@ commit as the task implementation (include the commit SHA).
 
 | Criterion | Result | Notes |
 |---|---|---|
-| `POST /payroll/runs` produces exactly one result per eligible employee | | |
-| Re-posting the same period returns 409 | | |
-| Each result references the exact `structureId` used | | |
-| Historical structure version used (not latest) | | |
-| 10k-employee run completes in < 30 s locally | | |
+| `POST /payroll/runs` produces exactly one result per eligible employee | PASS | payroll.e2e-spec.ts |
+| Re-posting the same period returns 409 | PASS | payroll.e2e-spec.ts |
+| Each result references the exact `structureId` used | PASS | payroll.e2e-spec.ts |
+| Historical structure version used (not latest) | PASS | payroll.e2e-spec.ts |
+| 10k-employee run completes in < 30 s locally | PASS | 4.9s — payroll.scale.e2e-spec.ts |
 
 ## Learnings
 

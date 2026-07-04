@@ -70,8 +70,9 @@ export class PayrollService {
 
     const employees = await this.employeeRepo.find();
 
+    // Load all structures without per-employee WHERE — avoids generating 10k OR
+    // conditions that exhaust the Postgres bind-parameter limit (65535).
     const structures = await this.structureRepo.find({
-      where: employees.map((e) => ({ employeeId: e.id })),
       relations: ["components"],
     });
 
@@ -110,13 +111,15 @@ export class PayrollService {
       });
     }
 
-    // Bulk insert — ON CONFLICT DO NOTHING to avoid race conditions
-    if (results.length > 0) {
+    // Chunked bulk insert — Postgres bind-param limit is 65535; 7 columns × 500
+    // rows = 3500 params per chunk, well within budget.
+    const INSERT_CHUNK = 500;
+    for (let i = 0; i < results.length; i += INSERT_CHUNK) {
       await this.payrollRepo
         .createQueryBuilder()
         .insert()
         .into(PayrollResultEntity)
-        .values(results)
+        .values(results.slice(i, i + INSERT_CHUNK))
         .orIgnore()
         .execute();
     }
