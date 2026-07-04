@@ -1,11 +1,13 @@
 import { Client } from "pg";
 import { DataSource } from "typeorm";
 import { EmployeeEntity } from "../../src/employees/employee.entity";
+import { PayrollResultEntity } from "../../src/payroll/payroll-result.entity";
 import { SalaryComponentEntity } from "../../src/salary/salary-component.entity";
 import { SalaryStructureEntity } from "../../src/salary/salary-structure.entity";
 import { CreateEmployees1751000000000 } from "../../src/database/migrations/1751000000000-CreateEmployees";
 import { CreateSalaryStructure1751100000000 } from "../../src/database/migrations/1751100000000-CreateSalaryStructure";
 import { AddSalaryStructureOpenVersionIndex1751200000000 } from "../../src/database/migrations/1751200000000-AddSalaryStructureOpenVersionIndex";
+import { CreatePayrollResults1751300000000 } from "../../src/database/migrations/1751300000000-CreatePayrollResults";
 
 const host = process.env.DB_HOST ?? "localhost";
 const port = Number(process.env.DB_PORT ?? 5432);
@@ -42,8 +44,8 @@ export async function setup(): Promise<void> {
     username,
     password,
     database: testDbName,
-    entities: [EmployeeEntity, SalaryStructureEntity, SalaryComponentEntity],
-    migrations: [CreateEmployees1751000000000, CreateSalaryStructure1751100000000, AddSalaryStructureOpenVersionIndex1751200000000],
+    entities: [EmployeeEntity, SalaryStructureEntity, SalaryComponentEntity, PayrollResultEntity],
+    migrations: [CreateEmployees1751000000000, CreateSalaryStructure1751100000000, AddSalaryStructureOpenVersionIndex1751200000000, CreatePayrollResults1751300000000],
     synchronize: false,
     logging: false,
   });
