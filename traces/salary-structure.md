@@ -48,14 +48,14 @@ Verification run (2026-07-04): `pnpm typecheck` clean; `pnpm lint` clean; 76/76 
 
 | Fix | Description | Commit |
 |---|---|---|
-| R1 | `@IsDateString()` → `@Matches(/^\d{4}-\d{2}-\d{2}$/)`: rejects datetime strings that caused `closeVersion` to crash and overlap guard to be bypassed | _pending_ |
-| R2 | Pessimistic write lock on `findOne` for open version inside `upsert` transaction: prevents concurrent PUTs producing two open versions | _pending_ |
-| R3 | New migration `1751200000000-AddSalaryStructureOpenVersionIndex`: partial unique index on `(employee_id) WHERE effective_to IS NULL` as DB-level backstop | _pending_ |
-| R4 | `assertEmployeeExists` moved inside transaction in `upsert`: eliminates TOCTOU window between existence check and FK-constrained INSERT | _pending_ |
-| R5 | `null as unknown as string` → `IsNull()` from typeorm in both `findOne` queries | _pending_ |
-| R6 | `COMPONENT_KINDS` in DTO replaced with import of `COMPONENT_KIND_VALUES` from entity: single source of truth | _pending_ |
-| R7 | Unused `ConflictException` import and stale RED-phase comment removed from spec file | _pending_ |
-| R8 | `upsert` returns `{ structure, created }` discriminant; controller uses `@Res({ passthrough: true })` to send 201 on first create, 200 on supersede | _pending_ |
+| R1 | `@IsDateString()` → `@Matches(/^\d{4}-\d{2}-\d{2}$/)`: rejects datetime strings that caused `closeVersion` to crash and overlap guard to be bypassed | f1b37fd |
+| R2 | Pessimistic write lock on `findOne` for open version inside `upsert` transaction: prevents concurrent PUTs producing two open versions | f1b37fd |
+| R3 | New migration `1751200000000-AddSalaryStructureOpenVersionIndex`: partial unique index on `(employee_id) WHERE effective_to IS NULL` as DB-level backstop | f1b37fd |
+| R4 | `assertEmployeeExists` moved inside transaction in `upsert`: eliminates TOCTOU window between existence check and FK-constrained INSERT | f1b37fd |
+| R5 | `null as unknown as string` → `IsNull()` from typeorm in both `findOne` queries | f1b37fd |
+| R6 | `COMPONENT_KINDS` in DTO replaced with import of `COMPONENT_KIND_VALUES` from entity: single source of truth | f1b37fd |
+| R7 | Unused `ConflictException` import and stale RED-phase comment removed from spec file | f1b37fd |
+| R8 | `upsert` returns `{ structure, created }` discriminant; controller uses `@Res({ passthrough: true })` to send 201 on first create, 200 on supersede | f1b37fd |
 
 ## Learnings
 
