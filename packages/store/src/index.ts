@@ -14,3 +14,8 @@ export {
   getSalaryStructureHistory,
   upsertSalaryStructure,
 } from "./api/salary-structure";
+export {
+  runPayroll,
+  getPayrollSummary,
+  getPayrollResults,
+} from "./api/payroll";

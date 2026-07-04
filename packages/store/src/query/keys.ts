@@ -16,7 +16,11 @@ export const queryKeys = {
   payroll: {
     all: () => ["payroll"] as const,
     runs: () => [...queryKeys.payroll.all(), "run"] as const,
-    run: (id: string) => [...queryKeys.payroll.runs(), id] as const,
+    run: (period: string) => [...queryKeys.payroll.runs(), period] as const,
+    summary: (period: string) =>
+      [...queryKeys.payroll.run(period), "summary"] as const,
+    results: (period: string, employeeId?: string) =>
+      [...queryKeys.payroll.run(period), "results", { employeeId }] as const,
   },
   payslips: {
     all: () => ["payslips"] as const,
