@@ -26,10 +26,10 @@ commit as the task implementation (include the commit SHA).
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| PR6 | | | |
-| PR7 | | | |
-| PR8 | | | |
-| PR9 | | | |
+| PR6 | `RunPayrollDto` (`@Matches` period regex) + `PayrollResultQueryDto` (`@IsOptional @IsUUID employeeId`) | TBD | typecheck pass, 400 on bad period/missing period |
+| PR7 | `computePayroll()` pure helper + `resolvePeriodStructure()` pure helper; both exported for unit test | TBD | 12/12 unit tests GREEN |
+| PR8 | `PayrollService.run()` (hard 409, bulk insert ON CONFLICT DO NOTHING), `findSummary()` (404 if no run), `findResults()` (filter by employeeId) | TBD | 15/15 integration tests GREEN |
+| PR9 | `PayrollController` at `/payroll`; `PayrollModule` wired with TypeORM repos for all 4 entities | TBD | 103/103 total tests GREEN, no regressions |
 
 ### Phase 4 — Scale
 
