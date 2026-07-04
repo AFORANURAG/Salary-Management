@@ -39,7 +39,7 @@ describe("SalaryStructureHistory", () => {
       data: mockHistory,
       isLoading: false,
       isError: false,
-    } as ReturnType<typeof useSalaryStructureHistory>);
+    } as unknown as ReturnType<typeof useSalaryStructureHistory>);
 
     render(<SalaryStructureHistory employeeId="e1" />);
 

@@ -80,7 +80,7 @@ describe("UpsertSalaryStructureDialog", () => {
 
     // Remove a row
     const removeButtons = screen.getAllByRole("button", { name: /remove/i });
-    await user.click(removeButtons[0]);
+    await user.click(removeButtons[0]!);
     expect(screen.getAllByLabelText(/code/i)).toHaveLength(1);
   });
 });
