@@ -53,8 +53,8 @@ Branch: `feat/payroll-fe-pr2-components`
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| PF2 | `apps/web/app/payroll/page.tsx` — hub page with Run Payroll button + `RunPayrollDialog` + `PayrollRunList` components | TBD | renders; 8/8 unit tests GREEN |
-| PF3 | `apps/web/app/payroll/[period]/page.tsx` — detail page with `PayrollSummaryCard` + `PayrollResultsTable` + employeeId filter | TBD | renders; typecheck pass |
+| PF2 | `apps/web/app/payroll/page.tsx` — hub page with Run Payroll button + `RunPayrollDialog` + `PayrollRunList` components | f692efe | renders; 8/8 unit tests GREEN |
+| PF3 | `apps/web/app/payroll/[period]/page.tsx` — detail page with `PayrollSummaryCard` + `PayrollResultsTable` + employeeId filter | f692efe | renders; typecheck pass; all 8 unit tests GREEN |
 
 ### Phase 7 — Frontend PR3: Integration + E2E tests
 
