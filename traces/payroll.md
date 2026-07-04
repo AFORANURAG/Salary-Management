@@ -83,4 +83,7 @@ Branch: `feat/payroll-fe-pr3-tests`
 
 ## Learnings
 
-_To be distilled into `.ai/rules/` after the module closes out._
+- **Standalone Next.js server requires static asset copy**: `.next/static/` must be copied to `.next/standalone/apps/web/.next/static/` before starting the standalone server. Without it, JS chunk 404s prevent React hydration and click handlers never fire in E2E tests.
+- **E2E period uniqueness**: Fixed period strings (e.g. `"2026-06"`) collide across test runs when the DB is not reset between runs. Use `Date.now()`-based year in a range unlikely to collide with real data (5000–9999) for E2E payroll period generation.
+- **Frontend plan gap**: The payroll spec had no `docs/plans/payroll.md` when the FE branches were created. Plan file should be created alongside the spec, not at spec closeout.
+- **Consolidating phases into one commit**: When all FE work is implemented in a single blob commit, it must be split across stacked branches retroactively using `git reset --mixed` to the intended base, then re-staging per phase. Keep phases separate from the start to avoid this.

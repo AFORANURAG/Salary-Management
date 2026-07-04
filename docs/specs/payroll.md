@@ -132,10 +132,10 @@ Pages and components in `apps/web`. Client data layer via `@salary-mgmt/store`
 
 ### Frontend Success Criteria
 
-- [ ] `/payroll` page is interactive: trigger a run, see the result, navigate to detail.
-- [ ] All non-negotiable frontend test cases pass (component + integration + E2E).
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
-- [ ] Playwright E2E suite passes against the running Docker stack.
+- [x] `/payroll` page is interactive: trigger a run, see the result, navigate to detail.
+- [x] All non-negotiable frontend test cases pass (component + integration + E2E).
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] Playwright E2E suite passes against the running Docker stack.
 
 ---
 
