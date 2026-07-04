@@ -61,9 +61,9 @@ Verification run (2026-07-04): `pnpm typecheck` clean; `pnpm lint` clean; 76/76 
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| SF1 | `getSalaryStructure`, `getSalaryStructureHistory`, `upsertSalaryStructure` API fns in `@salary-mgmt/store/src/api/salary-structure.ts` | _pending_ | store typecheck clean |
-| SF2 | `useSalaryStructure`, `useSalaryStructureHistory`, `useUpsertSalaryStructure` hooks; `salaryStructure` key family added to `queryKeys`; exported from store index | _pending_ | store typecheck clean |
-| SF3 | RED specs: `salary-structure-card.test.tsx` (3 specs), `salary-structure-history.test.tsx` (1 spec), `upsert-salary-structure-dialog.test.tsx` (3 specs) — all fail with missing component import | _pending_ | RED confirmed — 3 files fail for right reason |
+| SF1 | `getSalaryStructure`, `getSalaryStructureHistory`, `upsertSalaryStructure` API fns in `@salary-mgmt/store/src/api/salary-structure.ts` | 7bff673 | store typecheck clean |
+| SF2 | `useSalaryStructure`, `useSalaryStructureHistory`, `useUpsertSalaryStructure` hooks; `salaryStructure` key family added to `queryKeys`; exported from store index | 7bff673 | store typecheck clean |
+| SF3 | RED specs: `salary-structure-card.test.tsx` (3 specs), `salary-structure-history.test.tsx` (1 spec), `upsert-salary-structure-dialog.test.tsx` (3 specs) — all fail with missing component import | 7bff673 | RED confirmed — 3 files fail for right reason |
 
 ## Learnings
 
