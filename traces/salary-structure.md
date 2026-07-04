@@ -74,6 +74,14 @@ Verification run (2026-07-04): `pnpm typecheck` clean; `pnpm lint` clean; 76/76 
 | SF6 | `UpsertSalaryStructureDialog` — react-hook-form + zod + zodResolver; useFieldArray for dynamic component rows; 409 → field error; `valueAsNumber: true` on amount input | 1486027 | 34/34 web tests green |
 | SF7 | `apps/web/app/employees/[id]/page.tsx` wired with salary structure section; `@salary-mgmt/money` added to web deps + transpilePackages | 1486027 | typecheck clean |
 
+### Phase 6 — Frontend: integration + E2E tests
+
+| Task | Description | Commit | Verification |
+|---|---|---|---|
+| SF8 | MSW handlers `GET /salary-structure`, `GET /salary-structure/history`, `PUT /salary-structure` in `test/msw/handlers/salary-structure.ts`; wired into server | 6ecb01c | 36/36 web tests green |
+| SF9 | Integration tests: detail page renders card via real hook + MSW; upsert dialog PUTs and card re-fetches | 6ecb01c | 36/36 web tests green |
+| SF10 | E2E tests (Playwright): SF10a detail page shows structure, SF10b upsert updates card, SF10c history shows prior versions | 7d69bee | 3/3 E2E pass (full stack) |
+
 ## Learnings
 
 _To be distilled into `.ai/rules/` after the module closes out._

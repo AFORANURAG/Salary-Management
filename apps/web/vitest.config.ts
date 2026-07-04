@@ -8,6 +8,7 @@ export default defineConfig({
     environment: "./test/vitest-environment-jsdom-patched.ts",
     globals: true,
     setupFiles: ["./vitest.setup.ts"],
+    exclude: ["**/node_modules/**", "e2e/**"],
     pool: "forks",
     poolOptions: {
       forks: {
