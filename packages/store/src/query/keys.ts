@@ -28,6 +28,13 @@ export const queryKeys = {
     aggregates: (filters?: Record<string, unknown>) =>
       [...queryKeys.reporting.all(), "aggregates", { filters }] as const,
   },
+  salaryStructure: {
+    all: () => ["salaryStructure"] as const,
+    current: (employeeId: string) =>
+      [...queryKeys.salaryStructure.all(), employeeId, "current"] as const,
+    history: (employeeId: string) =>
+      [...queryKeys.salaryStructure.all(), employeeId, "history"] as const,
+  },
 } as const;
 
 export type QueryKeys = typeof queryKeys;

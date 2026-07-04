@@ -9,3 +9,8 @@ export {
   updateEmployee,
   deleteEmployee,
 } from "./api/employees";
+export {
+  getSalaryStructure,
+  getSalaryStructureHistory,
+  upsertSalaryStructure,
+} from "./api/salary-structure";

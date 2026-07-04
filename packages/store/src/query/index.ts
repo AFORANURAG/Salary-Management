@@ -4,6 +4,11 @@ export { useCreateEmployee, useUpdateEmployee, useDeleteEmployee } from "./emplo
 export { QueryProvider } from "./provider";
 export { queryKeys } from "./keys";
 export { useOptimisticMutation, type OptimisticMutationOptions } from "./mutations";
+export {
+  useSalaryStructure,
+  useSalaryStructureHistory,
+  useUpsertSalaryStructure,
+} from "./salary-structure";
 export { ApiError } from "../api/client";
 
 // Re-export the most commonly used TanStack Query hooks so consumers
