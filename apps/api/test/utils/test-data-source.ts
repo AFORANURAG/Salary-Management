@@ -1,5 +1,7 @@
 import { DataSource } from "typeorm";
 import { EmployeeEntity } from "../../src/employees/employee.entity";
+import { SalaryComponentEntity } from "../../src/salary/salary-component.entity";
+import { SalaryStructureEntity } from "../../src/salary/salary-structure.entity";
 
 const host = process.env.DB_HOST ?? "localhost";
 const port = Number(process.env.DB_PORT ?? 5432);
@@ -21,7 +23,7 @@ export const TestDataSource = new DataSource({
   username,
   password,
   database,
-  entities: [EmployeeEntity],
+  entities: [EmployeeEntity, SalaryStructureEntity, SalaryComponentEntity],
   synchronize: false,
   logging: false,
 });
@@ -42,5 +44,8 @@ export async function destroyTestDataSource(): Promise<void> {
 /** Truncate all domain tables (not the migrations table) for test isolation. */
 export async function truncateAll(): Promise<void> {
   const ds = await initTestDataSource();
-  await ds.query('TRUNCATE TABLE "employees" RESTART IDENTITY CASCADE');
+  // Order respects FK constraints: components → structures → employees
+  await ds.query(
+    'TRUNCATE TABLE "salary_components", "salary_structures", "employees" RESTART IDENTITY CASCADE',
+  );
 }

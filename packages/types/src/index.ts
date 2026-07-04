@@ -79,3 +79,39 @@ export interface EmployeeListQuery {
 
 export const EMPLOYEE_PAGE_SIZE_DEFAULT = 25;
 export const EMPLOYEE_PAGE_SIZE_MAX = 100;
+
+// ---------------------------------------------------------------------------
+// Salary Structure
+// ---------------------------------------------------------------------------
+
+export type ComponentKind = "EARNING" | "DEDUCTION";
+
+export interface SalaryComponent {
+  readonly id: string;
+  readonly structureId: string;
+  readonly code: string;
+  readonly kind: ComponentKind;
+  readonly amountMinor: number;
+}
+
+export interface SalaryStructure {
+  readonly id: string;
+  readonly employeeId: string;
+  readonly effectiveFrom: string;
+  readonly effectiveTo: string | null;
+  readonly currency: string;
+  readonly createdAt: string;
+  readonly components: readonly SalaryComponent[];
+}
+
+export interface ComponentInput {
+  readonly code: string;
+  readonly kind: ComponentKind;
+  readonly amountMinor: number;
+}
+
+export interface UpsertSalaryStructureInput {
+  readonly effectiveFrom: string;
+  readonly currency: string;
+  readonly components: readonly ComponentInput[];
+}
