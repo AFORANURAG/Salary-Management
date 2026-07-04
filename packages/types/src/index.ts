@@ -115,3 +115,31 @@ export interface UpsertSalaryStructureInput {
   readonly currency: string;
   readonly components: readonly ComponentInput[];
 }
+
+// ---------------------------------------------------------------------------
+// Payroll
+// ---------------------------------------------------------------------------
+
+export interface PayrollResult {
+  readonly id: string;
+  readonly employeeId: string;
+  readonly period: string;
+  readonly structureId: string;
+  readonly grossMinor: number;
+  readonly deductionsMinor: number;
+  readonly netMinor: number;
+  readonly currency: string;
+  readonly generatedAt: string;
+}
+
+export interface PayrollRunSummary {
+  readonly period: string;
+  readonly processed: number;
+  readonly skipped: readonly string[];
+  readonly totalGrossMinor: number;
+  readonly totalNetMinor: number;
+}
+
+export interface PayrollResultQuery {
+  readonly employeeId?: string;
+}
