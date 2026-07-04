@@ -19,8 +19,8 @@ commit as the task implementation (include the commit SHA).
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| PR4 | | | |
-| PR5 | | | |
+| PR4 | Unit specs: `computePayroll` (5 cases), `resolvePeriodStructure` (7 cases) | 000f951 | RED — `payroll.service.ts` not found |
+| PR5 | Integration specs: 10× POST runs, 2× GET summary, 3× GET results | 000f951 | RED — all routes 404 (controller not registered) |
 
 ### Phase 3 — GREEN
 
