@@ -78,9 +78,9 @@ Verification run (2026-07-04): `pnpm typecheck` clean; `pnpm lint` clean; 76/76 
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| SF8 | MSW handlers `GET /salary-structure`, `GET /salary-structure/history`, `PUT /salary-structure` in `test/msw/handlers/salary-structure.ts`; wired into server | TBD | 36/36 web tests green |
-| SF9 | Integration tests: detail page renders card via real hook + MSW; upsert dialog PUTs and card re-fetches | TBD | 36/36 web tests green |
-| SF10 | E2E tests (Playwright): SF10a detail page shows structure, SF10b upsert updates card, SF10c history shows prior versions | TBD | requires full stack |
+| SF8 | MSW handlers `GET /salary-structure`, `GET /salary-structure/history`, `PUT /salary-structure` in `test/msw/handlers/salary-structure.ts`; wired into server | 6ecb01c | 36/36 web tests green |
+| SF9 | Integration tests: detail page renders card via real hook + MSW; upsert dialog PUTs and card re-fetches | 6ecb01c | 36/36 web tests green |
+| SF10 | E2E tests (Playwright): SF10a detail page shows structure, SF10b upsert updates card, SF10c history shows prior versions | 6ecb01c | requires full stack |
 
 ## Learnings
 
