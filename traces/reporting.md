@@ -45,8 +45,8 @@ Branch: `feat/reporting-fe-pr1-hooks-red`
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| RF1 | | | |
-| RF2 | | | |
+| RF1 | `getReportingPayrollCost` + `getReportingSummary` API fns; `useReportingPayrollCost` + `useReportingSummary` hooks; `reporting.cost` + `reporting.summary` query keys; re-exported from store index | `feat(store): add reporting API fns, hooks, and RED unit specs (RF1-RF2)` | `pnpm --filter @salary-mgmt/store typecheck` clean |
+| RF2 | RED unit specs: `reporting-cost-table.test.tsx` (3 cases) + `reporting-summary-card.test.tsx` (2 cases) | (same commit) | RED — component files not found; 57 existing tests unaffected |
 
 ### Phase 5 — Frontend: Components + page wiring
 

@@ -16,6 +16,7 @@ export {
   useRunPayroll,
 } from "./payroll";
 export { usePayslipHistory, usePayslip } from "./payslips";
+export { useReportingPayrollCost, useReportingSummary } from "./reporting";
 export { ApiError } from "../api/client";
 
 // Re-export the most commonly used TanStack Query hooks so consumers
