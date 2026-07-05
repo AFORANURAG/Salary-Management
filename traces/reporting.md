@@ -23,10 +23,10 @@ Branch: `feat/reporting-pr2-test-harness`
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| RP4 | | | |
-| RP5 | | | |
-| RP6 | | | |
-| RP7 | | | |
+| RP4 | Unit spec `reporting.service.spec.ts`: `buildCostResponse` — 4 cases (by department, by country, by costCenter, empty rows) | `test(api): add failing reporting unit and integration specs (RP4-RP7)` | RED — `buildCostResponse` not exported from service |
+| RP5 | Unit spec `reporting.service.spec.ts`: `buildSummaryResponse` — 2 cases (single currency totals, multi-currency separate buckets) | (same commit) | RED — `buildSummaryResponse` not exported from service |
+| RP6 | Integration spec: `GET /v1/reporting/payroll-cost` — 6 cases (by department, by country, by costCenter null exclusion, 400 missing period, 400 invalid groupBy, empty buckets) | (same commit) | RED — route 404 (controller has no handler) |
+| RP7 | Integration spec: `GET /v1/reporting/payroll-summary` — 4 cases (totals, multi-currency buckets, 400 missing period, empty buckets) | (same commit) | RED — route 404 (controller has no handler) |
 
 ### Phase 3 — GREEN
 

@@ -64,13 +64,13 @@ Branch: `feat/reporting-pr2-test-harness`
 
 | Task | Description | Commit |
 |---|---|---|
-| RP4 | Unit spec: `ReportingService.getPayrollCost()` — 4 cases: groups by department, groups by country, groups by costCenter, skips employees with null costCenter when grouping by costCenter | |
-| RP5 | Unit spec: `ReportingService.getPayrollSummary()` — 2 cases: correct org-wide totals, multi-currency produces separate buckets (no cross-currency sum) | |
-| RP6 | Integration spec: `GET /v1/reporting/payroll-cost?period=&groupBy=department` — correct groups + headcounts; 400 on missing period; 400 on invalid groupBy | |
-| RP7 | Integration spec: `GET /v1/reporting/payroll-summary?period=` — correct totals; 400 on missing period; empty buckets when no results for period | |
+| RP4 | Unit spec: `ReportingService.getPayrollCost()` — 4 cases: groups by department, groups by country, groups by costCenter, skips employees with null costCenter when grouping by costCenter | `test(api): add failing reporting unit and integration specs (RP4-RP7)` |
+| RP5 | Unit spec: `ReportingService.getPayrollSummary()` — 2 cases: correct org-wide totals, multi-currency produces separate buckets (no cross-currency sum) | (same commit) |
+| RP6 | Integration spec: `GET /v1/reporting/payroll-cost?period=&groupBy=department` — correct groups + headcounts; 400 on missing period; 400 on invalid groupBy | (same commit) |
+| RP7 | Integration spec: `GET /v1/reporting/payroll-summary?period=` — correct totals; 400 on missing period; empty buckets when no results for period | (same commit) |
 
 **Acceptance**
-- [ ] All specs fail RED: routes 404, service not yet written — not harness errors.
+- [x] All specs fail RED: routes 404, service not yet written — not harness errors.
 
 ---
 
