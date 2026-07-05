@@ -156,18 +156,18 @@ Branch: `feat/payslips-fe-pr4-e2e`
 
 | Task | Description | Commit |
 |---|---|---|
-| PS19 | E2E: employee detail page shows payslip history list after a payroll run | `test(e2e): add payslip E2E specs` |
-| PS20 | E2E: clicking a period row navigates to the payslip detail page and shows correct line items | (same commit) |
-| PS21 | E2E: net pay on the payslip detail page matches the value shown in the history list row | (same commit) |
+| PS19 | E2E: employee detail page shows payslip history list after a payroll run | `efbf939` |
+| PS20 | E2E: clicking a period row navigates to the payslip detail page and shows correct line items | `efbf939` |
+| PS21 | E2E: net pay on the payslip detail page matches the value shown in the history list row | `efbf939` |
 
 **Acceptance**
-- [ ] 3/3 E2E tests GREEN against `docker compose up --build`.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` clean from repo root.
+- [x] 3/3 E2E tests GREEN against `docker compose up --build`.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` clean from repo root.
 
 ### Checkpoint: Complete
-- [ ] All spec Non-Negotiable Frontend Test Cases pass (unit + integration + E2E).
-- [ ] Frontend Success Criteria all satisfied.
-- [ ] Ready for review.
+- [x] All spec Non-Negotiable Frontend Test Cases pass (unit + integration + E2E).
+- [x] Frontend Success Criteria all satisfied.
+- [x] Ready for review.
 
 ---
 
