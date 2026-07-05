@@ -19,3 +19,4 @@ export {
   getPayrollSummary,
   getPayrollResults,
 } from "./api/payroll";
+export { getPayslipHistory, getPayslip } from "./api/payslips";
