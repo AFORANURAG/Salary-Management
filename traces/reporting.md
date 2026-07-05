@@ -74,9 +74,9 @@ Branch: `feat/reporting-fe-pr4-e2e`
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| RF9 | | | |
-| RF10 | | | |
-| RF11 | | | |
+| RF9 | E2E: `/reporting` page loads and shows summary card (currency) and cost table (department row) for a payroll period | `test(web): reporting E2E specs RF9-RF11` | GREEN against Docker stack |
+| RF10 | E2E: switching groupBy from `department` → `country` re-fetches and updates the column header | (same commit) | GREEN |
+| RF11 | E2E: cost table shows "No results for this period." for a period with no payroll run | (same commit) | GREEN |
 
 ---
 
