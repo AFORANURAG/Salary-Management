@@ -58,7 +58,8 @@ describe("buildCostResponse", () => {
     expect(response.period).toBe(period);
     expect(response.groupBy).toBe("department");
     expect(response.buckets).toHaveLength(1);
-    const bucket = response.buckets[0];
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const bucket = response.buckets[0]!;
     expect(bucket.currency).toBe("USD");
     expect(bucket.groups).toHaveLength(2);
     const eng = bucket.groups.find((g) => g.key === "Engineering");
@@ -90,10 +91,12 @@ describe("buildCostResponse", () => {
     const response = buildCostResponse(period, "country", rows);
 
     expect(response.buckets).toHaveLength(2);
-    const usd = response.buckets.find((b) => b.currency === "USD");
-    const inr = response.buckets.find((b) => b.currency === "INR");
-    expect(usd?.groups[0].key).toBe("US");
-    expect(inr?.groups[0].key).toBe("IN");
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const usd = response.buckets.find((b) => b.currency === "USD")!;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const inr = response.buckets.find((b) => b.currency === "INR")!;
+    expect(usd.groups[0]?.key).toBe("US");
+    expect(inr.groups[0]?.key).toBe("IN");
   });
 
   it("groups rows by costCenter, excluding null-key rows", () => {
@@ -114,7 +117,8 @@ describe("buildCostResponse", () => {
 
     expect(response.groupBy).toBe("costCenter");
     expect(response.buckets).toHaveLength(1);
-    expect(response.buckets[0].groups[0].key).toBe("CC-100");
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    expect(response.buckets[0]!.groups[0]?.key).toBe("CC-100");
   });
 
   it("returns empty buckets when no rows exist for the period", () => {
@@ -144,7 +148,8 @@ describe("buildSummaryResponse", () => {
 
     expect(response.period).toBe(period);
     expect(response.buckets).toHaveLength(1);
-    const bucket = response.buckets[0];
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const bucket = response.buckets[0]!;
     expect(bucket.currency).toBe("USD");
     expect(bucket.headcount).toBe(5);
     expect(bucket.grossMinor).toBe(3_000_000);
@@ -173,13 +178,13 @@ describe("buildSummaryResponse", () => {
     const response = buildSummaryResponse(period, rows);
 
     expect(response.buckets).toHaveLength(2);
-    const usd = response.buckets.find((b) => b.currency === "USD");
-    const inr = response.buckets.find((b) => b.currency === "INR");
-    expect(usd?.netMinor).toBe(1_620_000);
-    expect(inr?.netMinor).toBe(4_500_000);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const usd = response.buckets.find((b) => b.currency === "USD")!;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const inr = response.buckets.find((b) => b.currency === "INR")!;
+    expect(usd.netMinor).toBe(1_620_000);
+    expect(inr.netMinor).toBe(4_500_000);
     // Totals must NOT be blended
-    expect(usd?.grossMinor).not.toBe(
-      Number("1800000") + Number("5000000"),
-    );
+    expect(usd.grossMinor).not.toBe(Number("1800000") + Number("5000000"));
   });
 });

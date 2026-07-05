@@ -187,23 +187,52 @@ describe("Reporting (e2e)", () => {
 
   describe("GET /reporting/payroll-summary", () => {
     it("returns correct org-wide totals per currency for a period", async () => {
+      const summaryPeriod = "5100-04";
+      const emp1 = await persistEmployee({ currency: "USD" });
+      const emp2 = await persistEmployee({ currency: "USD" });
+
+      const s1 = await http
+        .put(`/v1/employees/${emp1.id}/salary-structure`)
+        .send(buildSalaryStructureInput({ effectiveFrom: "2025-01-01", currency: "USD" }));
+      const s2 = await http
+        .put(`/v1/employees/${emp2.id}/salary-structure`)
+        .send(buildSalaryStructureInput({ effectiveFrom: "2025-01-01", currency: "USD" }));
+
+      await persistPayrollResult({
+        employeeId: emp1.id,
+        structureId: s1.body.id,
+        period: summaryPeriod,
+        grossMinor: 600_000,
+        deductionsMinor: 60_000,
+        netMinor: 540_000,
+        currency: "USD",
+      });
+      await persistPayrollResult({
+        employeeId: emp2.id,
+        structureId: s2.body.id,
+        period: summaryPeriod,
+        grossMinor: 600_000,
+        deductionsMinor: 60_000,
+        netMinor: 540_000,
+        currency: "USD",
+      });
+
       const res = await http
         .get("/v1/reporting/payroll-summary")
-        .query({ period: PERIOD });
+        .query({ period: summaryPeriod });
 
       expect(res.status).toBe(200);
-      expect(res.body.period).toBe(PERIOD);
+      expect(res.body.period).toBe(summaryPeriod);
       expect(Array.isArray(res.body.buckets)).toBe(true);
 
       const usdBucket = res.body.buckets.find(
         (b: { currency: string }) => b.currency === "USD",
       );
       expect(usdBucket).toBeDefined();
-      expect(typeof usdBucket.grossMinor).toBe("number");
-      expect(typeof usdBucket.deductionsMinor).toBe("number");
-      expect(typeof usdBucket.netMinor).toBe("number");
-      expect(typeof usdBucket.headcount).toBe("number");
-      expect(usdBucket.headcount).toBeGreaterThanOrEqual(3);
+      expect(usdBucket.headcount).toBe(2);
+      expect(usdBucket.grossMinor).toBe(1_200_000);
+      expect(usdBucket.deductionsMinor).toBe(120_000);
+      expect(usdBucket.netMinor).toBe(1_080_000);
     });
 
     it("produces separate buckets for mixed-currency periods — no cross-currency sum", async () => {

@@ -34,10 +34,10 @@ Branch: `feat/reporting-pr3-implementation`
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| RP8 | | | |
-| RP9 | | | |
-| RP10 | | | |
-| RP11 | | | |
+| RP8 | `PayrollCostQueryDto` (`@Matches` period, `@IsIn` groupBy) + `PayrollSummaryQueryDto` (`period` only) in `src/reporting/dto/` | `feat(api): implement reporting GREEN phase — DTOs, service, controller (RP8-RP11)` | typecheck clean |
+| RP9 | `ReportingService.getPayrollCost()` — QueryBuilder JOIN + GROUP BY dimension+currency + SUM; null costCenter excluded; `buildCostResponse` pure helper exported for unit tests | (same commit) | 6 unit cases + integration cost cases green |
+| RP10 | `ReportingService.getPayrollSummary()` — QueryBuilder GROUP BY currency; `buildSummaryResponse` pure helper | (same commit) | 2 unit cases + integration summary cases green |
+| RP11 | `ReportingController` at `reporting/payroll-cost` + `reporting/payroll-summary`; `ReportingModule` fully wired | (same commit) | 130/130 tests green; typecheck + lint clean |
 
 ### Phase 4 — Frontend: Store hooks + RED specs
 
