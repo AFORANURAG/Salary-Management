@@ -143,3 +143,37 @@ export interface PayrollRunSummary {
 export interface PayrollResultQuery {
   readonly employeeId?: string;
 }
+
+// ---------------------------------------------------------------------------
+// Payslips
+// ---------------------------------------------------------------------------
+
+export interface PayslipLineItem {
+  readonly code: string;
+  readonly kind: ComponentKind;
+  readonly amountMinor: number;
+}
+
+export interface PayslipSummary {
+  readonly period: string;
+  readonly grossMinor: number;
+  readonly deductionsMinor: number;
+  readonly netMinor: number;
+  readonly currency: string;
+  readonly generatedAt: string;
+}
+
+export interface Payslip {
+  readonly period: string;
+  readonly generatedAt: string;
+  readonly employeeId: string;
+  readonly employeeCode: string;
+  readonly name: string;
+  readonly department: Department;
+  readonly country: string;
+  readonly currency: string;
+  readonly lineItems: readonly PayslipLineItem[];
+  readonly grossMinor: number;
+  readonly deductionsMinor: number;
+  readonly netMinor: number;
+}
