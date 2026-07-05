@@ -31,8 +31,10 @@ export const queryKeys = {
   },
   reporting: {
     all: () => ["reporting"] as const,
-    aggregates: (filters?: Record<string, unknown>) =>
-      [...queryKeys.reporting.all(), "aggregates", { filters }] as const,
+    cost: (period: string, groupBy: string) =>
+      [...queryKeys.reporting.all(), "cost", period, groupBy] as const,
+    summary: (period: string) =>
+      [...queryKeys.reporting.all(), "summary", period] as const,
   },
   salaryStructure: {
     all: () => ["salaryStructure"] as const,

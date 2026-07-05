@@ -104,12 +104,12 @@ Branch: `feat/reporting-fe-pr1-hooks-red`
 
 | Task | Description | Commit |
 |---|---|---|
-| RF1 | `packages/store`: `getPayrollCost`, `getPayrollSummary` API fns; `usePayrollCost`, `usePayrollSummary` hooks; `reporting` query-key family; re-export from store index | |
-| RF2 | RED unit specs: `reporting-cost-table.test.tsx` (3 cases — rows, loading skeleton, empty state); `reporting-summary-card.test.tsx` (2 cases — totals, loading skeleton) — fail because components not yet implemented | |
+| RF1 | `packages/store`: `getReportingPayrollCost`, `getReportingSummary` API fns; `useReportingPayrollCost`, `useReportingSummary` hooks; `reporting.cost` + `reporting.summary` query keys; re-exported from store index | `feat(store): add reporting API fns, hooks, and RED unit specs (RF1-RF2)` |
+| RF2 | RED unit specs: `reporting-cost-table.test.tsx` (3 cases — rows, skeleton, empty state); `reporting-summary-card.test.tsx` (2 cases — totals, skeleton) — fail because components not yet implemented | (same commit) |
 
 **Acceptance**
-- [ ] `pnpm --filter @salary-mgmt/store typecheck` passes.
-- [ ] Unit tests fail RED: component files not found.
+- [x] `pnpm --filter @salary-mgmt/store typecheck` passes.
+- [x] Unit tests fail RED: component files not found.
 
 ---
 
