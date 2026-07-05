@@ -139,17 +139,17 @@ Branch: `feat/reporting-fe-pr3-integration`
 
 | Task | Description | Commit |
 |---|---|---|
-| RF6 | MSW handlers in `test/msw/handlers/reporting.ts`: `GET /v1/reporting/payroll-cost` + `GET /v1/reporting/payroll-summary`; registered in `test/msw/server.ts` | |
-| RF7 | Integration: reporting page renders `ReportingCostTable` via real `usePayrollCost` + MSW | |
-| RF8 | Integration: reporting page renders `ReportingSummaryCard` via real `usePayrollSummary` + MSW | |
+| RF6 | MSW handlers in `test/msw/handlers/reporting.ts`: `GET /v1/reporting/payroll-cost` + `GET /v1/reporting/payroll-summary`; registered in `test/msw/server.ts` | `test(web): reporting MSW handlers and integration tests (RF6-RF8)` |
+| RF7 | Integration: reporting page renders `ReportingCostTable` with groups fetched via real `useReportingPayrollCost` + MSW | (same commit) |
+| RF8 | Integration: reporting page renders `ReportingSummaryCard` with currency bucket fetched via real `useReportingSummary` + MSW | (same commit) |
 
 **Acceptance**
-- [ ] 2/2 integration tests GREEN.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` clean from repo root.
+- [x] 2/2 integration tests GREEN.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` clean from repo root.
 
 ### Checkpoint: Integration green
-- [ ] All unit + integration tests pass.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] All unit + integration tests pass.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
 ---
 
