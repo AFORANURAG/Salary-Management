@@ -19,11 +19,13 @@ Branch: `feat/payslips-pr1-foundation`
 
 ### Phase 2 — RED
 
+Branch: `feat/payslips-pr2-test-harness`
+
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| PS4 | | | |
-| PS5 | | | |
-| PS6 | | | |
+| PS4 | Unit spec: `buildPayslip` — 4 cases (mixed, earnings-only, deductions-only, empty) | `4eef25f` | RED — `./payslips.service` not found |
+| PS5 | Integration spec: `GET /v1/employees/:id/payslips` — history newest-first, empty array, 404 unknown | `4eef25f` | RED — routes 404 (no controller) |
+| PS6 | Integration spec: `GET /v1/employees/:id/payslips/:period` — full payslip, 404 unknown employee, 404 no result for period | `4eef25f` | RED — routes 404 (no controller) |
 
 ### Phase 3 — GREEN
 
