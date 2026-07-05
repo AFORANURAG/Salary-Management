@@ -117,6 +117,7 @@ Pages and components in `apps/web`. Client data layer via `@salary-mgmt/store`
 |---|---|
 | Store API fns + hooks + RED component specs | `feat/payslips-fe-pr1-hooks-red` |
 | GREEN — components + page wiring | `feat/payslips-fe-pr2-components` |
-| Integration + E2E tests | `feat/payslips-fe-pr3-tests` |
+| Integration tests (MSW + real hooks) | `feat/payslips-fe-pr3-integration` |
+| E2E tests (Playwright, full stack) | `feat/payslips-fe-pr4-e2e` |
 
 Plan: [`docs/plans/payslips.md`](../plans/payslips.md) · Trace: [`traces/payslips.md`](../../traces/payslips.md)

@@ -29,11 +29,13 @@ Branch: `feat/payslips-pr2-test-harness`
 
 ### Phase 3 — GREEN
 
+Branch: `feat/payslips-pr3-implementation`
+
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| PS7 | | | |
-| PS8 | | | |
-| PS9 | | | |
+| PS7 | `PayslipsService.getHistory()` — asserts employee exists, queries `payroll_results` by `employeeId` ordered `period DESC`, maps to `PayslipSummary[]` | `c2477a6` | integration history + empty array specs green |
+| PS8 | `PayslipsService.getPayslip()` — asserts employee exists, loads `PayrollResult` for `(employeeId, period)`, loads `SalaryComponent` rows by `structureId`, calls `buildPayslip()` | `c2477a6` | all unit + integration specs green |
+| PS9 | `PayslipsController` at `employees/:employeeId/payslips`; `PayslipsModule` wired with controller + service; fix: controller path must not include `v1` prefix (global prefix adds it) | `c2477a6` | 114/114 tests green; typecheck + lint clean |
 
 ### Phase 4 — Frontend: Store hooks + RED specs
 
@@ -51,14 +53,25 @@ Branch: `feat/payslips-pr2-test-harness`
 | PS14 | | | |
 | PS15 | | | |
 
-### Phase 6 — Frontend: Integration + E2E tests
+### Phase 6 — Frontend: Integration tests (MSW + real hooks)
+
+Branch: `feat/payslips-fe-pr3-integration`
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
 | PS16 | | | |
 | PS17 | | | |
 | PS18 | | | |
+
+### Phase 7 — Frontend: E2E tests (Playwright, full stack)
+
+Branch: `feat/payslips-fe-pr4-e2e`
+
+| Task | Description | Commit | Verification |
+|---|---|---|---|
 | PS19 | | | |
+| PS20 | | | |
+| PS21 | | | |
 
 ---
 
@@ -77,4 +90,4 @@ Branch: `feat/payslips-pr2-test-harness`
 
 ## Learnings
 
-_To be filled during implementation._
+- Controller path must not include the `v1` prefix — `app.setGlobalPrefix("v1")` in `test-app.ts` and `main.ts` prepends it; doubling it causes all routes to 404.

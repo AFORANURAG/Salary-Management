@@ -130,19 +130,37 @@ Branch: `feat/payslips-fe-pr2-components`
 
 ---
 
-### Phase 6 — Frontend PR3: Integration + E2E tests
+### Phase 6 — Frontend PR3: Integration tests (MSW + real hooks)
 
-Branch: `feat/payslips-fe-pr3-tests`
+Branch: `feat/payslips-fe-pr3-integration`
 
 | Task | Description | Commit |
 |---|---|---|
-| PS16 | MSW handlers: `GET /v1/employees/:id/payslips` + `GET /v1/employees/:id/payslips/:period`; add to shared handler array | `test(web): payslip MSW handlers, integration tests, and E2E specs` |
+| PS16 | MSW handlers: `GET /v1/employees/:id/payslips` + `GET /v1/employees/:id/payslips/:period`; add to shared handler array in `test/msw/server.ts` | `test(web): add payslip MSW handlers and integration tests` |
 | PS17 | Integration: employee detail page renders `PayslipHistoryList` via real `usePayslipHistory` + MSW | (same commit) |
 | PS18 | Integration: payslip detail page renders `PayslipCard` via real `usePayslip` + MSW | (same commit) |
-| PS19 | E2E: employee detail page shows history after a payroll run; clicking a period navigates to detail; net pay matches | (same commit) |
 
 **Acceptance**
 - [ ] 2/2 integration tests GREEN.
+- [ ] `pnpm typecheck && pnpm lint && pnpm test` clean from repo root.
+
+### Checkpoint: Integration green
+- [ ] All unit + integration tests pass.
+- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+
+---
+
+### Phase 7 — Frontend PR4: E2E tests (Playwright, full stack)
+
+Branch: `feat/payslips-fe-pr4-e2e`
+
+| Task | Description | Commit |
+|---|---|---|
+| PS19 | E2E: employee detail page shows payslip history list after a payroll run | `test(e2e): add payslip E2E specs` |
+| PS20 | E2E: clicking a period row navigates to the payslip detail page and shows correct line items | (same commit) |
+| PS21 | E2E: net pay on the payslip detail page matches the value shown in the history list row | (same commit) |
+
+**Acceptance**
 - [ ] 3/3 E2E tests GREEN against `docker compose up --build`.
 - [ ] `pnpm typecheck && pnpm lint && pnpm test` clean from repo root.
 
