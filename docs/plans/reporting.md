@@ -80,21 +80,21 @@ Branch: `feat/reporting-pr3-implementation`
 
 | Task | Description | Commit |
 |---|---|---|
-| RP8 | `PayrollCostQueryDto` (`@IsString @IsNotEmpty period`, `@IsIn(['department','country','costCenter']) groupBy`) + `PayrollSummaryQueryDto` (`period` only) | |
-| RP9 | `ReportingService.getPayrollCost(period, groupBy)` — single `QueryBuilder` with `JOIN employees`, `GROUP BY` on dimension + currency, `SUM` on gross/deductions/net, `COUNT` headcount; excludes null costCenter rows when `groupBy=costCenter` | |
-| RP10 | `ReportingService.getPayrollSummary(period)` — single `QueryBuilder` grouping by `currency` only; returns `PayrollSummaryResponse` | |
-| RP11 | `ReportingController` at `/reporting` with `GET payroll-cost` and `GET payroll-summary`; `ReportingModule` wired with controller + service + TypeORM repos | |
+| RP8 | `PayrollCostQueryDto` (`@Matches` period regex, `@IsIn` groupBy) + `PayrollSummaryQueryDto` (`period` only) | `feat(api): implement reporting GREEN phase — DTOs, service, controller (RP8-RP11)` |
+| RP9 | `ReportingService.getPayrollCost()` — `QueryBuilder` JOIN employees, GROUP BY dimension + currency, SUM amounts, COUNT headcount; null costCenter excluded when groupBy=costCenter; `buildCostResponse` pure helper | (same commit) |
+| RP10 | `ReportingService.getPayrollSummary()` — `QueryBuilder` GROUP BY currency only; `buildSummaryResponse` pure helper | (same commit) |
+| RP11 | `ReportingController` at `/reporting`; `ReportingModule` wired with controller + service | (same commit) |
 
 **Acceptance**
-- [ ] All unit specs GREEN.
-- [ ] All integration specs GREEN.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] All unit specs GREEN.
+- [x] All integration specs GREEN.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
 ### Checkpoint: Backend complete
-- [ ] Non-negotiable test cases all covered and green.
-- [ ] Grouped totals equal sum of underlying `PayrollResult` rows (no double-counting).
-- [ ] Mixed-currency data is reported per currency, never summed across currencies.
-- [ ] Grouping by each of department / country / costCenter returns correct keys and headcounts.
+- [x] Non-negotiable test cases all covered and green.
+- [x] Grouped totals equal sum of underlying `PayrollResult` rows (no double-counting).
+- [x] Mixed-currency data is reported per currency, never summed across currencies.
+- [x] Grouping by each of department / country / costCenter returns correct keys and headcounts.
 
 ---
 
