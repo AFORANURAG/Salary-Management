@@ -63,9 +63,9 @@ Branch: `feat/payslips-fe-pr3-integration`
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| PS16 | MSW handlers in `test/msw/handlers/payslips.ts`: `GET /v1/employees/:id/payslips` + `GET /v1/employees/:id/payslips/:period`; registered in `test/msw/server.ts` | `this commit` | server picks up handlers; existing 57 tests unaffected |
-| PS17 | Integration: `payslip-history.integration.test.tsx` — `EmployeeDetailPage` renders period rows via real `usePayslipHistory` + MSW | `this commit` | GREEN |
-| PS18 | Integration: `payslip-detail.integration.test.tsx` — `PayslipDetailPage` renders name, employeeCode, line items via real `usePayslip` + MSW | `this commit` | GREEN; 57/57 tests pass; typecheck + lint clean |
+| PS16 | MSW handlers in `test/msw/handlers/payslips.ts`: `GET /v1/employees/:id/payslips` + `GET /v1/employees/:id/payslips/:period`; registered in `test/msw/server.ts` | `065c82f` | server picks up handlers; existing 57 tests unaffected |
+| PS17 | Integration: `payslip-history.integration.test.tsx` — `EmployeeDetailPage` renders period rows via real `usePayslipHistory` + MSW | `065c82f` | GREEN |
+| PS18 | Integration: `payslip-detail.integration.test.tsx` — `PayslipDetailPage` renders name, employeeCode, line items via real `usePayslip` + MSW | `065c82f` | GREEN; 57/57 tests pass; typecheck + lint clean |
 
 ### Phase 7 — Frontend: E2E tests (Playwright, full stack)
 
