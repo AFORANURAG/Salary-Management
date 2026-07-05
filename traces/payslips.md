@@ -9,11 +9,13 @@ commit as the task implementation (include the commit SHA).
 
 ### Phase 1 — Foundation
 
+Branch: `feat/payslips-pr1-foundation`
+
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| PS1 | `PayslipLineItem`, `PayslipSummary`, `Payslip` interfaces added to `@salary-mgmt/types` | this commit | types build + typecheck pass |
-| PS2 | `PayslipsModule` wired with `TypeOrmModule.forFeature([PayrollResultEntity, SalaryStructureEntity, SalaryComponentEntity, EmployeeEntity])`; registered in `AppModule` (already present) | this commit | app boots; `pnpm --filter api typecheck` clean |
-| PS3 | Verified `TestDataSource` + `truncateAll` require no changes — `payroll_results` CASCADE already covers all tables in FK order | this commit | 104/104 existing tests green |
+| PS1 | `PayslipLineItem`, `PayslipSummary`, `Payslip` interfaces added to `@salary-mgmt/types` | `7f97b5e` | types build + typecheck pass |
+| PS2 | `PayslipsModule` wired with `TypeOrmModule.forFeature([PayrollResultEntity, SalaryStructureEntity, SalaryComponentEntity, EmployeeEntity])`; registered in `AppModule` (already present) | `7f97b5e` | app boots; `pnpm --filter api typecheck` clean |
+| PS3 | Verified `TestDataSource` + `truncateAll` require no changes — `payroll_results` CASCADE already covers all tables in FK order | `7f97b5e` | 104/104 existing tests green |
 
 ### Phase 2 — RED
 
