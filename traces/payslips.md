@@ -11,9 +11,9 @@ commit as the task implementation (include the commit SHA).
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| PS1 | | | |
-| PS2 | | | |
-| PS3 | | | |
+| PS1 | `PayslipLineItem`, `PayslipSummary`, `Payslip` interfaces added to `@salary-mgmt/types` | this commit | types build + typecheck pass |
+| PS2 | `PayslipsModule` wired with `TypeOrmModule.forFeature([PayrollResultEntity, SalaryStructureEntity, SalaryComponentEntity, EmployeeEntity])`; registered in `AppModule` (already present) | this commit | app boots; `pnpm --filter api typecheck` clean |
+| PS3 | Verified `TestDataSource` + `truncateAll` require no changes — `payroll_results` CASCADE already covers all tables in FK order | this commit | 104/104 existing tests green |
 
 ### Phase 2 — RED
 
