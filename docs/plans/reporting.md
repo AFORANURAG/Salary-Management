@@ -119,17 +119,17 @@ Branch: `feat/reporting-fe-pr2-components`
 
 | Task | Description | Commit |
 |---|---|---|
-| RF3 | `ReportingSummaryCard` component — per-currency buckets: gross, deductions, net totals; loading skeleton | |
-| RF4 | `ReportingCostTable` component — period + groupBy selector (department / country / costCenter); results table with key, headcount, gross, net, currency; loading skeleton; empty state | |
-| RF5 | New route `apps/web/app/reporting/page.tsx` — renders `ReportingSummaryCard` + `ReportingCostTable`; add link from nav | |
+| RF3 | `ReportingSummaryCard` component — per-currency buckets: gross, deductions, net totals, headcount; loading skeleton | `feat(web): reporting components and page — GREEN (RF3-RF5)` |
+| RF4 | `ReportingCostTable` component — grouped results table with key, headcount, gross, deductions, net, currency columns; loading skeleton; empty state ("No results for this period.") | (same commit) |
+| RF5 | New route `apps/web/app/reporting/page.tsx` — period month picker + groupBy selector; renders `ReportingSummaryCard` + `ReportingCostTable` | (same commit) |
 
 **Acceptance**
-- [ ] All unit specs from RF2 GREEN.
-- [ ] `pnpm --filter web typecheck` passes.
+- [x] All unit specs from RF2 GREEN.
+- [x] `pnpm --filter web typecheck` passes.
 
 ### Checkpoint: GREEN
-- [ ] Employee reporting page renders both components.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] Employee reporting page renders both components.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
 ---
 
