@@ -7,6 +7,7 @@ import { Badge, Button, Skeleton } from "@salary-mgmt/ui";
 import { SalaryStructureCard } from "./components/salary-structure-card";
 import { SalaryStructureHistory } from "./components/salary-structure-history";
 import { UpsertSalaryStructureDialog } from "./components/upsert-salary-structure-dialog";
+import { PayslipHistoryList } from "./components/payslip-history-list";
 
 const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive"> = {
   ACTIVE: "default",
@@ -81,6 +82,11 @@ export default function EmployeeDetailPage() {
         </div>
         <SalaryStructureCard employeeId={id} onSetStructure={() => setUpsertOpen(true)} />
         <SalaryStructureHistory employeeId={id} />
+      </div>
+
+      <div className="space-y-2">
+        <h2 className="text-base font-semibold">Payslips</h2>
+        <PayslipHistoryList employeeId={id} />
       </div>
 
       <UpsertSalaryStructureDialog

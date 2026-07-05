@@ -114,19 +114,19 @@ Branch: `feat/payslips-fe-pr2-components`
 
 | Task | Description | Commit |
 |---|---|---|
-| PS12 | `PayslipHistoryList` component — renders period rows, loading skeleton, empty state; row click navigates to `/employees/[id]/payslips/[period]` | `feat(web): add payslip components and pages — GREEN` |
-| PS13 | Wire `PayslipHistoryList` into existing `/employees/[id]/page.tsx` below the salary structure section | (same commit) |
-| PS14 | `PayslipCard` component — earnings table, deductions table, gross/deductions/net footer, loading skeleton | (same commit) |
-| PS15 | New route `apps/web/app/employees/[id]/payslips/[period]/page.tsx` — renders `PayslipCard` | (same commit) |
+| PS12 | `PayslipHistoryList` component — renders period rows, loading skeleton, empty state; row click navigates to `/employees/[id]/payslips/[period]` | `f854610` |
+| PS13 | Wire `PayslipHistoryList` into existing `/employees/[id]/page.tsx` below the salary structure section | `f854610` |
+| PS14 | `PayslipCard` component — earnings table, deductions table, gross/deductions/net footer, loading skeleton | `f854610` |
+| PS15 | New route `apps/web/app/employees/[id]/payslips/[period]/page.tsx` — renders `PayslipCard` | `f854610` |
 
 **Acceptance**
-- [ ] All unit specs from PS11 GREEN.
-- [ ] `pnpm --filter web typecheck` passes.
+- [x] All unit specs from PS11 GREEN.
+- [x] `pnpm --filter web typecheck` passes.
 
 ### Checkpoint: GREEN
-- [ ] Employee detail page renders payslip history section.
-- [ ] Payslip detail page renders full breakdown.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] Employee detail page renders payslip history section.
+- [x] Payslip detail page renders full breakdown.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
 ---
 
