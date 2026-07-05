@@ -73,9 +73,9 @@ Branch: `feat/payslips-fe-pr4-e2e`
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| PS19 | | | |
-| PS20 | | | |
-| PS21 | | | |
+| PS19 | E2E: employee detail page shows payslip history list after a payroll run; creates employee + salary structure + runs payroll via API, then asserts period link visible | `efbf939` | requires full Docker stack |
+| PS20 | E2E: clicking a period row navigates to `/employees/[id]/payslips/[period]` and renders BASIC/HRA/PF line items | `efbf939` | requires full Docker stack |
+| PS21 | E2E: net pay text from history row link matches the value displayed on the payslip detail page | `efbf939` | requires full Docker stack |
 
 ---
 
