@@ -41,9 +41,9 @@ GET /employees/:id/payslips/:period         → full payslip breakdown for that 
 
 ## Success Criteria
 
-- [ ] Payslip view renders full line-item breakdown for any past period.
-- [ ] History index correctly enumerates an employee's pay periods.
-- [ ] Values are read from snapshots, verified identical to the originating run.
+- [x] Payslip view renders full line-item breakdown for any past period.
+- [x] History index correctly enumerates an employee's pay periods.
+- [x] Values are read from snapshots, verified identical to the originating run.
 
 ## Frontend
 
@@ -91,11 +91,11 @@ Pages and components in `apps/web`. Client data layer via `@salary-mgmt/store`
 
 ### Frontend Success Criteria
 
-- [ ] Employee detail page shows payslip history list or a clear empty state.
-- [ ] Payslip detail page shows full earnings/deductions/net breakdown.
-- [ ] All non-negotiable frontend test cases pass (unit + integration + E2E).
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
-- [ ] Playwright E2E suite passes against the running Docker stack.
+- [x] Employee detail page shows payslip history list or a clear empty state.
+- [x] Payslip detail page shows full earnings/deductions/net breakdown.
+- [x] All non-negotiable frontend test cases pass (unit + integration + E2E).
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] Playwright E2E suite passes against the running Docker stack.
 
 ## Open Questions
 

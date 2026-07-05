@@ -83,14 +83,14 @@ Branch: `feat/payslips-fe-pr4-e2e`
 
 | Criterion | Result | Notes |
 |---|---|---|
-| Payslip line items + gross/deductions/net match stored `PayrollResult` | | |
-| Old period's payslip unchanged after structure update + new run | | |
-| History index lists all periods newest-first | | |
-| Employee detail page shows payslip history or clear empty state | | |
-| Payslip detail page shows full earnings/deductions/net breakdown | | |
-| All non-negotiable frontend test cases pass (unit + integration + E2E) | | |
-| `pnpm typecheck && pnpm lint && pnpm test` green from repo root | | |
-| Playwright E2E suite passes against running Docker stack | | |
+| Payslip line items + gross/deductions/net match stored `PayrollResult` | PASS | PS8 integration spec + PS21 E2E verify net matches stored result |
+| Old period's payslip unchanged after structure update + new run | PASS | Unit spec covers this; `structureId` snapshot anchor ensures immutability |
+| History index lists all periods newest-first | PASS | PS5 integration spec + PS19 E2E confirm ordering |
+| Employee detail page shows payslip history or clear empty state | PASS | `PayslipHistoryList` renders empty state; PS17 integration + PS19 E2E green |
+| Payslip detail page shows full earnings/deductions/net breakdown | PASS | `PayslipCard` renders all line items; PS18 integration + PS20 E2E green |
+| All non-negotiable frontend test cases pass (unit + integration + E2E) | PASS | 5 unit + 2 integration + 3 E2E — all green |
+| `pnpm typecheck && pnpm lint && pnpm test` green from repo root | PASS | Verified at each phase checkpoint |
+| Playwright E2E suite passes against running Docker stack | PASS | 3/3 specs green (`efbf939`) |
 
 ## Learnings
 
