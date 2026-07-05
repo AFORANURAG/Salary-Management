@@ -47,14 +47,14 @@ Branch: `feat/reporting-pr1-foundation`
 
 | Task | Description | Commit |
 |---|---|---|
-| RP1 | `packages/types`: add `GroupByDimension` enum (`department \| country \| costCenter`), `PayrollCostGroup`, `PayrollCostBucket`, `PayrollCostResponse`, `PayrollSummaryResponse` interfaces | |
-| RP2 | Wire `ReportingModule`: replace placeholder with `TypeOrmModule.forFeature([PayrollResultEntity, EmployeeEntity])`; register `ReportingController` + `ReportingService` stubs; confirm `AppModule` already imports `ReportingModule` | |
-| RP3 | Verify all existing tests still green; no harness changes needed (no new entities) | |
+| RP1 | `packages/types`: add `GroupByDimension` enum (`department \| country \| costCenter`), `PayrollCostGroup`, `PayrollCostBucket`, `PayrollCostResponse`, `PayrollSummaryResponse` interfaces | `feat(types,api): add reporting types and wire ReportingModule` |
+| RP2 | Wire `ReportingModule`: replace placeholder with `TypeOrmModule.forFeature([PayrollResultEntity, EmployeeEntity])`; register `ReportingController` + `ReportingService` stubs; confirm `AppModule` already imports `ReportingModule` | (same commit) |
+| RP3 | Verify all existing tests still green; no harness changes needed (no new entities) | (same commit) |
 
 **Acceptance**
-- [ ] New types exported from `@salary-mgmt/types`; `pnpm --filter @salary-mgmt/types build && pnpm typecheck` pass.
-- [ ] `ReportingModule` boots with stub controller/service; `pnpm --filter api typecheck` clean.
-- [ ] All existing tests remain green.
+- [x] New types exported from `@salary-mgmt/types`; `pnpm --filter @salary-mgmt/types build && pnpm typecheck` pass.
+- [x] `ReportingModule` boots with stub controller/service; `pnpm --filter api typecheck` clean.
+- [x] All existing tests remain green.
 
 ---
 

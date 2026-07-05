@@ -177,3 +177,41 @@ export interface Payslip {
   readonly deductionsMinor: number;
   readonly netMinor: number;
 }
+
+// ---------------------------------------------------------------------------
+// Reporting
+// ---------------------------------------------------------------------------
+
+export type GroupByDimension = "department" | "country" | "costCenter";
+
+export interface PayrollCostGroup {
+  readonly key: string;
+  readonly headcount: number;
+  readonly grossMinor: number;
+  readonly deductionsMinor: number;
+  readonly netMinor: number;
+}
+
+export interface PayrollCostBucket {
+  readonly currency: string;
+  readonly groups: readonly PayrollCostGroup[];
+}
+
+export interface PayrollCostResponse {
+  readonly period: string;
+  readonly groupBy: GroupByDimension;
+  readonly buckets: readonly PayrollCostBucket[];
+}
+
+export interface PayrollSummaryBucket {
+  readonly currency: string;
+  readonly grossMinor: number;
+  readonly deductionsMinor: number;
+  readonly netMinor: number;
+  readonly headcount: number;
+}
+
+export interface PayrollSummaryResponse {
+  readonly period: string;
+  readonly buckets: readonly PayrollSummaryBucket[];
+}

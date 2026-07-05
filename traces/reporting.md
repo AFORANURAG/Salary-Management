@@ -13,9 +13,9 @@ Branch: `feat/reporting-pr1-foundation`
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| RP1 | | | |
-| RP2 | | | |
-| RP3 | | | |
+| RP1 | `GroupByDimension`, `PayrollCostGroup`, `PayrollCostBucket`, `PayrollCostResponse`, `PayrollSummaryBucket`, `PayrollSummaryResponse` added to `@salary-mgmt/types` | `feat(types,api): add reporting types and wire ReportingModule` | types build + typecheck pass |
+| RP2 | `ReportingModule` wired with `TypeOrmModule.forFeature([PayrollResultEntity, EmployeeEntity])`; stub `ReportingController` + `ReportingService` registered; `AppModule` already imported it | (same commit) | app boots; `pnpm --filter api typecheck` clean |
+| RP3 | No harness changes needed — no new entities; 114/114 existing tests green | (same commit) | 114/114 green |
 
 ### Phase 2 — RED
 
