@@ -52,10 +52,10 @@ Branch: `feat/payslips-fe-pr2-components`
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| PS12 | `PayslipHistoryList` — period rows with net pay via `formatMinor`, loading skeleton (`data-slot="skeleton"`), empty state ("No payslips found."); each row is a `Link` to the payslip detail route | `this commit` | unit spec 3/3 GREEN |
-| PS13 | `PayslipHistoryList` wired into `/employees/[id]/page.tsx` below salary structure section | `this commit` | typecheck clean |
-| PS14 | `PayslipCard` — earnings table, deductions table, gross/deductions/net summary footer, loading skeleton; located at `payslips/[period]/components/payslip-card.tsx` | `this commit` | unit spec 2/2 GREEN |
-| PS15 | New route `apps/web/app/employees/[id]/payslips/[period]/page.tsx` — client page rendering `PayslipCard` with `id` + `period` params | `this commit` | typecheck clean; 55/55 tests green |
+| PS12 | `PayslipHistoryList` — period rows with net pay via `formatMinor`, loading skeleton (`data-slot="skeleton"`), empty state ("No payslips found."); each row is a `Link` to the payslip detail route | `f854610` | unit spec 3/3 GREEN |
+| PS13 | `PayslipHistoryList` wired into `/employees/[id]/page.tsx` below salary structure section | `f854610` | typecheck clean |
+| PS14 | `PayslipCard` — earnings table, deductions table, gross/deductions/net summary footer, loading skeleton; located at `payslips/[period]/components/payslip-card.tsx` | `f854610` | unit spec 2/2 GREEN |
+| PS15 | New route `apps/web/app/employees/[id]/payslips/[period]/page.tsx` — client page rendering `PayslipCard` with `id` + `period` params | `f854610` | typecheck clean; 55/55 tests green |
 
 ### Phase 6 — Frontend: Integration tests (MSW + real hooks)
 
