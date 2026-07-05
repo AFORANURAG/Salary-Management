@@ -48,7 +48,7 @@ Branch: `feat/reporting-fe-pr1-hooks-red`
 | RF1 | | | |
 | RF2 | | | |
 
-### Phase 5 — Frontend: Components + page wiring + integration tests
+### Phase 5 — Frontend: Components + page wiring
 
 Branch: `feat/reporting-fe-pr2-components`
 
@@ -57,7 +57,26 @@ Branch: `feat/reporting-fe-pr2-components`
 | RF3 | | | |
 | RF4 | | | |
 | RF5 | | | |
+
+### Phase 6 — Frontend: Integration tests (MSW + real hooks)
+
+Branch: `feat/reporting-fe-pr3-integration`
+
+| Task | Description | Commit | Verification |
+|---|---|---|---|
 | RF6 | | | |
+| RF7 | | | |
+| RF8 | | | |
+
+### Phase 7 — Frontend: E2E tests (Playwright, full stack)
+
+Branch: `feat/reporting-fe-pr4-e2e`
+
+| Task | Description | Commit | Verification |
+|---|---|---|---|
+| RF9 | | | |
+| RF10 | | | |
+| RF11 | | | |
 
 ---
 
@@ -70,7 +89,8 @@ Branch: `feat/reporting-fe-pr2-components`
 | Grouping by department / country / costCenter returns correct keys and headcounts | | |
 | Reporting page shows grouped cost breakdown with period + groupBy controls | | |
 | Summary card shows org-wide totals per currency | | |
-| All non-negotiable frontend test cases pass (unit + integration) | | |
+| All non-negotiable frontend test cases pass (unit + integration + E2E) | | |
 | `pnpm typecheck && pnpm lint && pnpm test` green from repo root | | |
+| Playwright E2E suite passes against running Docker stack | | |
 
 ## Learnings

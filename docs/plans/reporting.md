@@ -121,17 +121,54 @@ Branch: `feat/reporting-fe-pr2-components`
 |---|---|---|
 | RF3 | `ReportingSummaryCard` component — per-currency buckets: gross, deductions, net totals; loading skeleton | |
 | RF4 | `ReportingCostTable` component — period + groupBy selector (department / country / costCenter); results table with key, headcount, gross, net, currency; loading skeleton; empty state | |
-| RF5 | New route `apps/web/app/reporting/page.tsx` — renders `ReportingSummaryCard` + `ReportingCostTable`; link from nav | |
-| RF6 | MSW handlers: `GET /v1/reporting/payroll-cost` + `GET /v1/reporting/payroll-summary`; integration tests: reporting page renders both components via real hooks + MSW | |
+| RF5 | New route `apps/web/app/reporting/page.tsx` — renders `ReportingSummaryCard` + `ReportingCostTable`; add link from nav | |
 
 **Acceptance**
 - [ ] All unit specs from RF2 GREEN.
-- [ ] 2/2 integration tests GREEN.
 - [ ] `pnpm --filter web typecheck` passes.
+
+### Checkpoint: GREEN
+- [ ] Employee reporting page renders both components.
 - [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
+---
+
+### Phase 6 — Frontend PR3: Integration tests (MSW + real hooks)
+
+Branch: `feat/reporting-fe-pr3-integration`
+
+| Task | Description | Commit |
+|---|---|---|
+| RF6 | MSW handlers in `test/msw/handlers/reporting.ts`: `GET /v1/reporting/payroll-cost` + `GET /v1/reporting/payroll-summary`; registered in `test/msw/server.ts` | |
+| RF7 | Integration: reporting page renders `ReportingCostTable` via real `usePayrollCost` + MSW | |
+| RF8 | Integration: reporting page renders `ReportingSummaryCard` via real `usePayrollSummary` + MSW | |
+
+**Acceptance**
+- [ ] 2/2 integration tests GREEN.
+- [ ] `pnpm typecheck && pnpm lint && pnpm test` clean from repo root.
+
+### Checkpoint: Integration green
+- [ ] All unit + integration tests pass.
+- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+
+---
+
+### Phase 7 — Frontend PR4: E2E tests (Playwright, full stack)
+
+Branch: `feat/reporting-fe-pr4-e2e`
+
+| Task | Description | Commit |
+|---|---|---|
+| RF9 | E2E: `/reporting` page loads and shows the summary card and cost table for a past payroll period | |
+| RF10 | E2E: selecting a groupBy dimension (department → country) re-fetches and updates the cost table rows | |
+| RF11 | E2E: cost table shows empty state when no payroll run exists for the entered period | |
+
+**Acceptance**
+- [ ] 3/3 E2E tests GREEN against `docker compose up --build`.
+- [ ] `pnpm typecheck && pnpm lint && pnpm test` clean from repo root.
+
 ### Checkpoint: Complete
-- [ ] All spec Non-Negotiable Test Cases pass.
+- [ ] All spec Non-Negotiable Test Cases pass (unit + integration + E2E).
 - [ ] Frontend Success Criteria all satisfied.
 - [ ] Ready for review.
 
@@ -144,4 +181,4 @@ Branch: `feat/reporting-fe-pr2-components`
 | `costCenter` is null for many employees — confusing empty groups | Med | Exclude null rows from costCenter grouping; document in response (no phantom empty-string group) |
 | Multi-currency response shape unfamiliar to frontend | Med | Define `PayrollCostBucket[]` type clearly; MSW fixture covers multi-currency case |
 | QueryBuilder JOIN produces duplicate rows on multi-result joins | Med | Use `addGroupBy` on all non-aggregate SELECT columns; verify with unit tests |
-| No E2E branch for reporting | Low | Frontend phase 5 combines components + integration in one branch — E2E deferred; can add as phase 6 if needed |
+| E2E period collisions across test runs | Med | Use `Date.now()`-based year (5000–9999 range) per test, same pattern as payroll E2E |

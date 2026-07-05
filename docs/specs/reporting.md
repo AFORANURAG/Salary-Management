@@ -84,15 +84,21 @@ Pages and components in `apps/web`. Client data layer via `@salary-mgmt/store`
 - `ReportingSummaryCard` renders loading skeleton while `isLoading` is true.
 
 **Integration (real hooks + MSW, jsdom)**
-- Reporting page renders `ReportingCostTable` with data from real `usePayrollCost` hook + MSW.
-- Reporting page renders `ReportingSummaryCard` with data from real `usePayrollSummary` hook + MSW.
+- Reporting page renders `ReportingCostTable` with data from real `usePayrollCost` hook + MSW `GET /v1/reporting/payroll-cost`.
+- Reporting page renders `ReportingSummaryCard` with data from real `usePayrollSummary` hook + MSW `GET /v1/reporting/payroll-summary`.
+
+**E2E (Playwright, full stack)**
+- `/reporting` page loads and shows the summary card and cost table for a past payroll period.
+- Selecting a different groupBy dimension re-fetches and updates the cost table rows.
+- Cost table shows empty state when no payroll run exists for the entered period.
 
 ### Frontend Success Criteria
 
 - [ ] Reporting page shows grouped cost breakdown with period + groupBy controls.
 - [ ] Summary card shows org-wide totals per currency.
-- [ ] All non-negotiable frontend test cases pass (unit + integration).
+- [ ] All non-negotiable frontend test cases pass (unit + integration + E2E).
 - [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [ ] Playwright E2E suite passes against the running Docker stack.
 
 ## Open Questions
 
@@ -114,6 +120,8 @@ Pages and components in `apps/web`. Client data layer via `@salary-mgmt/store`
 | Phase | Branch |
 |---|---|
 | Store API fns + hooks + RED component specs | `feat/reporting-fe-pr1-hooks-red` |
-| GREEN — components + page wiring + integration tests | `feat/reporting-fe-pr2-components` |
+| GREEN — components + page wiring | `feat/reporting-fe-pr2-components` |
+| Integration tests (MSW + real hooks) | `feat/reporting-fe-pr3-integration` |
+| E2E tests (Playwright, full stack) | `feat/reporting-fe-pr4-e2e` |
 
 Plan: [`docs/plans/reporting.md`](../plans/reporting.md) · Trace: [`traces/reporting.md`](../../traces/reporting.md)
