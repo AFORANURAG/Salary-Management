@@ -136,17 +136,17 @@ Branch: `feat/payslips-fe-pr3-integration`
 
 | Task | Description | Commit |
 |---|---|---|
-| PS16 | MSW handlers: `GET /v1/employees/:id/payslips` + `GET /v1/employees/:id/payslips/:period`; add to shared handler array in `test/msw/server.ts` | `test(web): add payslip MSW handlers and integration tests` |
-| PS17 | Integration: employee detail page renders `PayslipHistoryList` via real `usePayslipHistory` + MSW | (same commit) |
-| PS18 | Integration: payslip detail page renders `PayslipCard` via real `usePayslip` + MSW | (same commit) |
+| PS16 | MSW handlers: `GET /v1/employees/:id/payslips` + `GET /v1/employees/:id/payslips/:period`; add to shared handler array in `test/msw/server.ts` | `065c82f` |
+| PS17 | Integration: employee detail page renders `PayslipHistoryList` via real `usePayslipHistory` + MSW | `065c82f` |
+| PS18 | Integration: payslip detail page renders `PayslipCard` via real `usePayslip` + MSW | `065c82f` |
 
 **Acceptance**
-- [ ] 2/2 integration tests GREEN.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` clean from repo root.
+- [x] 2/2 integration tests GREEN.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` clean from repo root.
 
 ### Checkpoint: Integration green
-- [ ] All unit + integration tests pass.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] All unit + integration tests pass.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
 ---
 
