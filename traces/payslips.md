@@ -27,9 +27,9 @@ commit as the task implementation (include the commit SHA).
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| PS7 | | | |
-| PS8 | | | |
-| PS9 | | | |
+| PS7 | `PayslipsService.getHistory()` — asserts employee exists, queries `payroll_results` by `employeeId` ordered `period DESC`, maps to `PayslipSummary[]` | this commit | integration history + empty array specs green |
+| PS8 | `PayslipsService.getPayslip()` — asserts employee exists, loads `PayrollResult` for `(employeeId, period)`, loads `SalaryComponent` rows by `structureId`, calls `buildPayslip()` | this commit | all unit + integration specs green |
+| PS9 | `PayslipsController` at `employees/:employeeId/payslips`; `PayslipsModule` wired with controller + service; fix: controller path must not include `v1` prefix (global prefix adds it) | this commit | 114/114 tests green; typecheck + lint clean |
 
 ### Phase 4 — Frontend: Store hooks + RED specs
 
