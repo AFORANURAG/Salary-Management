@@ -19,9 +19,9 @@ commit as the task implementation (include the commit SHA).
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| PS4 | | | |
-| PS5 | | | |
-| PS6 | | | |
+| PS4 | Unit spec: `buildPayslip` — 4 cases (mixed, earnings-only, deductions-only, empty) | this commit | RED — `./payslips.service` not found |
+| PS5 | Integration spec: `GET /v1/employees/:id/payslips` — history newest-first, empty array, 404 unknown | this commit | RED — routes 404 (no controller) |
+| PS6 | Integration spec: `GET /v1/employees/:id/payslips/:period` — full payslip, 404 unknown employee, 404 no result for period | this commit | RED — routes 404 (no controller) |
 
 ### Phase 3 — GREEN
 
