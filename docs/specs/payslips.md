@@ -45,6 +45,78 @@ GET /employees/:id/payslips/:period         → full payslip breakdown for that 
 - [ ] History index correctly enumerates an employee's pay periods.
 - [ ] Values are read from snapshots, verified identical to the originating run.
 
+## Frontend
+
+Pages and components in `apps/web`. Client data layer via `@salary-mgmt/store`
+(TanStack Query + typed API client). UI primitives from `@salary-mgmt/ui`.
+
+### Pages / Routes
+
+| Route | Description |
+|---|---|
+| `/employees/[id]` | Extend existing detail page: add payslip history section (period list, newest first) |
+| `/employees/[id]/payslips/[period]` | Full payslip view — earnings table, deductions table, net summary |
+
+### Components
+
+| Component | Description |
+|---|---|
+| `PayslipHistoryList` | List of past pay periods on the employee detail page. Each row shows `period`, `grossMinor`, `netMinor`, `currency`. Row click navigates to `/employees/[id]/payslips/[period]`. Loading skeleton and empty state (no runs yet). |
+| `PayslipCard` | Full payslip on the detail route. Shows employee identity (name, code, department, country), currency, period, earnings table, deductions table, gross/deductions/net summary footer. |
+
+### Data Layer (hooks in `@salary-mgmt/store`)
+
+| Hook | Used by |
+|---|---|
+| `usePayslipHistory(employeeId: string)` | `PayslipHistoryList` — fetches all periods for the employee |
+| `usePayslip(employeeId: string, period: string)` | `PayslipCard` — fetches full breakdown for one period |
+
+### Non-Negotiable Frontend Test Cases
+
+**Unit / component (mocked hooks, jsdom)**
+- `PayslipHistoryList` renders one row per history item with correct period and net amount.
+- `PayslipHistoryList` renders loading skeleton while `isLoading` is true.
+- `PayslipHistoryList` renders empty state when the employee has no pay runs.
+- `PayslipCard` renders earnings rows, deductions rows, gross, deductions total, and net pay.
+- `PayslipCard` renders loading skeleton while `isLoading` is true.
+
+**Integration (real hooks + MSW, jsdom)**
+- Employee detail page renders `PayslipHistoryList` with data from real `usePayslipHistory` hook + MSW `GET /v1/employees/:id/payslips`.
+- Payslip detail page renders `PayslipCard` with data from real `usePayslip` hook + MSW `GET /v1/employees/:id/payslips/:period`.
+
+**E2E (Playwright, full stack)**
+- Employee detail page shows the payslip history list after a payroll run.
+- Clicking a period row navigates to the payslip detail page and shows the correct line items.
+- Net pay on the payslip matches the value shown in the history list row.
+
+### Frontend Success Criteria
+
+- [ ] Employee detail page shows payslip history list or a clear empty state.
+- [ ] Payslip detail page shows full earnings/deductions/net breakdown.
+- [ ] All non-negotiable frontend test cases pass (unit + integration + E2E).
+- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [ ] Playwright E2E suite passes against the running Docker stack.
+
 ## Open Questions
 
 - Any required payslip fields beyond the breakdown above (employer details, tax IDs)? (Note: statutory content is out of scope.)
+
+## Implementation
+
+### Backend
+
+| Phase | Branch |
+|---|---|
+| Types, module wiring, test harness update | `feat/payslips-pr1-foundation` |
+| RED — unit + integration specs | `feat/payslips-pr2-test-harness` |
+| GREEN — service, controller, module | `feat/payslips-pr3-implementation` |
+
+### Frontend
+
+| Phase | Branch |
+|---|---|
+| Store API fns + hooks + RED component specs | `feat/payslips-fe-pr1-hooks-red` |
+| GREEN — components + page wiring | `feat/payslips-fe-pr2-components` |
+| Integration + E2E tests | `feat/payslips-fe-pr3-tests` |
+
+Plan: [`docs/plans/payslips.md`](../plans/payslips.md) · Trace: [`traces/payslips.md`](../../traces/payslips.md)
