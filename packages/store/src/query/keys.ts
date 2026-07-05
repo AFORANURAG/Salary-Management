@@ -24,6 +24,8 @@ export const queryKeys = {
   },
   payslips: {
     all: () => ["payslips"] as const,
+    history: (employeeId: string) =>
+      [...queryKeys.payslips.all(), employeeId, "history"] as const,
     detail: (employeeId: string, period?: string) =>
       [...queryKeys.payslips.all(), employeeId, { period }] as const,
   },

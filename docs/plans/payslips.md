@@ -44,14 +44,14 @@ Branch: `feat/payslips-pr1-foundation`
 
 | Task | Description | Commit |
 |---|---|---|
-| PS1 | `packages/types`: add `PayslipSummary` and `Payslip` + `PayslipLineItem` interfaces | `feat(types,api): add payslip type contracts and wire payslips module` |
-| PS2 | Wire `PayslipsModule`: import `TypeOrmModule.forFeature([PayrollResultEntity, SalaryStructureEntity, SalaryComponentEntity, EmployeeEntity])`; register in `AppModule` | (same commit) |
-| PS3 | Extend `TestDataSource` entities list + `truncateAll` if needed; verify existing 104 tests still green | (same commit) |
+| PS1 | `packages/types`: add `PayslipSummary` and `Payslip` + `PayslipLineItem` interfaces | `7f97b5e` |
+| PS2 | Wire `PayslipsModule`: import `TypeOrmModule.forFeature([PayrollResultEntity, SalaryStructureEntity, SalaryComponentEntity, EmployeeEntity])`; register in `AppModule` | `7f97b5e` |
+| PS3 | Extend `TestDataSource` entities list + `truncateAll` if needed; verify existing 104 tests still green | `7f97b5e` |
 
 **Acceptance**
-- [ ] `PayslipSummary` and `Payslip` exported from `@salary-mgmt/types`; build + typecheck pass.
-- [ ] `PayslipsModule` registered in `AppModule`; app boots.
-- [ ] All existing tests remain green.
+- [x] `PayslipSummary` and `Payslip` exported from `@salary-mgmt/types`; build + typecheck pass.
+- [x] `PayslipsModule` registered in `AppModule`; app boots.
+- [x] All existing tests remain green.
 
 ---
 
@@ -61,12 +61,12 @@ Branch: `feat/payslips-pr2-test-harness`
 
 | Task | Description | Commit |
 |---|---|---|
-| PS4 | Unit spec: `PayslipsService.buildPayslip()` — assembles `Payslip` from a `PayrollResult` + related `SalaryComponent` rows; 4 cases (earnings only, deductions only, mixed, empty components) | `test(api): add failing payslip unit and integration specs` |
-| PS5 | Integration spec: `GET /v1/employees/:id/payslips` — returns history newest-first; 404 for unknown employee; empty array when no runs | (same commit) |
-| PS6 | Integration spec: `GET /v1/employees/:id/payslips/:period` — returns full payslip; 404 for unknown employee; 404 for period with no result | (same commit) |
+| PS4 | Unit spec: `PayslipsService.buildPayslip()` — assembles `Payslip` from a `PayrollResult` + related `SalaryComponent` rows; 4 cases (earnings only, deductions only, mixed, empty components) | `4eef25f` |
+| PS5 | Integration spec: `GET /v1/employees/:id/payslips` — returns history newest-first; 404 for unknown employee; empty array when no runs | `4eef25f` |
+| PS6 | Integration spec: `GET /v1/employees/:id/payslips/:period` — returns full payslip; 404 for unknown employee; 404 for period with no result | `4eef25f` |
 
 **Acceptance**
-- [ ] All specs fail RED: routes 404, service not yet written — not harness errors.
+- [x] All specs fail RED: routes 404, service not yet written — not harness errors.
 
 ---
 
@@ -76,20 +76,20 @@ Branch: `feat/payslips-pr3-implementation`
 
 | Task | Description | Commit |
 |---|---|---|
-| PS7 | `PayslipsService.getHistory(employeeId)` — validates employee exists; queries `payroll_results` by `employeeId` ordered by `period DESC`; maps to `PayslipSummary[]` | `feat(api): implement payslips GREEN — service, controller, module` |
-| PS8 | `PayslipsService.getPayslip(employeeId, period)` — validates employee; loads `PayrollResult` for `(employeeId, period)`; joins `SalaryComponent` rows by `structureId`; builds `Payslip` via `buildPayslip()` | (same commit) |
-| PS9 | `PayslipsController` at `employees/:employeeId/payslips`; `PayslipsModule` wired with all 4 TypeORM repos | (same commit) |
+| PS7 | `PayslipsService.getHistory(employeeId)` — validates employee exists; queries `payroll_results` by `employeeId` ordered by `period DESC`; maps to `PayslipSummary[]` | `c2477a6` |
+| PS8 | `PayslipsService.getPayslip(employeeId, period)` — validates employee; loads `PayrollResult` for `(employeeId, period)`; joins `SalaryComponent` rows by `structureId`; builds `Payslip` via `buildPayslip()` | `c2477a6` |
+| PS9 | `PayslipsController` at `employees/:employeeId/payslips`; `PayslipsModule` wired with all 4 TypeORM repos | `c2477a6` |
 
 **Acceptance**
-- [ ] All unit specs GREEN.
-- [ ] All integration specs GREEN.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] All unit specs GREEN.
+- [x] All integration specs GREEN.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
 ### Checkpoint: Backend complete
-- [ ] Non-negotiable test cases all covered and green.
-- [ ] Payslip line items + gross/deductions/net match stored `PayrollResult`.
-- [ ] Old period's payslip unchanged after structure update + new run.
-- [ ] History lists all periods newest-first.
+- [x] Non-negotiable test cases all covered and green.
+- [x] Payslip line items + gross/deductions/net match stored `PayrollResult`.
+- [x] Old period's payslip unchanged after structure update + new run.
+- [x] History lists all periods newest-first.
 
 ---
 
@@ -99,12 +99,12 @@ Branch: `feat/payslips-fe-pr1-hooks-red`
 
 | Task | Description | Commit |
 |---|---|---|
-| PS10 | `packages/store`: `getPayslipHistory`, `getPayslip` API fns; `usePayslipHistory`, `usePayslip` hooks; `payslips` query-key family; re-export from store index | `feat(store): add payslip API fns, hooks, and RED unit specs` |
-| PS11 | RED unit specs: `payslip-history-list.test.tsx` (3 cases), `payslip-card.test.tsx` (2 cases) — fail because components not yet implemented | (same commit) |
+| PS10 | `packages/store`: `getPayslipHistory`, `getPayslip` API fns; `usePayslipHistory`, `usePayslip` hooks; `payslips` query-key family; re-export from store index | `2518623` |
+| PS11 | RED unit specs: `payslip-history-list.test.tsx` (3 cases), `payslip-card.test.tsx` (2 cases) — fail because components not yet implemented | `2518623` |
 
 **Acceptance**
-- [ ] `pnpm --filter @salary-mgmt/store typecheck` passes.
-- [ ] Unit tests fail RED: component files not found.
+- [x] `pnpm --filter @salary-mgmt/store typecheck` passes.
+- [x] Unit tests fail RED: component files not found.
 
 ---
 
