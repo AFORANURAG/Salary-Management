@@ -54,9 +54,9 @@ Branch: `feat/reporting-fe-pr2-components`
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| RF3 | | | |
-| RF4 | | | |
-| RF5 | | | |
+| RF3 | `ReportingSummaryCard` — per-currency buckets with gross/deductions/net/headcount; loading skeleton | `feat(web): reporting components and page — GREEN (RF3-RF5)` | unit spec 2/2 GREEN |
+| RF4 | `ReportingCostTable` — grouped results table; loading skeleton; empty state | (same commit) | unit spec 3/3 GREEN |
+| RF5 | `/reporting/page.tsx` — period month picker + groupBy selector; renders both components | (same commit) | typecheck clean; 62/62 tests green |
 
 ### Phase 6 — Frontend: Integration tests (MSW + real hooks)
 
