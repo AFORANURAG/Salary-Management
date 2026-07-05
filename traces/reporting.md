@@ -64,9 +64,9 @@ Branch: `feat/reporting-fe-pr3-integration`
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| RF6 | | | |
-| RF7 | | | |
-| RF8 | | | |
+| RF6 | MSW handlers `reportingHandlers` in `test/msw/handlers/reporting.ts`; registered in `test/msw/server.ts` | `test(web): reporting MSW handlers and integration tests (RF6-RF8)` | server picks up handlers; existing 62 tests unaffected |
+| RF7 | Integration: `reporting-cost.integration.test.tsx` — `ReportingPage` renders Engineering + Sales group keys via real `useReportingPayrollCost` + MSW | (same commit) | GREEN |
+| RF8 | Integration: `reporting-summary.integration.test.tsx` — `ReportingPage` renders USD currency bucket via real `useReportingSummary` + MSW | (same commit) | GREEN; 64/64 tests pass; typecheck + lint clean |
 
 ### Phase 7 — Frontend: E2E tests (Playwright, full stack)
 
