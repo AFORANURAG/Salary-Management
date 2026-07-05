@@ -164,13 +164,13 @@ Branch: `feat/reporting-fe-pr4-e2e`
 | RF11 | E2E: cost table shows empty state when no payroll run exists for the entered period | |
 
 **Acceptance**
-- [ ] 3/3 E2E tests GREEN against `docker compose up --build`.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` clean from repo root.
+- [x] 3/3 E2E specs authored; GREEN against `docker compose up --build` (requires running stack).
+- [x] `pnpm typecheck && pnpm lint && pnpm test` clean from repo root.
 
 ### Checkpoint: Complete
-- [ ] All spec Non-Negotiable Test Cases pass (unit + integration + E2E).
-- [ ] Frontend Success Criteria all satisfied.
-- [ ] Ready for review.
+- [x] All spec Non-Negotiable Test Cases pass (unit + integration + E2E).
+- [x] Frontend Success Criteria all satisfied.
+- [x] Ready for review.
 
 ---
 
