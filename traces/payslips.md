@@ -43,8 +43,8 @@ Branch: `feat/payslips-fe-pr1-hooks-red`
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
-| PS10 | `getPayslipHistory`, `getPayslip` API fns in `@salary-mgmt/store/src/api/payslips.ts`; `usePayslipHistory`, `usePayslip` hooks in `query/payslips.ts`; `history` key added to `payslips` query-key family; re-exported from `query/index.ts` and `index.ts` | this commit | `pnpm --filter @salary-mgmt/store typecheck` clean |
-| PS11 | RED unit specs: `payslip-history-list.test.tsx` (3 cases — rows, skeleton, empty state); `payslip-card.test.tsx` (2 cases — line items, skeleton) | this commit | RED — component files not found |
+| PS10 | `getPayslipHistory`, `getPayslip` API fns in `@salary-mgmt/store/src/api/payslips.ts`; `usePayslipHistory`, `usePayslip` hooks in `query/payslips.ts`; `history` key added to `payslips` query-key family; re-exported from `query/index.ts` and `index.ts` | `2518623` | `pnpm --filter @salary-mgmt/store typecheck` clean |
+| PS11 | RED unit specs: `payslip-history-list.test.tsx` (3 cases — rows, skeleton, empty state); `payslip-card.test.tsx` (2 cases — line items, skeleton) | `2518623` | RED — component files not found |
 
 ### Phase 5 — Frontend: Components + page wiring
 
