@@ -61,9 +61,9 @@ Response: `{ data: Employee[], page, pageSize, total }`.
 
 ## Success Criteria
 
-- [ ] List endpoint p95 < 300ms locally over 10k seeded rows on indexed queries.
-- [ ] Pagination returns correct `total` and stable ordering across pages.
-- [ ] CRUD enforces uniqueness on `employeeCode` and `email`.
+- [x] List endpoint p95 < 300ms locally over 10k seeded rows on indexed queries.
+- [x] Pagination returns correct `total` and stable ordering across pages.
+- [x] CRUD enforces uniqueness on `employeeCode` and `email`.
 
 ## Frontend
 
@@ -143,11 +143,11 @@ Pages and components in `apps/web`. Client data layer via `@salary-mgmt/store`
 
 ### Frontend Success Criteria
 
-- [ ] `/employees` is interactive: search, filter, sort, and paginate work end-to-end
+- [x] `/employees` is interactive: search, filter, sort, and paginate work end-to-end
       against the running API.
-- [ ] All non-negotiable frontend test cases pass (unit + integration + E2E).
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
-- [ ] Playwright E2E suite passes against the running Docker stack.
+- [x] All non-negotiable frontend test cases pass (unit + integration + E2E).
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] Playwright E2E suite passes against the running Docker stack.
 
 ## Open Questions
 

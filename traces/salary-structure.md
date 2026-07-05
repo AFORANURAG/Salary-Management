@@ -82,6 +82,18 @@ Verification run (2026-07-04): `pnpm typecheck` clean; `pnpm lint` clean; 76/76 
 | SF9 | Integration tests: detail page renders card via real hook + MSW; upsert dialog PUTs and card re-fetches | 6ecb01c | 36/36 web tests green |
 | SF10 | E2E tests (Playwright): SF10a detail page shows structure, SF10b upsert updates card, SF10c history shows prior versions | 7d69bee | 3/3 E2E pass (full stack) |
 
+## Spec closeout — Frontend
+
+| Criterion | Result | Notes |
+|---|---|---|
+| Employee detail page shows active salary structure or clear empty state | PASS | `SalaryStructureCard` loading skeleton + empty state (SF4) |
+| Upsert dialog validates client-side; surfaces 409 conflicts as field errors | PASS | zod + zodResolver + 409 → field error mapping (SF6) |
+| History collapses cleanly; each version's effective date range is readable | PASS | `SalaryStructureHistory` collapsible list (SF5) |
+| All non-negotiable frontend test cases pass (unit + integration + E2E) | PASS | 36 unit/integration green (SF8–SF9); 3/3 E2E green (SF10) |
+| `pnpm typecheck && pnpm lint && pnpm test` green from repo root | PASS | verified at SF10 closeout, commit `7d69bee` |
+
 ## Learnings
 
-_To be distilled into `.ai/rules/` after the module closes out._
+- `@salary-mgmt/money` must be added to `apps/web` `package.json` dependencies and to `transpilePackages` in `next.config.mjs` before it can be imported in browser code — it ships TypeScript source.
+- `useFieldArray` from `react-hook-form` requires `valueAsNumber: true` on numeric inputs; omitting it causes zod to receive strings and fail integer validation.
+- Playwright locators for dynamically added rows need index-scoped selectors; relying on last-child is fragile when rows reorder.

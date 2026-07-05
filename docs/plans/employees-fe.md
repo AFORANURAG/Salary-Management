@@ -52,23 +52,23 @@ Branch: `feat/employees-fe-pr1-foundation`
 | EF3 | Add Vitest + Testing Library config to `apps/web` (vitest.config, test setup, render helper with Providers) | `test(web): add vitest and testing-library config` |
 
 **EF1 acceptance**
-- [ ] `Table`, `TableHeader`, `TableBody`, `TableRow`, `TableHead`, `TableCell` exported from `@salary-mgmt/ui`.
-- [ ] `Select`, `SelectTrigger`, `SelectContent`, `SelectItem`, `SelectValue` exported from `@salary-mgmt/ui`.
-- [ ] Verification: `pnpm --filter @salary-mgmt/ui typecheck`.
+- [x] `Table`, `TableHeader`, `TableBody`, `TableRow`, `TableHead`, `TableCell` exported from `@salary-mgmt/ui`.
+- [x] `Select`, `SelectTrigger`, `SelectContent`, `SelectItem`, `SelectValue` exported from `@salary-mgmt/ui`.
+- [x] Verification: `pnpm --filter @salary-mgmt/ui typecheck`.
 
 **EF2 acceptance**
-- [ ] All five API functions typed against `@salary-mgmt/types` contracts; `EmployeeListQuery` serialised to query string correctly.
-- [ ] Re-exported from `@salary-mgmt/store` index.
-- [ ] Verification: `pnpm --filter @salary-mgmt/store typecheck`.
+- [x] All five API functions typed against `@salary-mgmt/types` contracts; `EmployeeListQuery` serialised to query string correctly.
+- [x] Re-exported from `@salary-mgmt/store` index.
+- [x] Verification: `pnpm --filter @salary-mgmt/store typecheck`.
 
 **EF3 acceptance**
-- [ ] A trivial render test (`renders without crashing`) passes.
-- [ ] `jsdom` environment, `@testing-library/jest-dom` matchers available.
-- [ ] Verification: `pnpm --filter web test`.
+- [x] A trivial render test (`renders without crashing`) passes.
+- [x] `jsdom` environment, `@testing-library/jest-dom` matchers available.
+- [x] Verification: `pnpm --filter web test`.
 
 ### Checkpoint: Foundation
-- [ ] `pnpm typecheck && pnpm lint` clean across workspace.
-- [ ] Trivial web test green.
+- [x] `pnpm typecheck && pnpm lint` clean across workspace.
+- [x] Trivial web test green.
 
 ---
 
@@ -80,38 +80,38 @@ All tests in this phase must **fail for the right reason** (missing components /
 hooks, not harness errors). Commit as RED; do not implement until Phase 3.
 
 **EF4 — Hook tests** (unit; `packages/store/src/__tests__/employees.test.ts`)
-Commit: `test(store): add failing employee hook specs`
+Commit: `test(store): add failing employee hook specs` (`309d6ab`)
 
-- [ ] `useEmployees` — called with a query, issues a `GET /v1/employees?…` request; returns `PaginatedResponse<Employee>`.
-- [ ] `useEmployee` — called with an id, issues `GET /v1/employees/:id`; returns `Employee`.
-- [ ] `useCreateEmployee` — mutation posts to `POST /v1/employees`, invalidates `employees.lists()` key on success.
-- [ ] `useUpdateEmployee` — mutation patches `PATCH /v1/employees/:id`, invalidates `employees.lists()` and `employees.detail(id)` on success.
-- [ ] `useDeleteEmployee` — mutation deletes `DELETE /v1/employees/:id`, invalidates `employees.lists()` on success.
+- [x] `useEmployees` — called with a query, issues a `GET /v1/employees?…` request; returns `PaginatedResponse<Employee>`.
+- [x] `useEmployee` — called with an id, issues `GET /v1/employees/:id`; returns `Employee`.
+- [x] `useCreateEmployee` — mutation posts to `POST /v1/employees`, invalidates `employees.lists()` key on success.
+- [x] `useUpdateEmployee` — mutation patches `PATCH /v1/employees/:id`, invalidates `employees.lists()` and `employees.detail(id)` on success.
+- [x] `useDeleteEmployee` — mutation deletes `DELETE /v1/employees/:id`, invalidates `employees.lists()` on success.
 
 **EF5 — Component tests** (medium; `apps/web/app/employees/__tests__/`)
-Commit: `test(web): add failing employee component specs`
+Commit: `test(web): add failing employee component specs` (`0a512c8`)
 
-- [ ] `EmployeeList` renders column headings: Name, Code, Email, Department, Country, Status, Joining Date.
-- [ ] `EmployeeList` renders one row per employee in mock data.
-- [ ] `EmployeeList` renders loading skeleton while `isLoading` is true.
-- [ ] `EmployeeList` renders empty-state message when `data.total === 0`.
-- [ ] `EmployeeList` renders error message when query is in error state.
-- [ ] `EmployeeSearch` debounces input — value is not propagated on every keystroke.
-- [ ] `EmployeeFilters` — selecting a department filter calls `onFilterChange` with the correct value.
-- [ ] `EmployeeFilters` — selecting a status filter calls `onFilterChange` with the correct value.
-- [ ] `EmployeePagination` — clicking Next calls `onPageChange(currentPage + 1)`.
-- [ ] `EmployeePagination` — clicking Previous calls `onPageChange(currentPage - 1)`.
-- [ ] `EmployeePagination` — Previous is disabled on page 1.
-- [ ] `EmployeePagination` — Next is disabled on the last page.
-- [ ] `CreateEmployeeDialog` — submitting valid form calls `createEmployee` mutation.
-- [ ] `CreateEmployeeDialog` — submitting with empty required fields shows validation errors without calling the API.
-- [ ] `EditEmployeeDialog` — all fields pre-populated from the passed employee record.
-- [ ] `DeleteEmployeeDialog` — clicking Cancel closes the dialog without calling the API.
-- [ ] `DeleteEmployeeDialog` — clicking Confirm calls `deleteEmployee` mutation.
+- [x] `EmployeeList` renders column headings: Name, Code, Email, Department, Country, Status, Joining Date.
+- [x] `EmployeeList` renders one row per employee in mock data.
+- [x] `EmployeeList` renders loading skeleton while `isLoading` is true.
+- [x] `EmployeeList` renders empty-state message when `data.total === 0`.
+- [x] `EmployeeList` renders error message when query is in error state.
+- [x] `EmployeeSearch` debounces input — value is not propagated on every keystroke.
+- [x] `EmployeeFilters` — selecting a department filter calls `onFilterChange` with the correct value.
+- [x] `EmployeeFilters` — selecting a status filter calls `onFilterChange` with the correct value.
+- [x] `EmployeePagination` — clicking Next calls `onPageChange(currentPage + 1)`.
+- [x] `EmployeePagination` — clicking Previous calls `onPageChange(currentPage - 1)`.
+- [x] `EmployeePagination` — Previous is disabled on page 1.
+- [x] `EmployeePagination` — Next is disabled on the last page.
+- [x] `CreateEmployeeDialog` — submitting valid form calls `createEmployee` mutation.
+- [x] `CreateEmployeeDialog` — submitting with empty required fields shows validation errors without calling the API.
+- [x] `EditEmployeeDialog` — all fields pre-populated from the passed employee record.
+- [x] `DeleteEmployeeDialog` — clicking Cancel closes the dialog without calling the API.
+- [x] `DeleteEmployeeDialog` — clicking Confirm calls `deleteEmployee` mutation.
 
 ### Checkpoint: RED confirmed
-- [ ] EF4 + EF5 run and fail for the right reason (no components/hooks yet).
-- [ ] Go/no-go gate before any implementation.
+- [x] EF4 + EF5 run and fail for the right reason (no components/hooks yet).
+- [x] Go/no-go gate before any implementation.
 
 ---
 
@@ -129,14 +129,14 @@ Branch: `feat/employees-fe-pr3-list`
 | EF11 | `/employees/[id]` detail page — fetch one employee, display all fields read-only | `feat(web): add employee detail page` |
 
 **EF6–EF11 acceptance**
-- [ ] All EF4 hook tests green.
-- [ ] All EF5 component tests for list/search/filters/pagination green.
-- [ ] Verification: `pnpm --filter @salary-mgmt/store typecheck && pnpm --filter web typecheck && pnpm --filter web test`.
+- [x] All EF4 hook tests green.
+- [x] All EF5 component tests for list/search/filters/pagination green.
+- [x] Verification: `pnpm --filter @salary-mgmt/store typecheck && pnpm --filter web typecheck && pnpm --filter web test`.
 
 ### Checkpoint: List + detail green
-- [ ] List page interactive end-to-end against running API.
-- [ ] Detail page loads employee by id.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] List page interactive end-to-end against running API.
+- [x] Detail page loads employee by id.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
 ---
 
@@ -153,15 +153,15 @@ Branch: `feat/employees-fe-pr4-forms`
 | EF16 | Wire dialogs into `/employees` page — Create button, row action menu (Edit, Delete) | `feat(web): wire employee dialogs into list page` |
 
 **EF12–EF16 acceptance**
-- [ ] All EF5 dialog tests (create/edit/delete) green.
-- [ ] 409 conflict from API surfaces as field-level error on employeeCode / email.
-- [ ] Verification: `pnpm --filter web typecheck && pnpm --filter web test`.
+- [x] All EF5 dialog tests (create/edit/delete) green.
+- [x] 409 conflict from API surfaces as field-level error on employeeCode / email.
+- [x] Verification: `pnpm --filter web typecheck && pnpm --filter web test`.
 
 ### Checkpoint: Complete
-- [ ] All spec Non-Negotiable Frontend Test Cases pass.
-- [ ] `/employees` list page: search, filter, sort, paginate, create, edit, delete all work end-to-end.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
-- [ ] Ready for review.
+- [x] All spec Non-Negotiable Frontend Test Cases pass.
+- [x] `/employees` list page: search, filter, sort, paginate, create, edit, delete all work end-to-end.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] Ready for review.
 
 ---
 
@@ -188,13 +188,13 @@ server lifecycle into `vitest.setup.ts`. Tests live in
 | EF24 | Integration: 5xx error response from MSW causes error state to render on list page | `test(web): integration — API error renders error state` |
 
 **EF17–EF24 acceptance**
-- [ ] All 7 integration test cases pass in jsdom without a running server.
-- [ ] MSW handlers are reset between tests (`server.resetHandlers()` in `afterEach`).
-- [ ] Verification: `pnpm --filter web test`.
+- [x] All 7 integration test cases pass in jsdom without a running server.
+- [x] MSW handlers are reset between tests (`server.resetHandlers()` in `afterEach`).
+- [x] Verification: `pnpm --filter web test`.
 
 ### Checkpoint: Integration green
-- [ ] All unit + integration tests pass: `pnpm --filter web test`.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` clean from repo root.
+- [x] All unit + integration tests pass: `pnpm --filter web test`.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` clean from repo root.
 
 ---
 
@@ -218,14 +218,14 @@ Add Playwright as a dev dependency at workspace root. Config at
 | EF32 | E2E: delete (soft) employee via dialog — row removed from list | `test(e2e): employees delete flow` |
 
 **EF25–EF32 acceptance**
-- [ ] All 7 E2E scenarios pass against `docker compose up --build`.
-- [ ] Tests are independent (each creates its own seed data or uses stable fixtures).
-- [ ] `pnpm test:e2e` (or `npx playwright test`) runs from repo root.
+- [x] All 7 E2E scenarios pass against `docker compose up --build`.
+- [x] Tests are independent (each creates its own seed data or uses stable fixtures).
+- [x] `pnpm test:e2e` (or `npx playwright test`) runs from repo root.
 
 ### Checkpoint: E2E green
-- [ ] All E2E specs pass against the full Docker stack.
-- [ ] All spec Non-Negotiable Frontend Test Cases pass (unit + integration + E2E).
-- [ ] Ready for review.
+- [x] All E2E specs pass against the full Docker stack.
+- [x] All spec Non-Negotiable Frontend Test Cases pass (unit + integration + E2E).
+- [x] Ready for review.
 
 ---
 
