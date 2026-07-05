@@ -69,6 +69,66 @@ Branch: `feat/employees-pr5-department-enum`
 
 ---
 
+## Frontend — Phase 1: Foundation
+
+Branch: `feat/employees-fe-pr1-foundation`
+
+| Task | Description | Commit | Verification |
+|---|---|---|---|
+| EF1 | `Table` + `Select` shadcn/ui components added to `@salary-mgmt/ui` | `f3a33df` | `pnpm --filter @salary-mgmt/ui typecheck` clean |
+| EF2 | Employee API functions (`listEmployees`, `getEmployee`, `createEmployee`, `updateEmployee`, `deleteEmployee`) added to `@salary-mgmt/store` | `9792d94` | `pnpm --filter @salary-mgmt/store typecheck` clean |
+| EF3 | Vitest + Testing Library config in `apps/web`; trivial render test green | `9792d94` | `pnpm --filter web test` green |
+
+**Checkpoint:** `pnpm typecheck && pnpm lint` clean; trivial web test green.
+
+---
+
+## Frontend — Phase 2: RED
+
+Branch: `feat/employees-fe-pr2-red`
+
+| Task | Description | Commit | Verification |
+|---|---|---|---|
+| EF4 | Hook specs (`useEmployees`, `useEmployee`, `useCreateEmployee`, `useUpdateEmployee`, `useDeleteEmployee`) — RED | `309d6ab` | All 5 specs fail for right reason (missing hooks) |
+| EF5 | Component specs — `EmployeeList`, `EmployeeSearch`, `EmployeeFilters`, `EmployeePagination`, dialogs — RED | `0a512c8` | All 17 specs fail for right reason (missing components) |
+
+**RED checkpoint:** reached — suite fails for the right reason.
+
+---
+
+## Frontend — Phase 3: GREEN (store hooks + list + detail)
+
+Branch: `feat/employees-fe-pr3-list`
+
+| Task | Description | Commit | Verification |
+|---|---|---|---|
+| EF6 | `useEmployees`, `useEmployee` TanStack Query hooks in `@salary-mgmt/store` | `e89703e` | EF4 hook tests for list/detail green |
+| EF7 | `useCreateEmployee`, `useUpdateEmployee`, `useDeleteEmployee` mutation hooks | `e89703e` | EF4 mutation hook tests green |
+| EF8 | `EmployeeSearch`, `EmployeeFilters`, `EmployeePagination` components | `0a5a294` | EF5 search/filter/pagination tests green |
+| EF9 | `EmployeeList` table component (columns, loading skeleton, empty state, error state) | `0a5a294` | EF5 list tests green |
+| EF10 | `/employees` page — URL search params → query → list + search + filters + pagination | `47204d6` | list page renders and interactive |
+| EF11 | `/employees/[id]` detail page — fetch one employee, display all fields read-only | `47204d6` | detail page loads employee by id |
+
+**Checkpoint:** all EF4 + EF5 list/search/filter/pagination tests green; `pnpm typecheck && pnpm lint && pnpm test` green.
+
+---
+
+## Frontend — Phase 4: GREEN (create/edit/delete dialogs)
+
+Branch: `feat/employees-fe-pr4-forms`
+
+| Task | Description | Commit | Verification |
+|---|---|---|---|
+| EF12 | `EmployeeForm` — `react-hook-form` + `zod` schema | `9e0f02b` | form renders and validates |
+| EF13 | `CreateEmployeeDialog` — calls `useCreateEmployee`; surfaces 409/400 errors as field messages | `427121d` | EF5 create dialog tests green |
+| EF14 | `EditEmployeeDialog` — pre-populated from employee prop; calls `useUpdateEmployee` | `427121d` | EF5 edit dialog tests green |
+| EF15 | `DeleteEmployeeDialog` — confirmation; calls `useDeleteEmployee` on confirm | `427121d` | EF5 delete dialog tests green |
+| EF16 | Wire dialogs into `/employees` page — Create button, row action menu (Edit, Delete) | `21b788d` | full list page interactive end-to-end |
+
+**Checkpoint:** all EF5 dialog tests green; `/employees` CRUD flows end-to-end; `pnpm typecheck && pnpm lint && pnpm test` green.
+
+---
+
 ## Frontend — Phase 5: Integration tests (MSW + real hooks)
 
 Branch: `feat/employees-fe-pr5-integration`
@@ -94,6 +154,38 @@ Key learnings from this phase:
 - `isolate: false` causes `vi.mock()` leaks across test files — removed.
 - `useSearchParams` must be inside `<Suspense>` for Next.js 14 production static generation; dev mode is lenient, build is not.
 
+---
+
+## Frontend — Phase 6: E2E tests (Playwright, full stack)
+
+Branch: `feat/employees-fe-pr6-e2e`
+
+| Task | Description | Commit | Verification |
+|---|---|---|---|
+| EF25 | `@playwright/test` installed; `playwright.config.ts` at repo root | `7b173cd` | `npx playwright test` runs from repo root |
+| EF26 | E2E: list page loads; rows visible; column headings present | `7b173cd` | green |
+| EF27 | E2E: search by partial name filters displayed rows | `7b173cd` | green |
+| EF28 | E2E: department filter narrows the list | `7b173cd` | green |
+| EF29 | E2E: next-page navigation shows a different result set | `7b173cd` | green |
+| EF30 | E2E: create employee via dialog — new row appears in list | `7b173cd` | green |
+| EF31 | E2E: edit employee via dialog — updated row visible in list | `7b173cd` | green |
+| EF32 | E2E: delete (soft) employee via dialog — row removed from list | `7b173cd` | green |
+| — | Fix: 5 E2E failures resolved (locators, timing, data isolation) | `82748f5` | 7/7 E2E passing |
+
+**E2E checkpoint:** 7/7 E2E specs pass against full Docker stack; all non-negotiable frontend test cases pass (unit + integration + E2E).
+
+## Spec closeout — Frontend
+
+| Criterion | Result | Notes |
+|---|---|---|
+| `/employees` interactive: search, filter, sort, paginate end-to-end | PASS | phases 3–4 |
+| All non-negotiable frontend test cases pass (unit + integration + E2E) | PASS | 31 unit/integration + 7 E2E |
+| `pnpm typecheck && pnpm lint && pnpm test` green from repo root | PASS | verified across all phases |
+| Playwright E2E suite passes against running Docker stack | PASS | 7/7 (EF32, commit `82748f5`) |
+
 ## Learnings
 
-_To be distilled into `.ai/rules/` after the module closes out._
+- jsdom replaces native `AbortController`; MSW v2 `fetchProxy` checks `instanceof AbortSignal` — fails silently. Fix: custom vitest environment restoring native globals after jsdom setup.
+- `useSearchParams` requires a `<Suspense>` boundary in Next.js 14 App Router; dev mode is lenient but production build fails without it.
+- `isolate: false` in vitest config causes `vi.mock()` state to leak across test files — keep default isolation.
+- E2E tests must create and tear down their own data; shared DB state causes ordering flakiness across test runs.

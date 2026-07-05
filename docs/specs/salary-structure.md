@@ -52,9 +52,9 @@ PUT    /employees/:id/salary-structure            → supersede + create new ver
 
 ## Success Criteria
 
-- [ ] Effective-dated resolution returns the correct version for any given date.
-- [ ] History endpoint lists all versions in chronological order.
-- [ ] Invariant enforced: at most one open (`effectiveTo = null`) version per employee.
+- [x] Effective-dated resolution returns the correct version for any given date.
+- [x] History endpoint lists all versions in chronological order.
+- [x] Invariant enforced: at most one open (`effectiveTo = null`) version per employee.
 
 ## Frontend
 
@@ -107,11 +107,11 @@ No new top-level routes. Salary structure lives on the employee detail page.
 
 ### Frontend Success Criteria
 
-- [ ] Employee detail page shows the active salary structure or a clear empty state.
-- [ ] Upsert dialog validates client-side and surfaces 409 conflicts as field errors.
-- [ ] History collapses cleanly; each version's effective date range is readable.
-- [ ] All non-negotiable frontend test cases pass (unit + integration + E2E).
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] Employee detail page shows the active salary structure or a clear empty state.
+- [x] Upsert dialog validates client-side and surfaces 409 conflicts as field errors.
+- [x] History collapses cleanly; each version's effective date range is readable.
+- [x] All non-negotiable frontend test cases pass (unit + integration + E2E).
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
 ## Open Questions
 
