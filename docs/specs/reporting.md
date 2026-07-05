@@ -45,9 +45,9 @@ Response (grouped):
 
 ## Success Criteria
 
-- [ ] `payroll-cost?groupBy=department` returns correct per-currency totals matching raw results.
-- [ ] `payroll-summary` returns org-wide gross/deductions/net per currency for a period.
-- [ ] Reporting queries remain responsive at 10k-result scale locally.
+- [x] `payroll-cost?groupBy=department` returns correct per-currency totals matching raw results.
+- [x] `payroll-summary` returns org-wide gross/deductions/net per currency for a period.
+- [x] Reporting queries remain responsive at 10k-result scale locally.
 
 ## Frontend
 
@@ -94,11 +94,11 @@ Pages and components in `apps/web`. Client data layer via `@salary-mgmt/store`
 
 ### Frontend Success Criteria
 
-- [ ] Reporting page shows grouped cost breakdown with period + groupBy controls.
-- [ ] Summary card shows org-wide totals per currency.
-- [ ] All non-negotiable frontend test cases pass (unit + integration + E2E).
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
-- [ ] Playwright E2E suite passes against the running Docker stack.
+- [x] Reporting page shows grouped cost breakdown with period + groupBy controls.
+- [x] Summary card shows org-wide totals per currency.
+- [x] All non-negotiable frontend test cases pass (unit + integration + E2E).
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] Playwright E2E suite passes against the running Docker stack.
 
 ## Open Questions
 

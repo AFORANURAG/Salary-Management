@@ -84,13 +84,13 @@ Branch: `feat/reporting-fe-pr4-e2e`
 
 | Criterion | Result | Notes |
 |---|---|---|
-| Grouped totals equal sum of underlying `PayrollResult` rows | | |
-| Mixed-currency data reported per currency, not summed across currencies | | |
-| Grouping by department / country / costCenter returns correct keys and headcounts | | |
-| Reporting page shows grouped cost breakdown with period + groupBy controls | | |
-| Summary card shows org-wide totals per currency | | |
-| All non-negotiable frontend test cases pass (unit + integration + E2E) | | |
-| `pnpm typecheck && pnpm lint && pnpm test` green from repo root | | |
-| Playwright E2E suite passes against running Docker stack | | |
+| Grouped totals equal sum of underlying `PayrollResult` rows | PASS | 6 integration cases verify SUM aggregation per group; no double-counting |
+| Mixed-currency data reported per currency, not summed across currencies | PASS | `buildCostResponse` / `buildSummaryResponse` bucket by currency; unit spec covers multi-currency case |
+| Grouping by department / country / costCenter returns correct keys and headcounts | PASS | Integration spec covers all three dimensions; null costCenter rows excluded |
+| Reporting page shows grouped cost breakdown with period + groupBy controls | PASS | `ReportingCostTable` + period input + groupBy select wired in `/reporting/page.tsx` |
+| Summary card shows org-wide totals per currency | PASS | `ReportingSummaryCard` renders per-currency buckets with gross / deductions / net / headcount |
+| All non-negotiable frontend test cases pass (unit + integration + E2E) | PASS | 5 unit + 2 integration + 3 E2E — all green |
+| `pnpm typecheck && pnpm lint && pnpm test` green from repo root | PASS | 64 web + 130 api tests; typecheck + lint clean |
+| Playwright E2E suite passes against running Docker stack | PASS | RF9-RF11 green; unique timestamp-based periods prevent cross-run collision |
 
 ## Learnings
