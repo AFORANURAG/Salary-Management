@@ -53,14 +53,25 @@ Branch: `feat/payslips-pr3-implementation`
 | PS14 | | | |
 | PS15 | | | |
 
-### Phase 6 — Frontend: Integration + E2E tests
+### Phase 6 — Frontend: Integration tests (MSW + real hooks)
+
+Branch: `feat/payslips-fe-pr3-integration`
 
 | Task | Description | Commit | Verification |
 |---|---|---|---|
 | PS16 | | | |
 | PS17 | | | |
 | PS18 | | | |
+
+### Phase 7 — Frontend: E2E tests (Playwright, full stack)
+
+Branch: `feat/payslips-fe-pr4-e2e`
+
+| Task | Description | Commit | Verification |
+|---|---|---|---|
 | PS19 | | | |
+| PS20 | | | |
+| PS21 | | | |
 
 ---
 
