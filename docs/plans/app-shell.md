@@ -96,9 +96,9 @@ Branch: `feat/app-shell-pr4-responsive`
 | AS13 | Unit spec: at mobile viewport flag, hamburger renders; sidebar is not in document by default; after hamburger click, sidebar appears in sheet | `test(web): add mobile sidebar drawer unit spec` |
 
 **Acceptance**
-- [ ] Mobile drawer opens and closes correctly in jsdom tests.
-- [ ] Desktop sidebar unaffected by mobile changes.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green.
+- [x] Mobile drawer opens and closes correctly in jsdom tests.
+- [x] Desktop sidebar unaffected by mobile changes.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green.
 
 ---
 

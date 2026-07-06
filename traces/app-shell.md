@@ -71,3 +71,23 @@ Also updated `--primary` CSS variable from blue to indigo (`239 84% 67%`) in `pa
 **Commit:** `936394d`
 
 **Acceptance:** All 103 web tests pass · `pnpm typecheck` green.
+
+---
+
+## Phase 4 — Mobile Responsive (`feat/app-shell-pr4-responsive`)
+
+### AS11 — Sheet primitive
+
+`packages/ui/src/components/ui/sheet.tsx`. Built on `@radix-ui/react-dialog` (already installed — no new dependency). Slide-in-from-left animation. Exported from `@salary-mgmt/ui`.
+
+### AS12 — Mobile sidebar drawer
+
+`AppHeader` accepts optional `onMenuClick` prop; renders a hamburger button (`md:hidden`) when provided. `AuthenticatedLayout` manages `drawerOpen` state, closes on pathname change. Desktop sidebar wrapped in `hidden md:flex`; mobile drawer renders `AppSidebar` inside `SheetContent`.
+
+### AS13 — Unit specs
+
+3 tests in `apps/web/components/shell/__tests__/mobile-drawer.test.tsx`. Covers: hamburger renders when `onMenuClick` provided; absent when not provided; calls handler on click.
+
+**Commit:** <!-- SHA filled after commit -->
+
+**Acceptance:** All 106 web tests pass · `pnpm typecheck` green.

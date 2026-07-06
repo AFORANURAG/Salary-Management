@@ -9,7 +9,9 @@ vi.mock("next/navigation", () => ({
   usePathname: () => mockPathname(),
 }));
 
-const mockUseEmployee = vi.fn(() => ({ data: undefined }));
+const mockUseEmployee = vi.fn((_id: string) => ({
+  data: undefined as { name: string } | undefined,
+}));
 vi.mock("@salary-mgmt/store/query", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@salary-mgmt/store/query")>();
   return {
