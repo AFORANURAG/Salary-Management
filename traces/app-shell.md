@@ -91,3 +91,15 @@ Also updated `--primary` CSS variable from blue to indigo (`239 84% 67%`) in `pa
 **Commit:** `a8bc85b`
 
 **Acceptance:** All 106 web tests pass · `pnpm typecheck` green.
+
+---
+
+## Phase 5 — Integration Tests (`feat/app-shell-pr5-integration`)
+
+### AS14 — Role-based sidebar integration specs
+
+Two tests added to `app/(authenticated)/__tests__/integration/authenticated-layout.integration.test.tsx`. Uses `mockViewerUser` from existing MSW auth handlers. Verifies ADMIN session renders Admin section (Audit Log, User Management); HR_VIEWER session has those elements entirely absent from DOM.
+
+**Commit:** `7f8d816`
+
+**Acceptance:** 109 web tests pass · `pnpm typecheck` green.
