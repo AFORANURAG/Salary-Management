@@ -29,3 +29,25 @@ Sidebar toggles between `w-60` (expanded) and `w-16` (icon rail) via `useLocalSt
 **Commit:** `6f05142`
 
 **Acceptance:** All 86 web tests pass · `pnpm typecheck` green · `pnpm lint` green.
+
+---
+
+## Phase 2 — Header (`feat/app-shell-pr2-header`)
+
+### AS5 — AppHeader component
+
+`apps/web/components/shell/app-header.tsx`. Client component. Logo mark (indigo square grid) + "ACME HRMS" wordmark left; page title derived from `getNavItem(pathname)` center; `NotificationBell` (static, badge count 0 for MVP) + `UserMenu` right.
+
+### AS6 — UserMenu component
+
+`apps/web/components/shell/user-menu.tsx`. Dropdown using shadcn `DropdownMenu`. Avatar initials derived from `user.name` (first two words). Role badge: `ADMIN` → destructive, `HR_MANAGER` → default, `HR_VIEWER` → secondary. "My Profile" → `/profile` (placeholder). "Sign out" → `postLogout()` + `removeQueries` + `router.push('/login')`.
+
+### AS7 — Unit specs
+
+11 tests in `apps/web/components/shell/__tests__/app-header.test.tsx`. Covers: logo wordmark renders; page title matches pathname; notification bell renders; initials derived correctly; role badge variant per role; logout calls `postLogout`, `removeQueries`, and redirects to `/login`.
+
+Also updated `--primary` CSS variable from blue to indigo (`239 84% 67%`) in `packages/ui/src/globals.css` for consistent color grading across the product.
+
+**Commit:** `230f088`
+
+**Acceptance:** All 97 web tests pass · `pnpm typecheck` green.
