@@ -21,3 +21,4 @@ export {
 } from "./api/payroll";
 export { getPayslipHistory, getPayslip } from "./api/payslips";
 export { getReportingPayrollCost, getReportingSummary } from "./api/reporting";
+export { getMe, postLogin, postSetup, postLogout, postInvite } from "./api/auth";
