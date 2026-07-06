@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Put, Res } from "@nestjs/common";
 import type { SalaryStructure } from "@salary-mgmt/types";
+import { Roles } from "../auth/roles.decorator";
 import { UpsertSalaryStructureDto } from "./dto/upsert-salary-structure.dto";
 import { SalaryStructureService } from "./salary-structure.service";
 
@@ -12,6 +13,7 @@ export class SalaryStructureController {
   constructor(private readonly service: SalaryStructureService) {}
 
   @Put()
+  @Roles("ADMIN", "HR_MANAGER")
   async upsert(
     @Param("employeeId") employeeId: string,
     @Body() dto: UpsertSalaryStructureDto,

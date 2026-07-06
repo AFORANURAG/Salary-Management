@@ -8,6 +8,7 @@ import {
   Query,
 } from "@nestjs/common";
 import type { PayrollResult, PayrollRunSummary } from "@salary-mgmt/types";
+import { Roles } from "../auth/roles.decorator";
 import { PayrollResultQueryDto } from "./dto/payroll-result-query.dto";
 import { RunPayrollDto } from "./dto/run-payroll.dto";
 import { PayrollService } from "./payroll.service";
@@ -18,6 +19,7 @@ export class PayrollController {
 
   @Post("runs")
   @HttpCode(201)
+  @Roles("ADMIN", "HR_MANAGER")
   run(@Body() dto: RunPayrollDto): Promise<PayrollRunSummary> {
     return this.service.run(dto.period);
   }

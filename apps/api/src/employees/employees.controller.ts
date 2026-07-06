@@ -36,6 +36,7 @@ export class EmployeesController {
   }
 
   @Patch(":id")
+  @Roles("ADMIN", "HR_MANAGER")
   update(
     @Param("id") id: string,
     @Body() dto: UpdateEmployeeDto,
@@ -44,6 +45,7 @@ export class EmployeesController {
   }
 
   @Delete(":id")
+  @Roles("ADMIN", "HR_MANAGER")
   remove(@Param("id") id: string): Promise<Employee> {
     return this.employees.softDelete(id);
   }
