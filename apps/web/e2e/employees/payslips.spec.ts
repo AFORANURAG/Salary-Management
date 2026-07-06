@@ -1,12 +1,15 @@
 import { test, expect } from "@playwright/test";
-import { createEmployee, deleteEmployee } from "../helpers";
+import { createEmployee, deleteEmployee, loginViaApi, getSessionCookie } from "../helpers";
 
 const API = "http://localhost:3001/v1";
 
-async function setSalaryStructure(employeeId: string): Promise<void> {
+const ADMIN_EMAIL = process.env.E2E_ADMIN_EMAIL ?? "admin@acme.com";
+const ADMIN_PASSWORD = process.env.E2E_ADMIN_PASSWORD ?? "Test1234!";
+
+async function setSalaryStructure(employeeId: string, cookieHeader: string): Promise<void> {
   const res = await fetch(`${API}/employees/${employeeId}/salary-structure`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", Cookie: cookieHeader },
     body: JSON.stringify({
       effectiveFrom: "2024-01-01",
       currency: "USD",
@@ -20,10 +23,10 @@ async function setSalaryStructure(employeeId: string): Promise<void> {
   if (!res.ok) throw new Error(`setSalaryStructure failed: ${res.status}`);
 }
 
-async function runPayroll(period: string): Promise<void> {
+async function runPayroll(period: string, cookieHeader: string): Promise<void> {
   const res = await fetch(`${API}/payroll/runs`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", Cookie: cookieHeader },
     body: JSON.stringify({ period }),
   });
   if (!res.ok && res.status !== 409) {
@@ -40,11 +43,16 @@ function uniquePeriod(baseYear = 7000): string {
 }
 
 test.describe("Payslips — employee detail + detail page", () => {
-  test("PS19: employee detail page shows payslip history list after a payroll run", async ({ page }) => {
-    const emp = await createEmployee();
-    await setSalaryStructure(emp.id);
+  test.beforeEach(async ({ context }) => {
+    await loginViaApi(context, ADMIN_EMAIL, ADMIN_PASSWORD);
+  });
+
+  test("PS19: employee detail page shows payslip history list after a payroll run", async ({ page, context }) => {
+    const cookieHeader = await getSessionCookie(context);
+    const emp = await createEmployee(cookieHeader);
+    await setSalaryStructure(emp.id, cookieHeader);
     const period = uniquePeriod();
-    await runPayroll(period);
+    await runPayroll(period, cookieHeader);
 
     try {
       await page.goto(`/employees/${emp.id}`);
@@ -52,15 +60,16 @@ test.describe("Payslips — employee detail + detail page", () => {
 
       await expect(page.getByText(period)).toBeVisible({ timeout: 15_000 });
     } finally {
-      await deleteEmployee(emp.id);
+      await deleteEmployee(emp.id, cookieHeader);
     }
   });
 
-  test("PS20: clicking a period row navigates to the payslip detail page and shows correct line items", async ({ page }) => {
-    const emp = await createEmployee();
-    await setSalaryStructure(emp.id);
+  test("PS20: clicking a period row navigates to the payslip detail page and shows correct line items", async ({ page, context }) => {
+    const cookieHeader = await getSessionCookie(context);
+    const emp = await createEmployee(cookieHeader);
+    await setSalaryStructure(emp.id, cookieHeader);
     const period = uniquePeriod(8000);
-    await runPayroll(period);
+    await runPayroll(period, cookieHeader);
 
     try {
       await page.goto(`/employees/${emp.id}`);
@@ -75,15 +84,16 @@ test.describe("Payslips — employee detail + detail page", () => {
       await expect(page.getByText("HRA")).toBeVisible({ timeout: 10_000 });
       await expect(page.getByText("PF")).toBeVisible({ timeout: 10_000 });
     } finally {
-      await deleteEmployee(emp.id);
+      await deleteEmployee(emp.id, cookieHeader);
     }
   });
 
-  test("PS21: net pay on the payslip detail page matches the value shown in the history list row", async ({ page }) => {
-    const emp = await createEmployee();
-    await setSalaryStructure(emp.id);
+  test("PS21: net pay on the payslip detail page matches the value shown in the history list row", async ({ page, context }) => {
+    const cookieHeader = await getSessionCookie(context);
+    const emp = await createEmployee(cookieHeader);
+    await setSalaryStructure(emp.id, cookieHeader);
     const period = uniquePeriod(9000);
-    await runPayroll(period);
+    await runPayroll(period, cookieHeader);
 
     try {
       await page.goto(`/employees/${emp.id}`);
@@ -108,7 +118,7 @@ test.describe("Payslips — employee detail + detail page", () => {
       expect(netAmount).toBeTruthy();
       await expect(page.getByText(netAmount!).first()).toBeVisible({ timeout: 10_000 });
     } finally {
-      await deleteEmployee(emp.id);
+      await deleteEmployee(emp.id, cookieHeader);
     }
   });
 });

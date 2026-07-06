@@ -1,9 +1,17 @@
 import { test, expect } from "@playwright/test";
-import { createEmployee, deleteEmployee } from "../helpers";
+import { createEmployee, deleteEmployee, loginViaApi, getSessionCookie } from "../helpers";
+
+const ADMIN_EMAIL = process.env.E2E_ADMIN_EMAIL ?? "admin@acme.com";
+const ADMIN_PASSWORD = process.env.E2E_ADMIN_PASSWORD ?? "Test1234!";
+
+test.beforeEach(async ({ context }) => {
+  await loginViaApi(context, ADMIN_EMAIL, ADMIN_PASSWORD);
+});
 
 test.describe("Employees — list", () => {
-  test("EF26: list page loads with column headings and employee rows", async ({ page }) => {
-    const emp = await createEmployee();
+  test("EF26: list page loads with column headings and employee rows", async ({ page, context }) => {
+    const cookieHeader = await getSessionCookie(context);
+    const emp = await createEmployee(cookieHeader);
     try {
       await page.goto("/employees");
       await expect(page.getByRole("heading", { name: "Employees" })).toBeVisible();
@@ -16,33 +24,35 @@ test.describe("Employees — list", () => {
       await page.getByRole("searchbox").fill(emp.employeeCode);
       await expect(page.getByText(emp.name)).toBeVisible({ timeout: 5000 });
     } finally {
-      await deleteEmployee(emp.id);
+      await deleteEmployee(emp.id, cookieHeader);
     }
   });
 });
 
 test.describe("Employees — search", () => {
-  test("EF27: searching by partial name filters displayed rows", async ({ page }) => {
+  test("EF27: searching by partial name filters displayed rows", async ({ page, context }) => {
+    const cookieHeader = await getSessionCookie(context);
     const unique = `Findable-${Date.now()}`;
-    const emp = await createEmployee({ name: unique });
-    const other = await createEmployee({ name: `NotMatch-${Date.now()}` });
+    const emp = await createEmployee(cookieHeader, { name: unique });
+    const other = await createEmployee(cookieHeader, { name: `NotMatch-${Date.now()}` });
     try {
       await page.goto("/employees");
       await page.getByRole("searchbox").fill(unique);
       await expect(page.getByText(unique)).toBeVisible({ timeout: 5000 });
       await expect(page.getByText(other.name)).not.toBeVisible();
     } finally {
-      await deleteEmployee(emp.id);
-      await deleteEmployee(other.id);
+      await deleteEmployee(emp.id, cookieHeader);
+      await deleteEmployee(other.id, cookieHeader);
     }
   });
 });
 
 test.describe("Employees — filter", () => {
-  test("EF28: department filter narrows the list", async ({ page }) => {
+  test("EF28: department filter narrows the list", async ({ page, context }) => {
+    const cookieHeader = await getSessionCookie(context);
     // Use a department from the hardcoded list in EmployeeFilters
-    const emp = await createEmployee({ department: "Finance" });
-    const other = await createEmployee({ department: "HR" });
+    const emp = await createEmployee(cookieHeader, { department: "Finance" });
+    const other = await createEmployee(cookieHeader, { department: "HR" });
     try {
       await page.goto("/employees");
 
@@ -54,19 +64,20 @@ test.describe("Employees — filter", () => {
       await expect(page.getByText(emp.name)).toBeVisible({ timeout: 5000 });
       await expect(page.getByText(other.name)).not.toBeVisible();
     } finally {
-      await deleteEmployee(emp.id);
-      await deleteEmployee(other.id);
+      await deleteEmployee(emp.id, cookieHeader);
+      await deleteEmployee(other.id, cookieHeader);
     }
   });
 });
 
 test.describe("Employees — pagination", () => {
-  test("EF29: next-page navigation shows a different result set", async ({ page }) => {
+  test("EF29: next-page navigation shows a different result set", async ({ page, context }) => {
+    const cookieHeader = await getSessionCookie(context);
     const prefix = `PG${Date.now()}`;
     // Create 26 employees with a unique prefix so we can search-isolate them
     const employees = await Promise.all(
       Array.from({ length: 26 }, (_, i) =>
-        createEmployee({
+        createEmployee(cookieHeader, {
           employeeCode: `${prefix}-${String(i).padStart(3, "0")}`,
           name: `${prefix} Employee ${String(i).padStart(3, "0")}`,
         })
@@ -99,13 +110,14 @@ test.describe("Employees — pagination", () => {
 
       expect(secondPageCode).not.toBe(firstPageCode);
     } finally {
-      await Promise.all(employees.map((e) => deleteEmployee(e.id)));
+      await Promise.all(employees.map((e) => deleteEmployee(e.id, cookieHeader)));
     }
   });
 });
 
 test.describe("Employees — create", () => {
-  test("EF30: creating an employee via dialog causes new row to appear in the list", async ({ page }) => {
+  test("EF30: creating an employee via dialog causes new row to appear in the list", async ({ page, context }) => {
+    const cookieHeader = await getSessionCookie(context);
     const code = `CRE-${Date.now()}`;
     const name = `Create Test ${code}`;
     const email = `cre-${Date.now()}@example.com`;
@@ -133,13 +145,14 @@ test.describe("Employees — create", () => {
     // cleanup
     const res = await fetch(`http://localhost:3001/v1/employees?q=${code}`);
     const data = await res.json();
-    if (data.data?.[0]?.id) await deleteEmployee(data.data[0].id);
+    if (data.data?.[0]?.id) await deleteEmployee(data.data[0].id, cookieHeader);
   });
 });
 
 test.describe("Employees — edit", () => {
-  test("EF31: editing an employee via dialog updates the displayed row", async ({ page }) => {
-    const emp = await createEmployee();
+  test("EF31: editing an employee via dialog updates the displayed row", async ({ page, context }) => {
+    const cookieHeader = await getSessionCookie(context);
+    const emp = await createEmployee(cookieHeader);
     try {
       await page.goto("/employees");
 
@@ -160,14 +173,15 @@ test.describe("Employees — edit", () => {
       await expect(dialog).not.toBeVisible({ timeout: 5000 });
       await expect(page.getByText(updatedName)).toBeVisible({ timeout: 5000 });
     } finally {
-      await deleteEmployee(emp.id);
+      await deleteEmployee(emp.id, cookieHeader);
     }
   });
 });
 
 test.describe("Employees — delete", () => {
-  test("EF32: deleting an employee via dialog removes the row from the list", async ({ page }) => {
-    const emp = await createEmployee();
+  test("EF32: deleting an employee via dialog removes the row from the list", async ({ page, context }) => {
+    const cookieHeader = await getSessionCookie(context);
+    const emp = await createEmployee(cookieHeader);
 
     await page.goto("/employees");
     await page.getByRole("searchbox").fill(emp.employeeCode);

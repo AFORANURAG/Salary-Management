@@ -67,28 +67,76 @@ _Pending commit_
 
 ## Phase 5 — Frontend Types + Hooks (branch: `feat/hr-auth-fe-pr1-types-hooks`)
 
-_Pending_
+**Commit:** `7bf7ece`
+
+### Tasks completed
+- HA15: `packages/store/src/api/auth.ts` — `getMe`, `postLogin`, `postSetup`, `postLogout`, `postInvite`
+- HA16: `useSession` hook — `staleTime: Infinity`, `retry: false`; returns `{ user, isLoading, isAuthenticated }`
+- HA17: 4 unit specs — authenticated, 401, 500, and loading states
+
+### Test results
+- 10/10 store tests GREEN
 
 ---
 
 ## Phase 6 — Auth Pages (branch: `feat/hr-auth-fe-pr2-pages`)
 
-_Pending_
+**Commit:** `83484ff`
+
+### Tasks completed
+- HA18: Restructured `app/` into `(auth)/` and `(authenticated)/` route groups; moved all existing pages; fixed all relative test imports to `@/` alias
+- HA19: `/auth/login` page — react-hook-form + zod; error banner on 401
+- HA20: `/auth/setup` page — token from URL; password confirm; 410 error state; static error if no token
+- HA21: 9 unit specs for login and setup pages
+
+### Issues encountered
+- Stale `.next/types` cache pointed to old paths after route group move — deleted `.next/` to clear
+- `useQueryClient()` in login page caused "No QueryClient" error in tests — removed it; post-login redirect is sufficient, session refetches on the authenticated route
+
+### Test results
+- 73/73 web tests GREEN, typecheck clean
 
 ---
 
 ## Phase 7 — Route Protection (branch: `feat/hr-auth-fe-pr3-protection`)
 
-_Pending_
+**Commit:** `9ac241a`
+
+### Tasks completed
+- HA22: `middleware.ts` — redirects `/auth/login` when `hrms_session` cookie absent
+- HA23: `SessionProvider` — wraps children; subscribes to 401 query errors → `postLogout()` + redirect
+- HA24: `AuthenticatedLayout` — session gate with loading skeleton; `AuthGate` redirects if `!isAuthenticated`
+
+### Test results
+- 73/73 GREEN, typecheck clean
 
 ---
 
 ## Phase 8 — Frontend Integration Tests (branch: `feat/hr-auth-fe-pr4-integration`)
 
-_Pending_
+**Commit:** `cb08dca`
+
+### Tasks completed
+- HA25: `test/msw/handlers/auth.ts` — GET /me (200), POST login/logout (200), 401 variants, login-fail variant; registered in server
+- HA26-HA27: `authenticated-layout.integration.test.tsx` — renders children when authenticated; redirects when 401
+- HA28-HA29: `login-page.integration.test.tsx` — success redirects; failure shows banner
+
+### Issues encountered
+- `POST /v1/auth/login` MSW handler returned `null` body; `client.ts` always calls `.json()` — fixed handler to return `HttpResponse.json({}, { status: 200 })`
+
+### Test results
+- 77/77 GREEN
 
 ---
 
 ## Phase 9 — E2E Tests (branch: `feat/hr-auth-fe-pr5-e2e`)
 
-_Pending_
+**Commit:** `a65712d`
+
+### Tasks completed
+- `e2e/helpers.ts`: `loginViaApi`, `loginViaUI`, `getSessionCookie`; `createEmployee`/`deleteEmployee` now require `cookieHeader`
+- `e2e/auth/auth.spec.ts`: 5 Playwright specs — redirect, login success/fail, session cookie, setup no-token
+- All 5 existing E2E spec files updated: `test.beforeEach` with `loginViaApi`; API calls thread `cookieHeader`
+
+### Test results
+- 77/77 unit tests GREEN (E2E requires live server)
