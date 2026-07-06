@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import userEvent from "@testing-library/user-event";
 import { render, screen, waitFor } from "@/test/render";
-import SetupPage from "../setup/page";
+import { SetupForm as SetupPage } from "../setup/setup-form";
 import { ApiError } from "@salary-mgmt/store";
 
 const mockPush = vi.fn();
