@@ -2,6 +2,9 @@
  * Centralized query key factory for salary-mgmt domains.
  */
 export const queryKeys = {
+  session: {
+    all: () => ["session"] as const,
+  },
   health: {
     all: () => ["health"] as const,
   },
