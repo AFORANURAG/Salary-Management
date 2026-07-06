@@ -1,3 +1,53 @@
+// ---------------------------------------------------------------------------
+// HR Auth
+// ---------------------------------------------------------------------------
+
+export type HrUserRole = "ADMIN" | "HR_MANAGER" | "HR_VIEWER";
+export type HrUserStatus = "PENDING_SETUP" | "ACTIVE";
+
+export interface HrUser {
+  readonly id: string;
+  readonly email: string;
+  readonly name: string;
+  readonly role: HrUserRole;
+  readonly status: HrUserStatus;
+  readonly createdAt: string;
+  readonly updatedAt: string;
+}
+
+export interface AuthMeResponse {
+  readonly id: string;
+  readonly email: string;
+  readonly name: string;
+  readonly role: HrUserRole;
+}
+
+export interface InviteRequest {
+  readonly email: string;
+  readonly name: string;
+  readonly role: HrUserRole;
+}
+
+export interface InviteResponse {
+  readonly inviteToken: string;
+  readonly inviteUrl: string;
+}
+
+export interface SetupRequest {
+  readonly token: string;
+  readonly name: string;
+  readonly password: string;
+}
+
+export interface LoginRequest {
+  readonly email: string;
+  readonly password: string;
+}
+
+// ---------------------------------------------------------------------------
+// Shared Base
+// ---------------------------------------------------------------------------
+
 export interface HealthResponse {
   readonly status: "ok";
   readonly timestamp: string;
