@@ -88,6 +88,6 @@ Also updated `--primary` CSS variable from blue to indigo (`239 84% 67%`) in `pa
 
 3 tests in `apps/web/components/shell/__tests__/mobile-drawer.test.tsx`. Covers: hamburger renders when `onMenuClick` provided; absent when not provided; calls handler on click.
 
-**Commit:** <!-- SHA filled after commit -->
+**Commit:** `a8bc85b`
 
 **Acceptance:** All 106 web tests pass · `pnpm typecheck` green.
