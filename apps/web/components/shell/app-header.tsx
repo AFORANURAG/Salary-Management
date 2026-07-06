@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Bell } from "lucide-react";
+import { Bell, Menu } from "lucide-react";
 import { cn } from "@salary-mgmt/ui";
 import { getNavItem } from "./nav-items";
 import { UserMenu } from "./user-menu";
@@ -31,15 +31,31 @@ function NotificationBell(): React.JSX.Element {
   );
 }
 
-export function AppHeader(): React.JSX.Element {
+interface AppHeaderProps {
+  onMenuClick?: () => void;
+}
+
+export function AppHeader({ onMenuClick }: AppHeaderProps): React.JSX.Element {
   const pathname = usePathname();
   const pageTitle = getNavItem(pathname)?.label ?? "ACME HRMS";
 
   return (
     <header
       data-testid="app-header"
-      className="h-14 bg-background border-b border-border flex items-center px-4 gap-4 sticky top-0 z-40 flex-shrink-0"
+      className="h-14 bg-background border-b border-border flex items-center px-4 gap-3 sticky top-0 z-40 flex-shrink-0"
     >
+      {/* Hamburger — mobile only */}
+      {onMenuClick && (
+        <button
+          data-testid="hamburger"
+          aria-label="Open navigation"
+          onClick={onMenuClick}
+          className="md:hidden flex items-center justify-center w-8 h-8 rounded-md hover:bg-accent text-muted-foreground transition-colors"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+      )}
+
       {/* Left: logo + wordmark */}
       <div className="flex items-center gap-2 select-none">
         <LogoMark />

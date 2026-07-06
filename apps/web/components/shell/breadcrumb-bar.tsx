@@ -63,7 +63,7 @@ export function BreadcrumbBar(): React.JSX.Element | null {
   return (
     <div
       data-testid="breadcrumb-bar"
-      className="h-10 bg-background border-b border-border flex items-center px-5 gap-1 flex-shrink-0"
+      className="h-10 bg-background border-b border-border flex items-center px-5 gap-1 flex-shrink-0 sticky top-14 z-30"
     >
       {segments.map((seg, i) => {
         const isLast = i === segments.length - 1;

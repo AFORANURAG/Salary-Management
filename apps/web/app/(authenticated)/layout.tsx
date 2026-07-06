@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { SessionProvider, useSessionContext } from "@/components/session-provider";
-import { Skeleton } from "@salary-mgmt/ui";
+import { Sheet, SheetContent, Skeleton } from "@salary-mgmt/ui";
 import { AppSidebar } from "@/components/shell/app-sidebar";
 import { AppHeader } from "@/components/shell/app-header";
 import { BreadcrumbBar } from "@/components/shell/breadcrumb-bar";
@@ -36,6 +36,13 @@ function ShellSkeleton(): React.JSX.Element {
 function AuthGate({ children }: { children: React.ReactNode }): React.JSX.Element {
   const { isLoading, isAuthenticated } = useSessionContext();
   const router = useRouter();
+  const pathname = usePathname();
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  // Close drawer on route change
+  useEffect(() => {
+    setDrawerOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -53,9 +60,24 @@ function AuthGate({ children }: { children: React.ReactNode }): React.JSX.Elemen
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
-      <AppHeader />
+      <AppHeader onMenuClick={() => setDrawerOpen(true)} />
       <div className="flex flex-1 overflow-hidden">
-        <AppSidebar />
+        {/* Desktop sidebar — hidden below md */}
+        <div className="hidden md:flex">
+          <AppSidebar />
+        </div>
+
+        {/* Mobile drawer */}
+        <Sheet open={drawerOpen} onOpenChange={setDrawerOpen}>
+          <SheetContent
+            data-testid="mobile-drawer"
+            className="w-60 p-0"
+            aria-label="Navigation"
+          >
+            <AppSidebar />
+          </SheetContent>
+        </Sheet>
+
         <main className="flex-1 flex flex-col overflow-hidden">
           <BreadcrumbBar />
           <div className="flex-1 overflow-y-auto">

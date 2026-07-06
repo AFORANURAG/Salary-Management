@@ -16,3 +16,4 @@ export * from "./hooks/use-toast";
 export * from "./lib/utils";
 export * from "./components/ui/table";
 export * from "./components/ui/select";
+export * from "./components/ui/sheet";
