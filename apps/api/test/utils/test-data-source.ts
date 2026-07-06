@@ -1,5 +1,6 @@
 import { DataSource } from "typeorm";
 import { EmployeeEntity } from "../../src/employees/employee.entity";
+import { HrUserEntity } from "../../src/hr-users/hr-user.entity";
 import { PayrollResultEntity } from "../../src/payroll/payroll-result.entity";
 import { SalaryComponentEntity } from "../../src/salary/salary-component.entity";
 import { SalaryStructureEntity } from "../../src/salary/salary-structure.entity";
@@ -24,7 +25,7 @@ export const TestDataSource = new DataSource({
   username,
   password,
   database,
-  entities: [EmployeeEntity, SalaryStructureEntity, SalaryComponentEntity, PayrollResultEntity],
+  entities: [EmployeeEntity, HrUserEntity, SalaryStructureEntity, SalaryComponentEntity, PayrollResultEntity],
   synchronize: false,
   logging: false,
 });
@@ -47,6 +48,6 @@ export async function truncateAll(): Promise<void> {
   const ds = await initTestDataSource();
   // Order respects FK constraints: payroll_results → components → structures → employees
   await ds.query(
-    'TRUNCATE TABLE "payroll_results", "salary_components", "salary_structures", "employees" RESTART IDENTITY CASCADE',
+    'TRUNCATE TABLE "payroll_results", "salary_components", "salary_structures", "employees", "hr_users" RESTART IDENTITY CASCADE',
   );
 }

@@ -1,6 +1,7 @@
 import { Client } from "pg";
 import { DataSource } from "typeorm";
 import { EmployeeEntity } from "../../src/employees/employee.entity";
+import { HrUserEntity } from "../../src/hr-users/hr-user.entity";
 import { PayrollResultEntity } from "../../src/payroll/payroll-result.entity";
 import { SalaryComponentEntity } from "../../src/salary/salary-component.entity";
 import { SalaryStructureEntity } from "../../src/salary/salary-structure.entity";
@@ -8,6 +9,7 @@ import { CreateEmployees1751000000000 } from "../../src/database/migrations/1751
 import { CreateSalaryStructure1751100000000 } from "../../src/database/migrations/1751100000000-CreateSalaryStructure";
 import { AddSalaryStructureOpenVersionIndex1751200000000 } from "../../src/database/migrations/1751200000000-AddSalaryStructureOpenVersionIndex";
 import { CreatePayrollResults1751300000000 } from "../../src/database/migrations/1751300000000-CreatePayrollResults";
+import { CreateHrUsers1751400000000 } from "../../src/database/migrations/1751400000000-CreateHrUsers";
 
 const host = process.env.DB_HOST ?? "localhost";
 const port = Number(process.env.DB_PORT ?? 5432);
@@ -44,8 +46,8 @@ export async function setup(): Promise<void> {
     username,
     password,
     database: testDbName,
-    entities: [EmployeeEntity, SalaryStructureEntity, SalaryComponentEntity, PayrollResultEntity],
-    migrations: [CreateEmployees1751000000000, CreateSalaryStructure1751100000000, AddSalaryStructureOpenVersionIndex1751200000000, CreatePayrollResults1751300000000],
+    entities: [EmployeeEntity, HrUserEntity, SalaryStructureEntity, SalaryComponentEntity, PayrollResultEntity],
+    migrations: [CreateEmployees1751000000000, CreateSalaryStructure1751100000000, AddSalaryStructureOpenVersionIndex1751200000000, CreatePayrollResults1751300000000, CreateHrUsers1751400000000],
     synchronize: false,
     logging: false,
   });
