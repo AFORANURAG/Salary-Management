@@ -47,8 +47,8 @@ Branch: `feat/app-shell-pr1-sidebar`
 | AS4 | Unit spec: ADMIN sees all 9 items + Admin section; HR_MANAGER missing Admin section (DOM check); HR_VIEWER same; active route item has accent class; inactive items do not; collapse toggle changes width class + persists to localStorage | `test(web): add AppSidebar unit specs` |
 
 **Acceptance**
-- [ ] Unit specs GREEN.
-- [ ] `pnpm typecheck` passes.
+- [x] Unit specs GREEN.
+- [x] `pnpm typecheck` passes.
 
 ---
 
@@ -63,8 +63,8 @@ Branch: `feat/app-shell-pr2-header`
 | AS7 | Unit spec: avatar initials from name; role badge variant correct per role; logout calls `postLogout` and routes to `/auth/login` | `test(web): add AppHeader and UserMenu unit specs` |
 
 **Acceptance**
-- [ ] Unit specs GREEN.
-- [ ] `pnpm typecheck` passes.
+- [x] Unit specs GREEN.
+- [x] `pnpm typecheck` passes.
 
 ---
 
