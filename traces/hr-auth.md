@@ -19,7 +19,7 @@ _Pending commit_
 
 ## Phase 3 — API Implementation / GREEN (branch: `feat/hr-auth-pr3-api`)
 
-**Commit:** TBD (this commit)
+**Commit:** `e9e2cd3`
 
 ### Tasks completed
 - HA1: `HrUserRole`, `HrUserStatus`, `HrUser`, `AuthMeResponse`, `InviteRequest/Response`, `SetupRequest`, `LoginRequest` added to `packages/types/src/index.ts`
