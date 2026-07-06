@@ -6,7 +6,6 @@ import { SessionProvider, useSessionContext } from "@/components/session-provide
 import { Sheet, SheetContent, Skeleton } from "@salary-mgmt/ui";
 import { AppSidebar } from "@/components/shell/app-sidebar";
 import { AppHeader } from "@/components/shell/app-header";
-import { BreadcrumbBar } from "@/components/shell/breadcrumb-bar";
 
 function ShellSkeleton(): React.JSX.Element {
   return (
@@ -79,8 +78,7 @@ function AuthGate({ children }: { children: React.ReactNode }): React.JSX.Elemen
         </Sheet>
 
         <main className="flex-1 flex flex-col overflow-hidden">
-          <BreadcrumbBar />
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden">
             {children}
           </div>
         </main>

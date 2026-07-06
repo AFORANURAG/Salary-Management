@@ -70,6 +70,7 @@ export function EmployeeList({
   const hasActions = Boolean(onEdit ?? onDelete);
 
   return (
+    <div className="overflow-x-auto rounded-md border border-border">
     <Table>
       <TableHeader>
         <TableRow>
@@ -131,5 +132,6 @@ export function EmployeeList({
         ))}
       </TableBody>
     </Table>
+    </div>
   );
 }

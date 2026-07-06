@@ -16,7 +16,14 @@ function canSeeItem(itemRoles: HrUserRole[] | undefined, userRole: HrUserRole): 
 
 function isActive(href: string, pathname: string): boolean {
   if (href === "/") return pathname === "/";
-  return pathname === href || pathname.startsWith(href + "/");
+  if (pathname !== href && !pathname.startsWith(href + "/")) return false;
+  // Deactivate if a more specific nav item also matches
+  return !NAV_ITEMS.some(
+    (other) =>
+      other.href !== href &&
+      other.href.startsWith(href + "/") &&
+      (pathname === other.href || pathname.startsWith(other.href + "/")),
+  );
 }
 
 export function AppSidebar(): React.JSX.Element {
