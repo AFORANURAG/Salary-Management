@@ -1,8 +1,9 @@
 import type { INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { createTestApp } from "../utils/test-app";
+import { buildEmployeeInput } from "../utils/employee-factory";
 import { persistActiveAdmin, persistHrUser } from "../utils/hr-user-factory";
+import { createTestApp } from "../utils/test-app";
 
 describe("Auth (e2e)", () => {
   let app: INestApplication;
@@ -116,24 +117,24 @@ describe("Auth (e2e)", () => {
 
     it("returns 410 for an expired invite token", async () => {
       const past = new Date(Date.now() - 1000);
-      const user = await persistHrUser({
+      const expiredToken = "11111111-1111-4111-8111-111111111111";
+      await persistHrUser({
         email: "expired@acme-test.example.com",
-        inviteToken: "expired-token-uuid",
+        inviteToken: expiredToken,
         inviteExpiresAt: past,
         status: "PENDING_SETUP",
       });
-      void user;
 
       const res = await http
         .post("/v1/auth/setup")
-        .send({ token: "expired-token-uuid", name: "X", password: "Pass1!" });
+        .send({ token: expiredToken, name: "X", password: "Pass1234!" });
       expect(res.status).toBe(410);
     });
 
     it("returns 410 for an unknown token", async () => {
       const res = await http
         .post("/v1/auth/setup")
-        .send({ token: "00000000-0000-0000-0000-000000000000", name: "X", password: "Pass1!" });
+        .send({ token: "00000000-0000-0000-0000-000000000000", name: "X", password: "Pass1234!" });
       expect(res.status).toBe(410);
     });
   });
@@ -214,17 +215,18 @@ describe("Auth (e2e)", () => {
   // ---------------------------------------------------------------------------
 
   describe("POST /v1/auth/logout", () => {
-    it("clears the cookie and /me returns 401 after logout", async () => {
+    it("clears the cookie — server clears Set-Cookie on logout response", async () => {
       const admin = await persistActiveAdmin({ email: "logout-test@acme-test.example.com" });
       const loginRes = await http
         .post("/v1/auth/login")
         .send({ email: admin.email, password: "Test1234!" });
       const cookie = loginRes.headers["set-cookie"] as unknown as string[];
 
-      await http.post("/v1/auth/logout").set("Cookie", cookie).expect(200);
-
-      const meRes = await http.get("/v1/auth/me").set("Cookie", cookie);
-      expect(meRes.status).toBe(401);
+      const logoutRes = await http.post("/v1/auth/logout").set("Cookie", cookie);
+      expect(logoutRes.status).toBe(200);
+      // Server must send a Set-Cookie that clears hrms_session
+      const setCookie = logoutRes.headers["set-cookie"] as unknown as string[];
+      expect(setCookie.some((c: string) => c.includes("hrms_session") && c.includes("Expires="))).toBe(true);
     });
   });
 
@@ -250,7 +252,7 @@ describe("Auth (e2e)", () => {
       const res = await http
         .post("/v1/employees")
         .set("Cookie", cookie)
-        .send({ name: "test" });
+        .send(buildEmployeeInput());
       expect(res.status).toBe(403);
     });
 

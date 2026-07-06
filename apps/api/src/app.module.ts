@@ -1,4 +1,8 @@
 import { Module } from "@nestjs/common";
+import { APP_GUARD } from "@nestjs/core";
+import { AuthModule } from "./auth/auth.module";
+import { JwtAuthGuard } from "./auth/jwt-auth.guard";
+import { RolesGuard } from "./auth/roles.guard";
 import { CommonModule } from "./common/common.module";
 import { DatabaseModule } from "./database/database.module";
 import { EmployeesModule } from "./employees/employees.module";
@@ -14,12 +18,17 @@ import { SalaryModule } from "./salary/salary.module";
     HealthModule,
     DatabaseModule,
     CommonModule,
+    AuthModule,
     HrUsersModule,
     EmployeesModule,
     SalaryModule,
     PayrollModule,
     PayslipsModule,
     ReportingModule,
+  ],
+  providers: [
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_GUARD, useClass: RolesGuard },
   ],
 })
 export class AppModule {}

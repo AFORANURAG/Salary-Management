@@ -2,13 +2,14 @@ import type { INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { persistEmployees } from "../utils/persist-employee";
-import { createTestApp } from "../utils/test-app";
+import { createTestApp, loginAsAdmin } from "../utils/test-app";
 
 const SCALE = 10_000;
 
 describe("Employees list at scale (e2e)", () => {
   let app: INestApplication;
   let http: ReturnType<typeof request>;
+  let authCookie: string[];
 
   beforeAll(async () => {
     app = await createTestApp();
@@ -18,6 +19,7 @@ describe("Employees list at scale (e2e)", () => {
   // The global beforeEach truncates the DB; this local beforeEach re-seeds
   // after truncation so each test starts with a full 10k dataset.
   beforeEach(async () => {
+    authCookie = await loginAsAdmin(app);
     await persistEmployees(SCALE, (i) => ({
       name: i % 2 === 0 ? `ScaleUser ${i}` : `Other ${i}`,
       department: i % 3 === 0 ? "Engineering" : "Sales",
@@ -35,6 +37,7 @@ describe("Employees list at scale (e2e)", () => {
       // (1) paginated search returns correct total
       const searchRes = await http
         .get("/v1/employees")
+        .set("Cookie", authCookie)
         .query({ q: "ScaleUser", page: 1, pageSize: 25 });
       expect(searchRes.status).toBe(200);
       expect(searchRes.body.total).toBe(SCALE / 2);
@@ -43,6 +46,7 @@ describe("Employees list at scale (e2e)", () => {
       // (2) filters + search compose correctly
       const filterRes = await http
         .get("/v1/employees")
+        .set("Cookie", authCookie)
         .query({ q: "ScaleUser", department: "Engineering", country: "US" });
       expect(filterRes.status).toBe(200);
       expect(filterRes.body.total).toBeGreaterThan(0);
@@ -51,7 +55,7 @@ describe("Employees list at scale (e2e)", () => {
       const samples: number[] = [];
       for (let n = 0; n < 20; n += 1) {
         const start = performance.now();
-        await http.get("/v1/employees").query({ page: n + 1, pageSize: 25, sort: "name:asc" });
+        await http.get("/v1/employees").set("Cookie", authCookie).query({ page: n + 1, pageSize: 25, sort: "name:asc" });
         samples.push(performance.now() - start);
       }
       samples.sort((a, b) => a - b);
