@@ -79,9 +79,9 @@ Branch: `feat/app-shell-pr3-layout`
 | AS10 | Unit spec: breadcrumb for `/employees` → ["Employees"]; `/employees/{uuid}` → ["Employees", "{employee.name}"]; `/payroll/{period}` → ["Payroll", "{period}"]; `/audit-log` → ["Admin", "Audit Log"] | `test(web): add BreadcrumbBar unit specs` |
 
 **Acceptance**
-- [ ] Unit specs GREEN.
-- [ ] All existing page routes still render inside layout.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green.
+- [x] Unit specs GREEN.
+- [x] All existing page routes still render inside layout.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green.
 
 ---
 

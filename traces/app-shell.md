@@ -51,3 +51,23 @@ Also updated `--primary` CSS variable from blue to indigo (`239 84% 67%`) in `pa
 **Commit:** `230f088`
 
 **Acceptance:** All 97 web tests pass · `pnpm typecheck` green.
+
+---
+
+## Phase 3 — Authenticated Layout & Breadcrumbs (`feat/app-shell-pr3-layout`)
+
+### AS8 — BreadcrumbBar component
+
+`apps/web/components/shell/breadcrumb-bar.tsx`. Client component. Splits `usePathname()` into segments, maps each against `NAV_ITEMS` by accumulated href. UUID segments resolved to employee name via `useEmployee` (cache hit — no extra request if detail page loaded first). Falls back to raw segment string if not yet cached. Last segment unlinked; returns `null` on root path.
+
+### AS9 — AuthenticatedLayout wired
+
+`app/(authenticated)/layout.tsx` now renders the full shell: `AppHeader` (sticky top), `AppSidebar` (fixed left), `BreadcrumbBar` (below header), `children` in a scrollable main area. Loading skeleton upgraded to match shell chrome shape.
+
+### AS10 — Unit specs
+
+6 tests in `apps/web/components/shell/__tests__/breadcrumb-bar.test.tsx`. Covers: root returns null; `/employees` single unlinked segment; `/employees/{uuid}` linked parent + resolved name; UUID fallback when not cached; `/payroll/{period}` two-segment; `/audit-log` mapped label.
+
+**Commit:** <!-- SHA filled after commit -->
+
+**Acceptance:** All 103 web tests pass · `pnpm typecheck` green.
