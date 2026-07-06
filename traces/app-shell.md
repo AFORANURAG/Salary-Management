@@ -48,6 +48,6 @@ Sidebar toggles between `w-60` (expanded) and `w-16` (icon rail) via `useLocalSt
 
 Also updated `--primary` CSS variable from blue to indigo (`239 84% 67%`) in `packages/ui/src/globals.css` for consistent color grading across the product.
 
-**Commit:** <!-- SHA filled after commit -->
+**Commit:** `230f088`
 
 **Acceptance:** All 97 web tests pass · `pnpm typecheck` green.
