@@ -7,13 +7,22 @@ Plan: `docs/plans/hr-auth.md`
 
 ## Phase 1 — DB Models (branch: `feat/hr-auth-pr1-db-models`)
 
-_Pending commit_
+**Commit:** `7cb27a0` · **Merge PR #44:** `81b05d5`
+
+### Tasks completed
+- HA1: `HrUserRole`, `HrUserStatus`, `HrUser`, `AuthMeResponse`, `InviteRequest/Response`, `SetupRequest`, `LoginRequest` added to `packages/types/src/index.ts`
+- HA2: `BaseEntity` (id + createdAt + updatedAt) at `apps/api/src/common/base.entity.ts`; `HrUserEntity` extending `BaseEntity` with all columns and indexes at `apps/api/src/hr-users/hr-user.entity.ts`
+- HA3: Migration `1751400000000-CreateHrUsers.ts` — `hr_users` table, enums, partial unique index on invite_token; `HrUsersModule` stub registered in `AppModule`
 
 ---
 
 ## Phase 2 — Test Harness / RED (branch: `feat/hr-auth-pr2-test-harness`)
 
-_Pending commit_
+**Commit:** `5e5226d` · **Merge PR #45:** `d3a570c`
+
+### Tasks completed
+- HA4: `auth.service.spec.ts` — 9 unit specs covering invite, setup (valid/expired), login (correct/wrong/pending-setup), JwtStrategy validate
+- HA5: `auth.e2e-spec.ts` — 16 integration specs covering full cookie flow, role enforcement, duplicate invite, expired token, public routes
 
 ---
 
@@ -67,21 +76,21 @@ _Pending commit_
 
 ## Phase 5 — Frontend Types + Hooks (branch: `feat/hr-auth-fe-pr1-types-hooks`)
 
-**Commit:** `7bf7ece`
+**Commit:** `7bf7ece` · **Merge PR #48:** `909624b`
 
 ### Tasks completed
-- HA15: `packages/store/src/api/auth.ts` — `getMe`, `postLogin`, `postSetup`, `postLogout`, `postInvite`
-- HA16: `useSession` hook — `staleTime: Infinity`, `retry: false`; returns `{ user, isLoading, isAuthenticated }`
-- HA17: 4 unit specs — authenticated, 401, 500, and loading states
+- HA15: `packages/store/src/api/auth.ts` — `getMe`, `postLogin`, `postSetup`, `postLogout`, `postInvite`; `credentials: "include"` added to all fetch calls in `api/client.ts`
+- HA16: `useSession` hook — `staleTime: Infinity`, `retry: false`; returns `{ user, isLoading, isAuthenticated }`; `useLogin` mutation (invalidates session on success); `useLogout` mutation (clears query cache on success)
+- HA17: 15 unit specs — `useSession` (authenticated/401/500/loading), `useLogin` (idle/isPending/success/401), `useLogout` (success)
 
 ### Test results
-- 10/10 store tests GREEN
+- 15/15 store tests GREEN
 
 ---
 
 ## Phase 6 — Auth Pages (branch: `feat/hr-auth-fe-pr2-pages`)
 
-**Commit:** `83484ff`
+**Commit:** `83484ff` · **Merge PR #49:** `6f79bb6`
 
 ### Tasks completed
 - HA18: Restructured `app/` into `(auth)/` and `(authenticated)/` route groups; moved all existing pages; fixed all relative test imports to `@/` alias
@@ -100,12 +109,17 @@ _Pending commit_
 
 ## Phase 7 — Route Protection (branch: `feat/hr-auth-fe-pr3-protection`)
 
-**Commit:** `9ac241a`
+**Commit:** `9ac241a` · **Merge PR #50:** `d0458bf`
 
 ### Tasks completed
-- HA22: `middleware.ts` — redirects `/auth/login` when `hrms_session` cookie absent
-- HA23: `SessionProvider` — wraps children; subscribes to 401 query errors → `postLogout()` + redirect
-- HA24: `AuthenticatedLayout` — session gate with loading skeleton; `AuthGate` redirects if `!isAuthenticated`
+- HA22: `middleware.ts` — redirects to `/login` when `hrms_session` cookie absent; `/login` and `/setup` are public (exact path match, not prefix)
+- HA23: `SessionProvider` — wraps children; subscribes to 401 query errors → `postLogout()` + redirect to `/login`
+- HA24: `AuthenticatedLayout` — session gate with loading skeleton; `AuthGate` redirects to `/login` if `!isAuthenticated`
+
+### Post-merge fixes (on `feat/hr-auth-fe-pr5-e2e`)
+- `AuthGate` was still redirecting to `/auth/login` (stale) — corrected to `/login`
+- CORS config missing `credentials: true` on API — added to `main.ts`
+- Login page was calling `postLogin` directly — migrated to `useLogin` mutation
 
 ### Test results
 - 73/73 GREEN, typecheck clean
@@ -114,7 +128,7 @@ _Pending commit_
 
 ## Phase 8 — Frontend Integration Tests (branch: `feat/hr-auth-fe-pr4-integration`)
 
-**Commit:** `cb08dca`
+**Commit:** `cb08dca` · **Merge PR #51:** `8b7bf3f`
 
 ### Tasks completed
 - HA25: `test/msw/handlers/auth.ts` — GET /me (200), POST login/logout (200), 401 variants, login-fail variant; registered in server
@@ -131,12 +145,42 @@ _Pending commit_
 
 ## Phase 9 — E2E Tests (branch: `feat/hr-auth-fe-pr5-e2e`)
 
-**Commit:** `a65712d`
+**Commits:** `a65712d`, `430408b` · **Merge PR #52:** `d51571c`
 
 ### Tasks completed
-- `e2e/helpers.ts`: `loginViaApi`, `loginViaUI`, `getSessionCookie`; `createEmployee`/`deleteEmployee` now require `cookieHeader`
-- `e2e/auth/auth.spec.ts`: 5 Playwright specs — redirect, login success/fail, session cookie, setup no-token
+- `e2e/helpers.ts`: `loginViaApi`, `loginViaUI`, `getSessionCookie`; all E2E routes updated from `/auth/login` → `/login` and `/auth/setup` → `/setup`
+- `e2e/auth/auth.spec.ts`: 5 Playwright specs — unauthenticated redirect, login success/fail, session cookie present, setup no-token error
 - All 5 existing E2E spec files updated: `test.beforeEach` with `loginViaApi`; API calls thread `cookieHeader`
+- `useSearchParams` wrapped in `Suspense` boundary on setup page (Next.js App Router requirement)
+- `login/page.tsx` migrated from raw `postLogin` to `useLogin` mutation; login page unit tests updated to mock `useLogin`
+- `useLogin`/`useLogout` unit tests added to `use-session.test.tsx` (15 total specs)
+- `seed.ts`: `dotenv/config` imported so `.env` is loaded without shell env var injection
 
 ### Test results
-- 77/77 unit tests GREEN (E2E requires live server)
+- 77/77 web unit tests GREEN
+- 166/166 api tests GREEN
+- 15/15 store tests GREEN
+- E2E requires `docker compose up --build`
+
+---
+
+## Post-merge Status
+
+**All 9 PRs merged to main as of 2026-07-06.**
+
+| PR | Branch | SHA |
+|---|---|---|
+| #44 | `feat/hr-auth-pr1-db-models` | `81b05d5` |
+| #45 | `feat/hr-auth-pr2-test-harness` | `d3a570c` |
+| #46 | `feat/hr-auth-pr3-api` | `6c06a4f` |
+| #47 | `feat/hr-auth-pr4-guard-wiring` | `10a12b2` |
+| #48 | `feat/hr-auth-fe-pr1-types-hooks` | `909624b` |
+| #49 | `feat/hr-auth-fe-pr2-pages` | `6f79bb6` |
+| #50 | `feat/hr-auth-fe-pr3-protection` | `d0458bf` |
+| #51 | `feat/hr-auth-fe-pr4-integration` | `8b7bf3f` |
+| #52 | `feat/hr-auth-fe-pr5-e2e` | `d51571c` |
+
+### Deviations from spec
+- Routes are `/login` and `/setup` (not `/auth/login`, `/auth/setup`) — Next.js route groups `(auth)` strip the folder name from the URL. Spec text reflects original intent; implementation is correct.
+- Invite URL built as `${FRONTEND_URL}/setup?token=...` (not `/auth/setup`) for the same reason.
+- `useLogin` and `useLogout` hooks added beyond spec's `useSession` — required for React Query DevTools visibility and consistent mutation pattern.

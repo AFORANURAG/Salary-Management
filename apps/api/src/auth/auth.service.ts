@@ -56,7 +56,7 @@ export class AuthService {
     const frontendUrl = process.env.FRONTEND_URL ?? "http://localhost:3000";
     return {
       inviteToken,
-      inviteUrl: `${frontendUrl}/auth/setup?token=${inviteToken}`,
+      inviteUrl: `${frontendUrl}/setup?token=${inviteToken}`,
     };
   }
 

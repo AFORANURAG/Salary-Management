@@ -10,21 +10,28 @@ vi.mock("next/navigation", () => ({
   useSearchParams: () => ({ get: () => null }),
 }));
 
-vi.mock("@salary-mgmt/store", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@salary-mgmt/store")>();
-  return { ...actual, postLogin: vi.fn() };
+const mockMutate = vi.fn();
+vi.mock("@salary-mgmt/store/query", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@salary-mgmt/store/query")>();
+  return {
+    ...actual,
+    useLogin: () => ({
+      mutate: mockMutate,
+      isPending: false,
+      error: null,
+      isSuccess: false,
+      isError: false,
+    }),
+  };
 });
-
-import { postLogin } from "@salary-mgmt/store";
-const mockPostLogin = postLogin as ReturnType<typeof vi.fn>;
 
 describe("LoginPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("calls postLogin with email and password on submit", async () => {
-    mockPostLogin.mockResolvedValue(undefined);
+  it("calls mutate with email and password on submit", async () => {
+    mockMutate.mockImplementation(() => {});
 
     render(<LoginPage />);
 
@@ -33,15 +40,17 @@ describe("LoginPage", () => {
     await userEvent.click(screen.getByRole("button", { name: /sign in/i }));
 
     await waitFor(() => {
-      expect(mockPostLogin).toHaveBeenCalledWith({
-        email: "admin@acme.com",
-        password: "Test1234!",
-      });
+      expect(mockMutate).toHaveBeenCalledWith(
+        { email: "admin@acme.com", password: "Test1234!" },
+        expect.objectContaining({ onSuccess: expect.any(Function) }),
+      );
     });
   });
 
-  it("redirects to / on successful login", async () => {
-    mockPostLogin.mockResolvedValue(undefined);
+  it("redirects to / on successful login via onSuccess callback", async () => {
+    mockMutate.mockImplementation((_vars: unknown, opts: { onSuccess: () => void }) => {
+      opts.onSuccess();
+    });
 
     render(<LoginPage />);
 
@@ -52,22 +61,30 @@ describe("LoginPage", () => {
     await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/"));
   });
 
-  it("shows error banner on 401 response", async () => {
-    mockPostLogin.mockRejectedValue(new ApiError("Unauthorized", 401));
+  it("shows error banner when login.error is a 401", async () => {
+    vi.doMock("@salary-mgmt/store/query", async (importOriginal) => {
+      const actual = await importOriginal<typeof import("@salary-mgmt/store/query")>();
+      return {
+        ...actual,
+        useLogin: () => ({
+          mutate: mockMutate,
+          isPending: false,
+          error: new ApiError("Unauthorized", 401),
+          isSuccess: false,
+          isError: true,
+        }),
+      };
+    });
 
-    render(<LoginPage />);
-
-    await userEvent.type(screen.getByLabelText(/email/i), "bad@acme.com");
-    await userEvent.type(screen.getByLabelText(/password/i), "wrongpass");
-    await userEvent.click(screen.getByRole("button", { name: /sign in/i }));
+    const { default: LoginPageWithError } = await import("../login/page?error=1");
+    render(<LoginPageWithError />);
 
     await waitFor(() => {
       expect(screen.getByRole("alert")).toHaveTextContent("Invalid email or password");
     });
-    expect(mockPush).not.toHaveBeenCalled();
   });
 
-  it("does not submit with an invalid email", async () => {
+  it("does not call mutate with an invalid email", async () => {
     render(<LoginPage />);
 
     await userEvent.type(screen.getByLabelText(/email/i), "not-an-email");
@@ -77,6 +94,6 @@ describe("LoginPage", () => {
     await waitFor(() => {
       expect(screen.getByText(/valid email/i)).toBeInTheDocument();
     });
-    expect(mockPostLogin).not.toHaveBeenCalled();
+    expect(mockMutate).not.toHaveBeenCalled();
   });
 });
