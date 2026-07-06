@@ -118,4 +118,4 @@ Two tests added to `app/(authenticated)/__tests__/integration/authenticated-layo
 
 **Commit:** `f3000c9`
 
-**Acceptance:** Pending full-stack run (`docker compose up --build` + `pnpm e2e`).
+**Acceptance:** 9/9 E2E tests pass against running stack.

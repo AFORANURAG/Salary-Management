@@ -128,14 +128,14 @@ Branch: `feat/app-shell-pr6-e2e`
 | AS18 | E2E: mobile viewport (375px) — sidebar closed by default; hamburger opens drawer; overlay click closes it | `test(web): add shell E2E specs AS15–AS18` |
 
 **Acceptance**
-- [ ] All 4 E2E specs GREEN against running stack.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] All 4 E2E specs GREEN against running stack (9/9 tests pass).
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
 ### Checkpoint: Complete
-- [ ] All spec Non-Negotiable Test Cases covered and green.
-- [ ] Shell visible on all authenticated routes.
-- [ ] Admin section DOM-absent for non-ADMIN (verified in E2E).
-- [ ] Ready for review.
+- [x] All spec Non-Negotiable Test Cases covered and green.
+- [x] Shell visible on all authenticated routes.
+- [x] Admin section DOM-absent for non-ADMIN (verified in E2E).
+- [x] Ready for review.
 
 ---
 

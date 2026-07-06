@@ -20,7 +20,7 @@ async function createViewerUser(adminCookie: string): Promise<void> {
   const setupRes = await fetch(`${API}/auth/setup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ token: inviteToken, password: VIEWER_PASSWORD }),
+    body: JSON.stringify({ token: inviteToken, name: "E2E Viewer", password: VIEWER_PASSWORD }),
   });
   if (!setupRes.ok) throw new Error(`setup failed: ${setupRes.status}`);
 }
@@ -47,7 +47,7 @@ test.describe("AS15: shell — ADMIN sidebar navigation", () => {
     // All sections
     await expect(sidebar.getByText("Overview")).toBeVisible();
     await expect(sidebar.getByText("Workforce")).toBeVisible();
-    await expect(sidebar.getByText("Payroll")).toBeVisible();
+    await expect(sidebar.getByText("Payroll", { exact: true })).toBeVisible();
     await expect(sidebar.getByText("Reporting")).toBeVisible();
     await expect(sidebar.getByText("Admin")).toBeVisible();
 
