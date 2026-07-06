@@ -77,4 +77,19 @@ describe("BreadcrumbBar", () => {
     render(<BreadcrumbBar />);
     expect(screen.getByText("Audit Log")).toBeInTheDocument();
   });
+
+  it("renders Employees / {name} / Payslips / {period} for deep payslip route", () => {
+    const uuid = "11111111-1111-1111-1111-111111111111";
+    mockPathname.mockReturnValue(`/employees/${uuid}/payslips/2025-06`);
+    mockUseEmployee.mockReturnValue({ data: { name: "Sarah Mitchell" } });
+
+    render(<BreadcrumbBar />);
+
+    expect(screen.getByRole("link", { name: "Employees" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Sarah Mitchell" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Payslips" })).toBeInTheDocument();
+    expect(screen.getByText("2025-06")).toBeInTheDocument();
+    // last segment is unlinked
+    expect(screen.queryByRole("link", { name: "2025-06" })).not.toBeInTheDocument();
+  });
 });
