@@ -1,7 +1,9 @@
 import { faker } from "@faker-js/faker";
 import { DEPARTMENTS, type Department } from "@salary-mgmt/types";
+import * as bcrypt from "bcrypt";
 import { AppDataSource } from "./data-source";
 import { EmployeeEntity } from "../employees/employee.entity";
+import { HrUserEntity } from "../hr-users/hr-user.entity";
 import type { EmploymentStatus } from "@salary-mgmt/types";
 
 const COUNTRIES = ["US", "IN", "GB", "DE", "SG", "AU", "CA", "FR", "JP", "BR"] as const;
@@ -27,8 +29,30 @@ function buildEmployee(index: number): Partial<EmployeeEntity> {
   };
 }
 
+async function seedAdmin(): Promise<void> {
+  const email = process.env.SEED_ADMIN_EMAIL;
+  const password = process.env.SEED_ADMIN_PASSWORD;
+  if (!email || !password) {
+    console.log("Skipping admin seed — SEED_ADMIN_EMAIL or SEED_ADMIN_PASSWORD not set.");
+    return;
+  }
+  const repo = AppDataSource.getRepository(HrUserEntity);
+  const existing = await repo.findOne({ where: { email } });
+  if (existing) {
+    console.log(`Admin ${email} already exists — skipping.`);
+    return;
+  }
+  const rounds = Number(process.env.BCRYPT_ROUNDS ?? 12);
+  const passwordHash = await bcrypt.hash(password, rounds);
+  await repo.save(
+    repo.create({ email, name: "Admin", role: "ADMIN", passwordHash, status: "ACTIVE" }),
+  );
+  console.log(`Admin ${email} created.`);
+}
+
 async function seed(): Promise<void> {
   await AppDataSource.initialize();
+  await seedAdmin();
   const repo = AppDataSource.getRepository(EmployeeEntity);
 
   const existing = await repo.count();

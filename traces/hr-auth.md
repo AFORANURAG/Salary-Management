@@ -52,7 +52,16 @@ _Pending commit_
 
 ## Phase 4 — Guard Wiring (branch: `feat/hr-auth-pr4-guard-wiring`)
 
-_Pending_
+**Commits:** `b3ab1aa` (guards + seed), `905aab0` (integration tests)
+
+### Tasks completed
+- HA11: `seed.ts` upserts ADMIN from `SEED_ADMIN_EMAIL` + `SEED_ADMIN_PASSWORD`; idempotent
+- HA12: `@Roles("ADMIN", "HR_MANAGER")` on `EmployeesController.update/remove`, `SalaryStructureController.upsert`, `PayrollController.run`
+- HA13: `role-guards.e2e-spec.ts` — 11 specs covering HR_VIEWER 403 on all write endpoints; GETs return 200
+- HA14: `.env.example` already had all auth vars from pr3
+
+### Test results
+- 166/166 GREEN
 
 ---
 
