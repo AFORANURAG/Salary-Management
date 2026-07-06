@@ -25,8 +25,8 @@ test.describe("Auth — login page", () => {
     await page.getByLabel(/password/i).fill("wrongpassword123");
     await page.getByRole("button", { name: /sign in/i }).click();
 
-    await expect(page.getByRole("alert")).toBeVisible({ timeout: 5000 });
-    await expect(page.getByRole("alert")).toContainText(/invalid email or password/i);
+    const errorAlert = page.getByRole("alert").filter({ hasText: /invalid email or password/i });
+    await expect(errorAlert).toBeVisible({ timeout: 5000 });
     await expect(page).toHaveURL(/\/login/);
   });
 

@@ -95,6 +95,18 @@ describe("AppSidebar", () => {
     expect(dashboardLink).toHaveAttribute("data-active", "false");
   });
 
+  it("activates only the most specific nav item on a sub-route", () => {
+    mockPathname.mockReturnValue("/employees/bulk");
+    mockUseSessionContext.mockReturnValue(makeSession("ADMIN"));
+    render(<AppSidebar />);
+
+    const bulkLink = screen.getByRole("link", { name: /bulk operations/i });
+    expect(bulkLink).toHaveAttribute("data-active", "true");
+
+    const employeesLink = screen.getByRole("link", { name: /^employees$/i });
+    expect(employeesLink).toHaveAttribute("data-active", "false");
+  });
+
   it("hides text labels when collapsed", () => {
     mockCollapsedState.mockReturnValue(true);
     mockUseSessionContext.mockReturnValue(makeSession("ADMIN"));

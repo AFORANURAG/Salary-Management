@@ -61,7 +61,7 @@ function EmployeesPageContent() {
   );
 
   return (
-    <div className="mx-auto max-w-7xl space-y-4 p-6">
+    <div className="mx-auto w-full max-w-7xl space-y-4 p-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">Employees</h1>
         <Button onClick={() => setDialog({ type: "create" })}>Add Employee</Button>

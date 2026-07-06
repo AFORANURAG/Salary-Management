@@ -56,11 +56,15 @@ test.describe("Employees — filter", () => {
     try {
       await page.goto("/employees");
 
+      // Search by name first so both candidates are visible before filtering
+      await page.getByRole("searchbox").fill(emp.employeeCode);
+      await expect(page.getByText(emp.name)).toBeVisible({ timeout: 5000 });
+
       // Select "Finance" from the Department combobox
       await page.getByRole("combobox", { name: /department/i }).click();
       await page.getByRole("option", { name: "Finance" }).click();
 
-      // Finance employee should be visible; HR employee should not
+      // Finance employee should still be visible; HR employee should not
       await expect(page.getByText(emp.name)).toBeVisible({ timeout: 5000 });
       await expect(page.getByText(other.name)).not.toBeVisible();
     } finally {
@@ -129,7 +133,8 @@ test.describe("Employees — create", () => {
     await dialog.getByLabel(/employee code/i).fill(code);
     await dialog.getByLabel(/full name/i).fill(name);
     await dialog.getByLabel(/email/i).fill(email);
-    await dialog.getByLabel(/department/i).fill("E2E-Dept");
+    await dialog.getByRole("combobox", { name: /department/i }).click();
+    await page.getByRole("option", { name: "Engineering" }).click();
     await dialog.getByLabel(/designation/i).fill("Tester");
     await dialog.getByLabel(/country/i).fill("IN");
     await dialog.getByLabel(/currency/i).fill("INR");

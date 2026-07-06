@@ -112,8 +112,9 @@ test.describe("Reporting", () => {
       // Default groupBy=department: Finance row should appear
       await expect(page.getByText("Finance")).toBeVisible({ timeout: 15_000 });
 
-      // Switch groupBy to Country
-      await page.getByLabel("Group by").selectOption("country");
+      // Switch groupBy to Country (shadcn Select — click trigger then option)
+      await page.getByLabel("Group by").click();
+      await page.getByRole("option", { name: "Country" }).click();
 
       // Country column header now visible; department rows gone
       await expect(page.getByRole("columnheader", { name: /country/i })).toBeVisible({
