@@ -26,6 +26,6 @@ Sidebar toggles between `w-60` (expanded) and `w-16` (icon rail) via `useLocalSt
 - `apps/web/app/(auth)/__tests__/login-page.test.tsx`: refactored mock setup to use module-level state variables; added tests for 500 error banner and pending button state.
 - `apps/web/app/(authenticated)/__tests__/integration/authenticated-layout.integration.test.tsx`: updated redirect assertion to `/login`.
 
-**Commit:** <!-- SHA filled after commit -->
+**Commit:** `6f05142`
 
 **Acceptance:** All 86 web tests pass · `pnpm typecheck` green · `pnpm lint` green.
