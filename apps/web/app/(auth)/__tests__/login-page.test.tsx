@@ -11,16 +11,19 @@ vi.mock("next/navigation", () => ({
 }));
 
 const mockMutate = vi.fn();
+let mockError: ApiError | null = null;
+let mockIsPending = false;
+
 vi.mock("@salary-mgmt/store/query", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@salary-mgmt/store/query")>();
   return {
     ...actual,
     useLogin: () => ({
       mutate: mockMutate,
-      isPending: false,
-      error: null,
+      isPending: mockIsPending,
+      error: mockError,
       isSuccess: false,
-      isError: false,
+      isError: mockError !== null,
     }),
   };
 });
@@ -28,11 +31,12 @@ vi.mock("@salary-mgmt/store/query", async (importOriginal) => {
 describe("LoginPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockError = null;
+    mockIsPending = false;
   });
 
   it("calls mutate with email and password on submit", async () => {
     mockMutate.mockImplementation(() => {});
-
     render(<LoginPage />);
 
     await userEvent.type(screen.getByLabelText(/email/i), "admin@acme.com");
@@ -51,7 +55,6 @@ describe("LoginPage", () => {
     mockMutate.mockImplementation((_vars: unknown, opts: { onSuccess: () => void }) => {
       opts.onSuccess();
     });
-
     render(<LoginPage />);
 
     await userEvent.type(screen.getByLabelText(/email/i), "admin@acme.com");
@@ -62,26 +65,24 @@ describe("LoginPage", () => {
   });
 
   it("shows error banner when login.error is a 401", async () => {
-    vi.doMock("@salary-mgmt/store/query", async (importOriginal) => {
-      const actual = await importOriginal<typeof import("@salary-mgmt/store/query")>();
-      return {
-        ...actual,
-        useLogin: () => ({
-          mutate: mockMutate,
-          isPending: false,
-          error: new ApiError("Unauthorized", 401),
-          isSuccess: false,
-          isError: true,
-        }),
-      };
-    });
+    mockError = new ApiError("Unauthorized", 401);
+    render(<LoginPage />);
 
-    const { default: LoginPageWithError } = await import("../login/page?error=1");
-    render(<LoginPageWithError />);
+    expect(screen.getByRole("alert")).toHaveTextContent("Invalid email or password");
+  });
 
-    await waitFor(() => {
-      expect(screen.getByRole("alert")).toHaveTextContent("Invalid email or password");
-    });
+  it("shows generic error banner for non-401 errors", async () => {
+    mockError = new ApiError("Server Error", 500);
+    render(<LoginPage />);
+
+    expect(screen.getByRole("alert")).toHaveTextContent("Something went wrong");
+  });
+
+  it("disables submit button while isPending", () => {
+    mockIsPending = true;
+    render(<LoginPage />);
+
+    expect(screen.getByRole("button", { name: /signing in/i })).toBeDisabled();
   });
 
   it("does not call mutate with an invalid email", async () => {

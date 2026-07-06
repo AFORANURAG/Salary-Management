@@ -36,7 +36,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }): Re
           .catch(() => undefined)
           .then(() => {
             void queryClient.removeQueries({ queryKey: queryKeys.session.all() });
-            router.push("/auth/login");
+            router.push("/login");
           });
       }
     });

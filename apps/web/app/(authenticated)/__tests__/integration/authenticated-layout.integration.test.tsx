@@ -30,7 +30,7 @@ describe("AuthenticatedLayout integration", () => {
     expect(mockPush).not.toHaveBeenCalled();
   });
 
-  it("redirects to /auth/login when /me returns 401", async () => {
+  it("redirects to /login when /me returns 401", async () => {
     server.use(
       http.get("http://localhost:3001/v1/auth/me", () =>
         new HttpResponse(null, { status: 401 }),
@@ -44,7 +44,7 @@ describe("AuthenticatedLayout integration", () => {
     );
 
     await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith("/auth/login");
+      expect(mockPush).toHaveBeenCalledWith("/login");
     });
     expect(screen.queryByText("Protected content")).not.toBeInTheDocument();
   });
