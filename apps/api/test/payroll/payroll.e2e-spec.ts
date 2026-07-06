@@ -1,17 +1,22 @@
 import type { INestApplication } from "@nestjs/common";
 import request from "supertest";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { persistEmployee } from "../utils/persist-employee";
 import { buildSalaryStructureInput } from "../utils/salary-structure-factory";
-import { createTestApp } from "../utils/test-app";
+import { createTestApp, loginAsAdmin } from "../utils/test-app";
 
 describe("Payroll (e2e)", () => {
   let app: INestApplication;
   let http: ReturnType<typeof request>;
+  let authCookie: string[];
 
   beforeAll(async () => {
     app = await createTestApp();
     http = request(app.getHttpServer());
+  });
+
+  beforeEach(async () => {
+    authCookie = await loginAsAdmin(app);
   });
 
   afterAll(async () => {
@@ -28,12 +33,14 @@ describe("Payroll (e2e)", () => {
       const emp2 = await persistEmployee();
       await http
         .put(`/v1/employees/${emp1.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2026-01-01" }));
       await http
         .put(`/v1/employees/${emp2.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2026-01-01" }));
 
-      const res = await http.post("/v1/payroll/runs").send({ period: "2026-06" });
+      const res = await http.post("/v1/payroll/runs").set("Cookie", authCookie).send({ period: "2026-06" });
 
       expect(res.status).toBe(201);
       expect(res.body.period).toBe("2026-06");
@@ -44,10 +51,11 @@ describe("Payroll (e2e)", () => {
       const emp = await persistEmployee();
       await http
         .put(`/v1/employees/${emp.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2025-01-01" }));
 
-      await http.post("/v1/payroll/runs").send({ period: "2025-06" });
-      const res = await http.post("/v1/payroll/runs").send({ period: "2025-06" });
+      await http.post("/v1/payroll/runs").set("Cookie", authCookie).send({ period: "2025-06" });
+      const res = await http.post("/v1/payroll/runs").set("Cookie", authCookie).send({ period: "2025-06" });
 
       expect(res.status).toBe(409);
     });
@@ -56,12 +64,13 @@ describe("Payroll (e2e)", () => {
       const emp = await persistEmployee();
       await http
         .put(`/v1/employees/${emp.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2024-01-01" }));
 
-      await http.post("/v1/payroll/runs").send({ period: "2024-08" });
-      await http.post("/v1/payroll/runs").send({ period: "2024-08" }).ok(() => true);
+      await http.post("/v1/payroll/runs").set("Cookie", authCookie).send({ period: "2024-08" });
+      await http.post("/v1/payroll/runs").set("Cookie", authCookie).send({ period: "2024-08" }).ok(() => true);
 
-      const res = await http.get("/v1/payroll/runs/2024-08/results").query({ employeeId: emp.id });
+      const res = await http.get("/v1/payroll/runs/2024-08/results").set("Cookie", authCookie).query({ employeeId: emp.id });
       expect(res.status).toBe(200);
       expect(res.body).toHaveLength(1);
     });
@@ -70,6 +79,7 @@ describe("Payroll (e2e)", () => {
       const emp = await persistEmployee();
       await http
         .put(`/v1/employees/${emp.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send({
           effectiveFrom: "2026-01-01",
           currency: "USD",
@@ -80,11 +90,12 @@ describe("Payroll (e2e)", () => {
           ],
         });
 
-      const runRes = await http.post("/v1/payroll/runs").send({ period: "2026-07" });
+      const runRes = await http.post("/v1/payroll/runs").set("Cookie", authCookie).send({ period: "2026-07" });
       expect(runRes.status).toBe(201);
 
       const res = await http
         .get("/v1/payroll/runs/2026-07/results")
+        .set("Cookie", authCookie)
         .query({ employeeId: emp.id });
       expect(res.status).toBe(200);
       const result = res.body[0];
@@ -96,24 +107,25 @@ describe("Payroll (e2e)", () => {
     it("uses the structure version active for the period, not the latest", async () => {
       const emp = await persistEmployee();
       // Version 1: active Jan–Jun 2025
-      await http.put(`/v1/employees/${emp.id}/salary-structure`).send({
+      await http.put(`/v1/employees/${emp.id}/salary-structure`).set("Cookie", authCookie).send({
         effectiveFrom: "2025-01-01",
         currency: "USD",
         components: [{ code: "BASIC", kind: "EARNING", amountMinor: 300_000 }],
       });
       // Version 2: active from Jul 2025
-      await http.put(`/v1/employees/${emp.id}/salary-structure`).send({
+      await http.put(`/v1/employees/${emp.id}/salary-structure`).set("Cookie", authCookie).send({
         effectiveFrom: "2025-07-01",
         currency: "USD",
         components: [{ code: "BASIC", kind: "EARNING", amountMinor: 400_000 }],
       });
 
       // Run payroll for March 2025 — should use version 1 (300k)
-      const runRes = await http.post("/v1/payroll/runs").send({ period: "2025-03" });
+      const runRes = await http.post("/v1/payroll/runs").set("Cookie", authCookie).send({ period: "2025-03" });
       expect(runRes.status).toBe(201);
 
       const res = await http
         .get("/v1/payroll/runs/2025-03/results")
+        .set("Cookie", authCookie)
         .query({ employeeId: emp.id });
       expect(res.body[0].grossMinor).toBe(300_000);
     });
@@ -122,13 +134,15 @@ describe("Payroll (e2e)", () => {
       const emp = await persistEmployee();
       const putRes = await http
         .put(`/v1/employees/${emp.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2026-01-01" }));
       const structureId = putRes.body.id;
 
-      await http.post("/v1/payroll/runs").send({ period: "2026-08" });
+      await http.post("/v1/payroll/runs").set("Cookie", authCookie).send({ period: "2026-08" });
 
       const res = await http
         .get("/v1/payroll/runs/2026-08/results")
+        .set("Cookie", authCookie)
         .query({ employeeId: emp.id });
       expect(res.body[0].structureId).toBe(structureId);
     });
@@ -138,27 +152,28 @@ describe("Payroll (e2e)", () => {
       const withoutStructure = await persistEmployee();
       await http
         .put(`/v1/employees/${withStructure.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2026-01-01" }));
 
-      const res = await http.post("/v1/payroll/runs").send({ period: "2026-09" });
+      const res = await http.post("/v1/payroll/runs").set("Cookie", authCookie).send({ period: "2026-09" });
       expect(res.status).toBe(201);
       expect(res.body.skipped).toContain(withoutStructure.id);
     });
 
     it("run with no eligible employees returns 201 with processed=0", async () => {
       // No employees with structures for this period
-      const res = await http.post("/v1/payroll/runs").send({ period: "2020-01" });
+      const res = await http.post("/v1/payroll/runs").set("Cookie", authCookie).send({ period: "2020-01" });
       expect(res.status).toBe(201);
       expect(res.body.processed).toBe(0);
     });
 
     it("returns 400 for an invalid period format", async () => {
-      const res = await http.post("/v1/payroll/runs").send({ period: "2026-13" });
+      const res = await http.post("/v1/payroll/runs").set("Cookie", authCookie).send({ period: "2026-13" });
       expect(res.status).toBe(400);
     });
 
     it("returns 400 when period is missing", async () => {
-      const res = await http.post("/v1/payroll/runs").send({});
+      const res = await http.post("/v1/payroll/runs").set("Cookie", authCookie).send({});
       expect(res.status).toBe(400);
     });
   });
@@ -172,11 +187,12 @@ describe("Payroll (e2e)", () => {
       const emp = await persistEmployee();
       await http
         .put(`/v1/employees/${emp.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2026-01-01" }));
 
-      await http.post("/v1/payroll/runs").send({ period: "2026-10" });
+      await http.post("/v1/payroll/runs").set("Cookie", authCookie).send({ period: "2026-10" });
 
-      const res = await http.get("/v1/payroll/runs/2026-10");
+      const res = await http.get("/v1/payroll/runs/2026-10").set("Cookie", authCookie);
       expect(res.status).toBe(200);
       expect(res.body.period).toBe("2026-10");
       expect(res.body.processed).toBeGreaterThanOrEqual(1);
@@ -186,7 +202,7 @@ describe("Payroll (e2e)", () => {
     });
 
     it("returns 404 for a period with no run", async () => {
-      const res = await http.get("/v1/payroll/runs/1999-01");
+      const res = await http.get("/v1/payroll/runs/1999-01").set("Cookie", authCookie);
       expect(res.status).toBe(404);
     });
   });
@@ -201,14 +217,16 @@ describe("Payroll (e2e)", () => {
       const emp2 = await persistEmployee();
       await http
         .put(`/v1/employees/${emp1.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2026-01-01" }));
       await http
         .put(`/v1/employees/${emp2.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2026-01-01" }));
 
-      await http.post("/v1/payroll/runs").send({ period: "2026-11" });
+      await http.post("/v1/payroll/runs").set("Cookie", authCookie).send({ period: "2026-11" });
 
-      const res = await http.get("/v1/payroll/runs/2026-11/results");
+      const res = await http.get("/v1/payroll/runs/2026-11/results").set("Cookie", authCookie);
       expect(res.status).toBe(200);
       expect(Array.isArray(res.body)).toBe(true);
       const ids = res.body.map((r: { employeeId: string }) => r.employeeId);
@@ -221,15 +239,18 @@ describe("Payroll (e2e)", () => {
       const emp2 = await persistEmployee();
       await http
         .put(`/v1/employees/${emp1.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2026-01-01" }));
       await http
         .put(`/v1/employees/${emp2.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2026-01-01" }));
 
-      await http.post("/v1/payroll/runs").send({ period: "2026-12" });
+      await http.post("/v1/payroll/runs").set("Cookie", authCookie).send({ period: "2026-12" });
 
       const res = await http
         .get("/v1/payroll/runs/2026-12/results")
+        .set("Cookie", authCookie)
         .query({ employeeId: emp1.id });
       expect(res.status).toBe(200);
       expect(res.body).toHaveLength(1);
@@ -240,11 +261,13 @@ describe("Payroll (e2e)", () => {
       const emp = await persistEmployee();
       await http
         .put(`/v1/employees/${emp.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2026-01-01" }));
-      await http.post("/v1/payroll/runs").send({ period: "2027-01" });
+      await http.post("/v1/payroll/runs").set("Cookie", authCookie).send({ period: "2027-01" });
 
       const res = await http
         .get("/v1/payroll/runs/2027-01/results")
+        .set("Cookie", authCookie)
         .query({ employeeId: "00000000-0000-0000-0000-000000000000" });
       expect(res.status).toBe(200);
       expect(res.body).toEqual([]);

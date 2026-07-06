@@ -1,18 +1,23 @@
 import type { INestApplication } from "@nestjs/common";
 import request from "supertest";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { buildSalaryStructureInput } from "../utils/salary-structure-factory";
-import { createTestApp } from "../utils/test-app";
+import { createTestApp, loginAsAdmin } from "../utils/test-app";
 import { persistEmployee } from "../utils/persist-employee";
 import { persistPayrollResult } from "../utils/persist-payroll-result";
 
 describe("Payslips (e2e)", () => {
   let app: INestApplication;
   let http: ReturnType<typeof request>;
+  let authCookie: string[];
 
   beforeAll(async () => {
     app = await createTestApp();
     http = request(app.getHttpServer());
+  });
+
+  beforeEach(async () => {
+    authCookie = await loginAsAdmin(app);
   });
 
   afterAll(async () => {
@@ -28,6 +33,7 @@ describe("Payslips (e2e)", () => {
       const emp = await persistEmployee();
       const structRes = await http
         .put(`/v1/employees/${emp.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2025-01-01" }));
       const structureId = structRes.body.id as string;
 
@@ -50,7 +56,7 @@ describe("Payslips (e2e)", () => {
         currency: "USD",
       });
 
-      const res = await http.get(`/v1/employees/${emp.id}/payslips`);
+      const res = await http.get(`/v1/employees/${emp.id}/payslips`).set("Cookie", authCookie);
 
       expect(res.status).toBe(200);
       expect(Array.isArray(res.body)).toBe(true);
@@ -68,7 +74,7 @@ describe("Payslips (e2e)", () => {
     it("returns an empty array when the employee has no payroll results", async () => {
       const emp = await persistEmployee();
 
-      const res = await http.get(`/v1/employees/${emp.id}/payslips`);
+      const res = await http.get(`/v1/employees/${emp.id}/payslips`).set("Cookie", authCookie);
 
       expect(res.status).toBe(200);
       expect(res.body).toEqual([]);
@@ -77,7 +83,7 @@ describe("Payslips (e2e)", () => {
     it("returns 404 for an unknown employee id", async () => {
       const res = await http.get(
         "/v1/employees/00000000-0000-0000-0000-000000000000/payslips",
-      );
+      ).set("Cookie", authCookie);
 
       expect(res.status).toBe(404);
     });
@@ -92,6 +98,7 @@ describe("Payslips (e2e)", () => {
       const emp = await persistEmployee({ currency: "USD" });
       const structRes = await http
         .put(`/v1/employees/${emp.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2025-01-01" }));
       const structureId = structRes.body.id as string;
 
@@ -105,7 +112,7 @@ describe("Payslips (e2e)", () => {
         currency: "USD",
       });
 
-      const res = await http.get(`/v1/employees/${emp.id}/payslips/2025-06`);
+      const res = await http.get(`/v1/employees/${emp.id}/payslips/2025-06`).set("Cookie", authCookie);
 
       expect(res.status).toBe(200);
       expect(res.body.period).toBe("2025-06");
@@ -125,7 +132,7 @@ describe("Payslips (e2e)", () => {
     it("returns 404 for an unknown employee id", async () => {
       const res = await http.get(
         "/v1/employees/00000000-0000-0000-0000-000000000000/payslips/2025-06",
-      );
+      ).set("Cookie", authCookie);
 
       expect(res.status).toBe(404);
     });
@@ -133,7 +140,7 @@ describe("Payslips (e2e)", () => {
     it("returns 404 when the employee exists but has no result for that period", async () => {
       const emp = await persistEmployee();
 
-      const res = await http.get(`/v1/employees/${emp.id}/payslips/2099-01`);
+      const res = await http.get(`/v1/employees/${emp.id}/payslips/2099-01`).set("Cookie", authCookie);
 
       expect(res.status).toBe(404);
     });

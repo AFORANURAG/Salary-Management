@@ -1,6 +1,8 @@
 import { Controller, Get } from "@nestjs/common";
 import type { HealthResponse } from "@salary-mgmt/types";
+import { Public } from "../auth/public.decorator";
 
+@Public()
 @Controller("health")
 export class HealthController {
   @Get()

@@ -1,8 +1,8 @@
 import type { INestApplication } from "@nestjs/common";
 import request from "supertest";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { buildSalaryStructureInput } from "../utils/salary-structure-factory";
-import { createTestApp } from "../utils/test-app";
+import { createTestApp, loginAsAdmin } from "../utils/test-app";
 import { persistEmployee } from "../utils/persist-employee";
 import { persistPayrollResult } from "../utils/persist-payroll-result";
 
@@ -12,10 +12,15 @@ const PERIOD = "5100-01";
 describe("Reporting (e2e)", () => {
   let app: INestApplication;
   let http: ReturnType<typeof request>;
+  let authCookie: string[];
 
   beforeAll(async () => {
     app = await createTestApp();
     http = request(app.getHttpServer());
+  });
+
+  beforeEach(async () => {
+    authCookie = await loginAsAdmin(app);
   });
 
   afterAll(async () => {
@@ -34,12 +39,15 @@ describe("Reporting (e2e)", () => {
 
       const structRes1 = await http
         .put(`/v1/employees/${emp1.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2025-01-01", currency: "USD" }));
       const structRes2 = await http
         .put(`/v1/employees/${emp2.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2025-01-01", currency: "USD" }));
       const structRes3 = await http
         .put(`/v1/employees/${emp3.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2025-01-01", currency: "USD" }));
 
       await persistPayrollResult({
@@ -72,6 +80,7 @@ describe("Reporting (e2e)", () => {
 
       const res = await http
         .get("/v1/reporting/payroll-cost")
+        .set("Cookie", authCookie)
         .query({ period: PERIOD, groupBy: "department" });
 
       expect(res.status).toBe(200);
@@ -103,6 +112,7 @@ describe("Reporting (e2e)", () => {
     it("returns grouped cost by country", async () => {
       const res = await http
         .get("/v1/reporting/payroll-cost")
+        .set("Cookie", authCookie)
         .query({ period: PERIOD, groupBy: "country" });
 
       expect(res.status).toBe(200);
@@ -119,9 +129,11 @@ describe("Reporting (e2e)", () => {
 
       const structResCC = await http
         .put(`/v1/employees/${empWithCC.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2025-01-01", currency: "USD" }));
       const structResNo = await http
         .put(`/v1/employees/${empNoCC.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2025-01-01", currency: "USD" }));
 
       const ccPeriod = "5100-02";
@@ -146,6 +158,7 @@ describe("Reporting (e2e)", () => {
 
       const res = await http
         .get("/v1/reporting/payroll-cost")
+        .set("Cookie", authCookie)
         .query({ period: ccPeriod, groupBy: "costCenter" });
 
       expect(res.status).toBe(200);
@@ -160,6 +173,7 @@ describe("Reporting (e2e)", () => {
     it("returns 400 when period is missing", async () => {
       const res = await http
         .get("/v1/reporting/payroll-cost")
+        .set("Cookie", authCookie)
         .query({ groupBy: "department" });
       expect(res.status).toBe(400);
     });
@@ -167,6 +181,7 @@ describe("Reporting (e2e)", () => {
     it("returns 400 when groupBy is invalid", async () => {
       const res = await http
         .get("/v1/reporting/payroll-cost")
+        .set("Cookie", authCookie)
         .query({ period: PERIOD, groupBy: "invalid" });
       expect(res.status).toBe(400);
     });
@@ -174,6 +189,7 @@ describe("Reporting (e2e)", () => {
     it("returns empty buckets when no results exist for the period", async () => {
       const res = await http
         .get("/v1/reporting/payroll-cost")
+        .set("Cookie", authCookie)
         .query({ period: "5999-12", groupBy: "department" });
 
       expect(res.status).toBe(200);
@@ -193,9 +209,11 @@ describe("Reporting (e2e)", () => {
 
       const s1 = await http
         .put(`/v1/employees/${emp1.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2025-01-01", currency: "USD" }));
       const s2 = await http
         .put(`/v1/employees/${emp2.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2025-01-01", currency: "USD" }));
 
       await persistPayrollResult({
@@ -219,6 +237,7 @@ describe("Reporting (e2e)", () => {
 
       const res = await http
         .get("/v1/reporting/payroll-summary")
+        .set("Cookie", authCookie)
         .query({ period: summaryPeriod });
 
       expect(res.status).toBe(200);
@@ -241,9 +260,11 @@ describe("Reporting (e2e)", () => {
 
       const sUSD = await http
         .put(`/v1/employees/${empUSD.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2025-01-01", currency: "USD" }));
       const sINR = await http
         .put(`/v1/employees/${empINR.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(
           buildSalaryStructureInput({
             effectiveFrom: "2025-01-01",
@@ -274,6 +295,7 @@ describe("Reporting (e2e)", () => {
 
       const res = await http
         .get("/v1/reporting/payroll-summary")
+        .set("Cookie", authCookie)
         .query({ period: mixPeriod });
 
       expect(res.status).toBe(200);
@@ -287,13 +309,14 @@ describe("Reporting (e2e)", () => {
     });
 
     it("returns 400 when period is missing", async () => {
-      const res = await http.get("/v1/reporting/payroll-summary");
+      const res = await http.get("/v1/reporting/payroll-summary").set("Cookie", authCookie);
       expect(res.status).toBe(400);
     });
 
     it("returns empty buckets when no results exist for the period", async () => {
       const res = await http
         .get("/v1/reporting/payroll-summary")
+        .set("Cookie", authCookie)
         .query({ period: "5998-12" });
 
       expect(res.status).toBe(200);

@@ -7,13 +7,13 @@ import { HrUserEntity } from "../hr-users/hr-user.entity";
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 type AuthServiceType = import("./auth.service").AuthService;
 
-function makeRepo(overrides: Partial<Repository<HrUserEntity>> = {}): jest.Mocked<Repository<HrUserEntity>> {
+function makeRepo(overrides: Partial<Repository<HrUserEntity>> = {}): Repository<HrUserEntity> {
   return {
     findOne: vi.fn(),
     create: vi.fn(),
     save: vi.fn(),
     ...overrides,
-  } as unknown as jest.Mocked<Repository<HrUserEntity>>;
+  } as unknown as Repository<HrUserEntity>;
 }
 
 async function buildService(repoOverrides: Partial<Repository<HrUserEntity>> = {}): Promise<AuthServiceType> {
@@ -45,11 +45,11 @@ describe("AuthService", () => {
 
       expect(result.inviteToken).toBeTruthy();
       expect(result.inviteUrl).toContain(result.inviteToken);
-      const saved = (repo.save as ReturnType<typeof vi.fn>).mock.calls[0][0] as HrUserEntity;
+      const saved = (repo.save as ReturnType<typeof vi.fn>).mock.calls[0]?.[0] as HrUserEntity;
       expect(saved.status).toBe("PENDING_SETUP");
       expect(saved.inviteToken).toBeTruthy();
       expect(saved.inviteExpiresAt).toBeDefined();
-      const expiresIn = saved.inviteExpiresAt!.getTime() - Date.now();
+      const expiresIn = (saved.inviteExpiresAt as Date).getTime() - Date.now();
       expect(expiresIn).toBeGreaterThan(71 * 60 * 60 * 1000);
       expect(expiresIn).toBeLessThan(73 * 60 * 60 * 1000);
     });
@@ -83,7 +83,7 @@ describe("AuthService", () => {
 
       await svc.setup({ token: "valid-token", name: "Jane", password: "Password1!" });
 
-      const saved = (repo.save as ReturnType<typeof vi.fn>).mock.calls[0][0] as HrUserEntity;
+      const saved = (repo.save as ReturnType<typeof vi.fn>).mock.calls[0]?.[0] as HrUserEntity;
       expect(saved.status).toBe("ACTIVE");
       expect(saved.passwordHash).toBeTruthy();
       expect(saved.inviteToken).toBeNull();

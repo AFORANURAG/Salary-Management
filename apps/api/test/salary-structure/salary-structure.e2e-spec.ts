@@ -1,17 +1,22 @@
 import type { INestApplication } from "@nestjs/common";
 import request from "supertest";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { persistEmployee } from "../utils/persist-employee";
 import { buildSalaryStructureInput } from "../utils/salary-structure-factory";
-import { createTestApp } from "../utils/test-app";
+import { createTestApp, loginAsAdmin } from "../utils/test-app";
 
 describe("Salary Structure (e2e)", () => {
   let app: INestApplication;
   let http: ReturnType<typeof request>;
+  let authCookie: string[];
 
   beforeAll(async () => {
     app = await createTestApp();
     http = request(app.getHttpServer());
+  });
+
+  beforeEach(async () => {
+    authCookie = await loginAsAdmin(app);
   });
 
   afterAll(async () => {
@@ -29,6 +34,7 @@ describe("Salary Structure (e2e)", () => {
 
       const res = await http
         .put(`/v1/employees/${emp.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(input);
 
       expect(res.status).toBe(201);
@@ -45,7 +51,7 @@ describe("Salary Structure (e2e)", () => {
     it("supersedes prior version: closes it and creates a new one", async () => {
       const emp = await persistEmployee();
       const first = buildSalaryStructureInput({ effectiveFrom: "2024-01-01" });
-      await http.put(`/v1/employees/${emp.id}/salary-structure`).send(first);
+      await http.put(`/v1/employees/${emp.id}/salary-structure`).set("Cookie", authCookie).send(first);
 
       const second = buildSalaryStructureInput({
         effectiveFrom: "2024-07-01",
@@ -53,6 +59,7 @@ describe("Salary Structure (e2e)", () => {
       });
       const res = await http
         .put(`/v1/employees/${emp.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(second);
 
       expect(res.status).toBe(200);
@@ -62,7 +69,7 @@ describe("Salary Structure (e2e)", () => {
       // Prior version is now closed
       const history = await http.get(
         `/v1/employees/${emp.id}/salary-structure/history`,
-      );
+      ).set("Cookie", authCookie);
       const v1 = history.body.find(
         (v: { effectiveFrom: string }) => v.effectiveFrom === "2024-01-01",
       );
@@ -72,15 +79,16 @@ describe("Salary Structure (e2e)", () => {
     it("prior version components are byte-for-byte unchanged after supersede", async () => {
       const emp = await persistEmployee();
       const input = buildSalaryStructureInput({ effectiveFrom: "2024-01-01" });
-      await http.put(`/v1/employees/${emp.id}/salary-structure`).send(input);
+      await http.put(`/v1/employees/${emp.id}/salary-structure`).set("Cookie", authCookie).send(input);
 
       await http
         .put(`/v1/employees/${emp.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2024-07-01" }));
 
       const history = await http.get(
         `/v1/employees/${emp.id}/salary-structure/history`,
-      );
+      ).set("Cookie", authCookie);
       const v1 = history.body.find(
         (v: { effectiveFrom: string }) => v.effectiveFrom === "2024-01-01",
       );
@@ -96,15 +104,18 @@ describe("Salary Structure (e2e)", () => {
       const emp = await persistEmployee();
       await http
         .put(`/v1/employees/${emp.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2024-06-01" }));
 
       const res = await http
         .put(`/v1/employees/${emp.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2024-06-01" }));
       expect(res.status).toBe(409);
 
       const res2 = await http
         .put(`/v1/employees/${emp.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2024-01-01" }));
       expect(res2.status).toBe(409);
     });
@@ -112,6 +123,7 @@ describe("Salary Structure (e2e)", () => {
     it("returns 404 for a non-existent employeeId", async () => {
       const res = await http
         .put("/v1/employees/00000000-0000-0000-0000-000000000000/salary-structure")
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput());
       expect(res.status).toBe(404);
     });
@@ -121,6 +133,7 @@ describe("Salary Structure (e2e)", () => {
       const { effectiveFrom: _ef, ...withoutDate } = buildSalaryStructureInput();
       const res = await http
         .put(`/v1/employees/${emp.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(withoutDate);
       expect(res.status).toBe(400);
     });
@@ -134,9 +147,9 @@ describe("Salary Structure (e2e)", () => {
     it("returns the currently active (open) structure with components", async () => {
       const emp = await persistEmployee();
       const input = buildSalaryStructureInput({ effectiveFrom: "2024-01-01" });
-      await http.put(`/v1/employees/${emp.id}/salary-structure`).send(input);
+      await http.put(`/v1/employees/${emp.id}/salary-structure`).set("Cookie", authCookie).send(input);
 
-      const res = await http.get(`/v1/employees/${emp.id}/salary-structure`);
+      const res = await http.get(`/v1/employees/${emp.id}/salary-structure`).set("Cookie", authCookie);
       expect(res.status).toBe(200);
       expect(res.body.effectiveTo).toBeNull();
       expect(res.body.components).toHaveLength(3);
@@ -146,9 +159,11 @@ describe("Salary Structure (e2e)", () => {
       const emp = await persistEmployee();
       await http
         .put(`/v1/employees/${emp.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2024-01-01" }));
       await http
         .put(`/v1/employees/${emp.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(
           buildSalaryStructureInput({
             effectiveFrom: "2024-07-01",
@@ -156,7 +171,7 @@ describe("Salary Structure (e2e)", () => {
           }),
         );
 
-      const res = await http.get(`/v1/employees/${emp.id}/salary-structure`);
+      const res = await http.get(`/v1/employees/${emp.id}/salary-structure`).set("Cookie", authCookie);
       expect(res.status).toBe(200);
       expect(res.body.effectiveFrom).toBe("2024-07-01");
       expect(res.body.components).toHaveLength(1);
@@ -164,14 +179,14 @@ describe("Salary Structure (e2e)", () => {
 
     it("returns 404 when employee has no structure", async () => {
       const emp = await persistEmployee();
-      const res = await http.get(`/v1/employees/${emp.id}/salary-structure`);
+      const res = await http.get(`/v1/employees/${emp.id}/salary-structure`).set("Cookie", authCookie);
       expect(res.status).toBe(404);
     });
 
     it("returns 404 for a non-existent employee", async () => {
       const res = await http.get(
         "/v1/employees/00000000-0000-0000-0000-000000000000/salary-structure",
-      );
+      ).set("Cookie", authCookie);
       expect(res.status).toBe(404);
     });
   });
@@ -185,17 +200,20 @@ describe("Salary Structure (e2e)", () => {
       const emp = await persistEmployee();
       await http
         .put(`/v1/employees/${emp.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2024-01-01" }));
       await http
         .put(`/v1/employees/${emp.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2024-07-01" }));
       await http
         .put(`/v1/employees/${emp.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2025-01-01" }));
 
       const res = await http.get(
         `/v1/employees/${emp.id}/salary-structure/history`,
-      );
+      ).set("Cookie", authCookie);
       expect(res.status).toBe(200);
       expect(res.body).toHaveLength(3);
       const dates = res.body.map((v: { effectiveFrom: string }) => v.effectiveFrom);
@@ -206,7 +224,7 @@ describe("Salary Structure (e2e)", () => {
       const emp = await persistEmployee();
       const res = await http.get(
         `/v1/employees/${emp.id}/salary-structure/history`,
-      );
+      ).set("Cookie", authCookie);
       expect(res.status).toBe(200);
       expect(res.body).toEqual([]);
     });
@@ -215,14 +233,16 @@ describe("Salary Structure (e2e)", () => {
       const emp = await persistEmployee();
       await http
         .put(`/v1/employees/${emp.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2024-01-01" }));
       await http
         .put(`/v1/employees/${emp.id}/salary-structure`)
+        .set("Cookie", authCookie)
         .send(buildSalaryStructureInput({ effectiveFrom: "2024-07-01" }));
 
       const res = await http.get(
         `/v1/employees/${emp.id}/salary-structure/history`,
-      );
+      ).set("Cookie", authCookie);
       const versions: Array<{ effectiveFrom: string; effectiveTo: string | null }> =
         res.body;
 

@@ -9,6 +9,7 @@ import {
   Query,
 } from "@nestjs/common";
 import type { Employee, PaginatedResponse } from "@salary-mgmt/types";
+import { Roles } from "../auth/roles.decorator";
 import { CreateEmployeeDto } from "./dto/create-employee.dto";
 import { UpdateEmployeeDto } from "./dto/update-employee.dto";
 import type { RawEmployeeQuery } from "./employee-query";
@@ -19,6 +20,7 @@ export class EmployeesController {
   constructor(private readonly employees: EmployeesService) {}
 
   @Post()
+  @Roles("ADMIN", "HR_MANAGER")
   create(@Body() dto: CreateEmployeeDto): Promise<Employee> {
     return this.employees.create(dto);
   }
