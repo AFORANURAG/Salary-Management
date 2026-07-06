@@ -1,11 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-import { postLogin, ApiError } from "@salary-mgmt/store";
+import { useLogin } from "@salary-mgmt/store/query";
 import { Button, Input, Label, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@salary-mgmt/ui";
 
 const loginSchema = z.object({
@@ -17,28 +16,20 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage(): React.JSX.Element {
   const router = useRouter();
-  const [serverError, setServerError] = useState<string | null>(null);
+  const login = useLogin();
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
   });
 
-  async function onSubmit(values: LoginFormValues): Promise<void> {
-    setServerError(null);
-    try {
-      await postLogin(values);
-      router.push("/");
-    } catch (err) {
-      if (err instanceof ApiError && err.status === 401) {
-        setServerError("Invalid email or password.");
-      } else {
-        setServerError("Something went wrong. Please try again.");
-      }
-    }
+  function onSubmit(values: LoginFormValues): void {
+    login.mutate(values, {
+      onSuccess: () => router.push("/"),
+    });
   }
 
   return (
@@ -49,9 +40,11 @@ export default function LoginPage(): React.JSX.Element {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
-          {serverError && (
+          {login.error && (
             <p role="alert" className="text-destructive text-sm">
-              {serverError}
+              {login.error.status === 401
+                ? "Invalid email or password."
+                : "Something went wrong. Please try again."}
             </p>
           )}
           <div className="space-y-1">
@@ -79,8 +72,8 @@ export default function LoginPage(): React.JSX.Element {
               <p className="text-destructive text-xs">{errors.password.message}</p>
             )}
           </div>
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Signing in…" : "Sign in"}
+          <Button type="submit" className="w-full" disabled={login.isPending}>
+            {login.isPending ? "Signing in…" : "Sign in"}
           </Button>
         </form>
       </CardContent>

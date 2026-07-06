@@ -200,21 +200,23 @@ Both pages use `react-hook-form` + `zod` (already installed).
 
 ### Backend
 
-| Phase | Branch |
-|---|---|
-| `HrUser` entity, migration, `@salary-mgmt/types` contracts | `feat/hr-auth-pr1-db-models` |
-| RED — unit + integration test suite | `feat/hr-auth-pr2-test-harness` |
-| Invite, setup, login, logout, `/me` (GREEN) | `feat/hr-auth-pr3-api` |
-| `JwtAuthGuard` global, `@Roles` on all existing routes | `feat/hr-auth-pr4-guard-wiring` |
+| Phase | Branch | PR | Merge SHA |
+|---|---|---|---|
+| `HrUser` entity, migration, `@salary-mgmt/types` contracts | `feat/hr-auth-pr1-db-models` | #44 | `81b05d5` |
+| RED — unit + integration test suite | `feat/hr-auth-pr2-test-harness` | #45 | `d3a570c` |
+| Invite, setup, login, logout, `/me` (GREEN) | `feat/hr-auth-pr3-api` | #46 | `6c06a4f` |
+| `JwtAuthGuard` global, `@Roles` on all existing routes | `feat/hr-auth-pr4-guard-wiring` | #47 | `10a12b2` |
 
 ### Frontend
 
-| Phase | Branch |
-|---|---|
-| `@salary-mgmt/types` auth types + store API fns + `useSession` hook + unit tests | `feat/hr-auth-fe-pr1-types-hooks` |
-| `/auth/login` + `/auth/setup` pages + unit tests | `feat/hr-auth-fe-pr2-pages` |
-| `SessionProvider`, Next.js middleware, route protection | `feat/hr-auth-fe-pr3-protection` |
-| Integration tests (MSW): `AuthenticatedLayout`, login flow | `feat/hr-auth-fe-pr4-integration` |
-| E2E (Playwright): login, setup, logout, role-gating | `feat/hr-auth-fe-pr5-e2e` |
+| Phase | Branch | PR | Merge SHA |
+|---|---|---|---|
+| `@salary-mgmt/types` auth types + store API fns + `useSession`/`useLogin`/`useLogout` hooks + unit tests | `feat/hr-auth-fe-pr1-types-hooks` | #48 | `909624b` |
+| `/login` + `/setup` pages + unit tests | `feat/hr-auth-fe-pr2-pages` | #49 | `6f79bb6` |
+| `SessionProvider`, Next.js middleware, route protection | `feat/hr-auth-fe-pr3-protection` | #50 | `d0458bf` |
+| Integration tests (MSW): `AuthenticatedLayout`, login flow | `feat/hr-auth-fe-pr4-integration` | #51 | `8b7bf3f` |
+| E2E (Playwright): login, setup, logout, role-gating | `feat/hr-auth-fe-pr5-e2e` | #52 | `d51571c` |
+
+**Status: COMPLETE — all 9 PRs merged to main.**
 
 Plan: [`docs/plans/hr-auth.md`](../plans/hr-auth.md) · Trace: [`traces/hr-auth.md`](../../traces/hr-auth.md)

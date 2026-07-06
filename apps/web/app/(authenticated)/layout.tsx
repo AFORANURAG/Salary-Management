@@ -11,7 +11,7 @@ function AuthGate({ children }: { children: React.ReactNode }): React.JSX.Elemen
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      router.push("/auth/login");
+      router.push("/login");
     }
   }, [isLoading, isAuthenticated, router]);
 

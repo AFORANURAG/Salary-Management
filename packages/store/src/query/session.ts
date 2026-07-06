@@ -1,8 +1,8 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import type { AuthMeResponse } from "@salary-mgmt/types";
-import { getMe } from "../api/auth";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { AuthMeResponse, LoginRequest } from "@salary-mgmt/types";
+import { getMe, postLogin, postLogout } from "../api/auth";
 import { ApiError } from "../api/client";
 import { queryKeys } from "./keys";
 
@@ -25,4 +25,24 @@ export function useSession(): SessionState {
     isLoading,
     isAuthenticated: data !== undefined,
   };
+}
+
+export function useLogin() {
+  const queryClient = useQueryClient();
+  return useMutation<void, ApiError, LoginRequest>({
+    mutationFn: postLogin,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.session.all() });
+    },
+  });
+}
+
+export function useLogout() {
+  const queryClient = useQueryClient();
+  return useMutation<void, ApiError, void>({
+    mutationFn: postLogout,
+    onSuccess: () => {
+      queryClient.clear();
+    },
+  });
 }

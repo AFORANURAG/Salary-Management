@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { faker } from "@faker-js/faker";
 import { DEPARTMENTS, type Department } from "@salary-mgmt/types";
 import * as bcrypt from "bcrypt";

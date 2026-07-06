@@ -77,6 +77,7 @@ async function request<T>(baseUrl: string, path: string, options: RequestOptions
   try {
     const response = await fetch(`${baseUrl}${path}`, {
       ...init,
+      credentials: "include",
       signal: controller.signal,
       headers: {
         "Content-Type": "application/json",

@@ -52,12 +52,12 @@ Branch: `feat/hr-auth-pr1-db-models`
 | HA3 | `HrUsersModule` stub; `HrUserEntity` registered in `TypeOrmModule.forFeature`; `AppModule` imports `HrUsersModule` | `feat(api): wire HrUsersModule stub` |
 
 **Acceptance**
-- [ ] Types exported from `@salary-mgmt/types`; `pnpm --filter @salary-mgmt/types build && pnpm typecheck` pass.
-- [ ] Migration runs against compose DB: `pnpm --filter api migration:run`.
-- [ ] `AppModule` boots with stub module registered.
+- [x] Types exported from `@salary-mgmt/types`; `pnpm --filter @salary-mgmt/types build && pnpm typecheck` pass.
+- [x] Migration runs against compose DB: `pnpm --filter api migration:run`.
+- [x] `AppModule` boots with stub module registered.
 
 ### Checkpoint: Foundation
-- [ ] `pnpm typecheck && pnpm lint` clean.
+- [x] `pnpm typecheck && pnpm lint` clean.
 
 ---
 
@@ -71,7 +71,7 @@ Branch: `feat/hr-auth-pr2-test-harness`
 | HA5 | Integration spec: full invite → setup → login → `/me` → logout flow; cookie set and cleared; HR_MANAGER calling invite → 403; HR_VIEWER calling `POST /v1/employees` → 403; ADMIN inviting twice → two distinct tokens; expired cookie → 401; `/health` without cookie → 200 | `test(api): add failing hr-auth integration specs (HA5)` |
 
 **Acceptance**
-- [ ] All unit and integration specs fail RED (routes 404, service not implemented) — not harness errors.
+- [x] All unit and integration specs fail RED (routes 404, service not implemented) — not harness errors.
 
 ---
 
@@ -89,13 +89,13 @@ Branch: `feat/hr-auth-pr3-api`
 | HA11 | Update seed: upsert ADMIN from `SEED_ADMIN_EMAIL` + `SEED_ADMIN_PASSWORD`; idempotent | `chore(api): seed admin HrUser` |
 
 **Acceptance**
-- [ ] All unit specs from HA4 GREEN.
-- [ ] All integration specs from HA5 GREEN.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] All unit specs from HA4 GREEN.
+- [x] All integration specs from HA5 GREEN.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
 ### Checkpoint: Backend complete
-- [ ] All non-negotiable backend test cases pass.
-- [ ] Seed admin boots; can log in via curl / Postman.
+- [x] All non-negotiable backend test cases pass.
+- [x] Seed admin boots; can log in via curl / Postman.
 
 ---
 
@@ -110,12 +110,12 @@ Branch: `feat/hr-auth-pr4-guard-wiring`
 | HA14 | Update `.env.example` with `JWT_SECRET`, `JWT_EXPIRY`, `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD`, `FRONTEND_URL` | `chore(api): document auth env vars in .env.example` |
 
 **Acceptance**
-- [ ] All existing tests still pass (guards don't break GET routes).
-- [ ] Write routes return 403 for HR_VIEWER.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green.
+- [x] All existing tests still pass (guards don't break GET routes).
+- [x] Write routes return 403 for HR_VIEWER.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green.
 
 ### Checkpoint: Backend fully secured
-- [ ] All API routes protected; role matrix from spec enforced.
+- [x] All API routes protected; role matrix from spec enforced.
 
 ---
 
@@ -130,8 +130,8 @@ Branch: `feat/hr-auth-fe-pr1-types-hooks`
 | HA17 | Unit spec: `useSession` returns `isAuthenticated: false` when `/me` returns 401; `isAuthenticated: true` with valid user | `test(store): add useSession unit specs` |
 
 **Acceptance**
-- [ ] `pnpm --filter @salary-mgmt/store typecheck` passes.
-- [ ] `useSession` unit specs GREEN.
+- [x] `pnpm --filter @salary-mgmt/store typecheck` passes.
+- [x] `useSession` unit specs GREEN.
 
 ---
 
@@ -147,9 +147,9 @@ Branch: `feat/hr-auth-fe-pr2-pages`
 | HA21 | Unit specs: login form submit calls `postLogin`; wrong password shows error; setup mismatched passwords shows validation error; setup missing token shows static error | `test(web): add login and setup page unit specs` |
 
 **Acceptance**
-- [ ] Login and setup pages render correctly.
-- [ ] Unit specs GREEN.
-- [ ] `pnpm typecheck` passes after route group restructure.
+- [x] Login and setup pages render correctly.
+- [x] Unit specs GREEN.
+- [x] `pnpm typecheck` passes after route group restructure.
 
 ---
 
@@ -164,8 +164,8 @@ Branch: `feat/hr-auth-fe-pr3-protection`
 | HA24 | `AuthenticatedLayout` (`app/(authenticated)/layout.tsx`): renders `SessionProvider`; full-page skeleton while `isLoading`; redirect if `!isAuthenticated` | `feat(web): add AuthenticatedLayout with session gate` |
 
 **Acceptance**
-- [ ] Unauthenticated visit to any authenticated route redirects to `/auth/login`.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] Unauthenticated visit to any authenticated route redirects to `/auth/login`.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
 ---
 
@@ -182,8 +182,8 @@ Branch: `feat/hr-auth-fe-pr4-integration`
 | HA29 | Integration spec: login page MSW 401 → error banner renders, no redirect | `test(web): add login page failure integration spec` |
 
 **Acceptance**
-- [ ] All 4 integration specs GREEN.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] All 4 integration specs GREEN.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
 ---
 
@@ -201,13 +201,13 @@ Branch: `feat/hr-auth-fe-pr5-e2e`
 | HA35 | E2E: logout → redirect to `/auth/login`; back-button does not restore session | |
 
 **Acceptance**
-- [ ] All 6 E2E specs GREEN against `docker compose up --build`.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] All 6 E2E specs GREEN against `docker compose up --build`.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
 ### Checkpoint: Complete
-- [ ] All spec Non-Negotiable Test Cases covered and green.
-- [ ] Invite → setup → login → logout flows working end-to-end.
-- [ ] Ready for review.
+- [x] All spec Non-Negotiable Test Cases covered and green.
+- [x] Invite → setup → login → logout flows working end-to-end.
+- [x] Ready for review.
 
 ---
 

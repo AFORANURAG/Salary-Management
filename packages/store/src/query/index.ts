@@ -1,5 +1,5 @@
 export { createQueryClient, getQueryClient, STALE_TIMES, CACHE_TIMES } from "./client";
-export { useSession, type SessionState } from "./session";
+export { useSession, useLogin, useLogout, type SessionState } from "./session";
 export { useEmployees, useEmployee } from "./employees";
 export { useCreateEmployee, useUpdateEmployee, useDeleteEmployee } from "./employee-mutations";
 export { QueryProvider } from "./provider";
