@@ -68,6 +68,6 @@ Also updated `--primary` CSS variable from blue to indigo (`239 84% 67%`) in `pa
 
 6 tests in `apps/web/components/shell/__tests__/breadcrumb-bar.test.tsx`. Covers: root returns null; `/employees` single unlinked segment; `/employees/{uuid}` linked parent + resolved name; UUID fallback when not cached; `/payroll/{period}` two-segment; `/audit-log` mapped label.
 
-**Commit:** <!-- SHA filled after commit -->
+**Commit:** `936394d`
 
 **Acceptance:** All 103 web tests pass · `pnpm typecheck` green.
