@@ -122,10 +122,10 @@ Branch: `feat/app-shell-pr6-e2e`
 
 | Task | Description | Commit |
 |---|---|---|
-| AS15 | E2E: ADMIN — all sidebar sections visible; clicking each item navigates to correct route | |
-| AS16 | E2E: HR_VIEWER — Admin section absent from sidebar DOM | |
-| AS17 | E2E: sidebar collapse toggle — collapses to icon rail; content area expands; preference survives page reload | |
-| AS18 | E2E: mobile viewport (375px) — sidebar closed by default; hamburger opens drawer; overlay click closes it | |
+| AS15 | E2E: ADMIN — all sidebar sections visible; clicking each item navigates to correct route | `test(web): add shell E2E specs AS15–AS18` |
+| AS16 | E2E: HR_VIEWER — Admin section absent from sidebar DOM | `test(web): add shell E2E specs AS15–AS18` |
+| AS17 | E2E: sidebar collapse toggle — collapses to icon rail; content area expands; preference survives page reload | `test(web): add shell E2E specs AS15–AS18` |
+| AS18 | E2E: mobile viewport (375px) — sidebar closed by default; hamburger opens drawer; overlay click closes it | `test(web): add shell E2E specs AS15–AS18` |
 
 **Acceptance**
 - [ ] All 4 E2E specs GREEN against running stack.

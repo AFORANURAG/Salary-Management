@@ -103,3 +103,19 @@ Two tests added to `app/(authenticated)/__tests__/integration/authenticated-layo
 **Commit:** `7f8d816`
 
 **Acceptance:** 109 web tests pass · `pnpm typecheck` green.
+
+---
+
+## Phase 6 — E2E Tests (`feat/app-shell-pr6-e2e`)
+
+### AS15–AS18 — Shell Playwright specs
+
+`apps/web/e2e/shell/shell.spec.ts`. Four describe blocks:
+- **AS15** ADMIN sidebar: all 5 sections + 9 items visible; Employees and Reports nav to correct URLs.
+- **AS16** HR_VIEWER sidebar: Admin section DOM-absent (`not.toBeAttached`); viewer user created/torn down via `POST /auth/invite` + `/auth/setup` within the test.
+- **AS17** Collapse: toggle hides labels; reload restores collapsed state from localStorage.
+- **AS18** Mobile (375px): drawer closed by default; hamburger opens it; overlay click closes it.
+
+**Commit:** `f3000c9`
+
+**Acceptance:** Pending full-stack run (`docker compose up --build` + `pnpm e2e`).
