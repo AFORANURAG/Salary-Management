@@ -13,6 +13,7 @@ Significant technical decisions for the Employee Salary Management System. Each 
 | [ADR-0005](./ADR-0005-nestjs-backend-framework.md) | NestJS backend framework | Accepted | 2026-07-02 |
 | [ADR-0006](./ADR-0006-react-hook-form-zod-fe-forms.md) | react-hook-form + zod for frontend forms | Accepted | 2026-07-03 |
 | [ADR-0007](./ADR-0007-url-search-params-employee-filters.md) | URL search params for employee list state | Accepted | 2026-07-03 |
+| [ADR-0008](./ADR-0008-msw-integration-test-network-interception.md) | MSW for integration-test network interception | Accepted | 2026-07-03 |
 
 ## Lifecycle
 
@@ -26,7 +27,7 @@ PROPOSED → ACCEPTED → (SUPERSEDED or DEPRECATED)
 
 ## Adding a new ADR
 
-1. Copy the template from [documentation-and-adrs skill](../../.cursor/skills/documentation-and-adrs/SKILL.md).
+1. Copy the template from [documentation-and-adrs skill](../../.ai/skills/documentation-and-adrs/SKILL.md).
 2. Number sequentially: `ADR-NNNN-short-title.md`.
 3. Add a row to the index table above.
 4. Commit with `docs: add ADR-NNNN <short title>`.

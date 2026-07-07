@@ -47,7 +47,7 @@ Referenced by path — content is not duplicated here.
 | Traces / observability | `~/.cursor/skills/observability-and-instrumentation/SKILL.md` |
 | Security / boundaries | `~/.cursor/skills/security-and-hardening/SKILL.md` |
 
-Codified rules: [commit-conventions](../.cursor/rules/commit-conventions.mdc), [spec-driven-workflow](../.cursor/rules/spec-driven-workflow.mdc).
+Codified rules: [commit-conventions](../.ai/rules/commit-conventions.md), [spec-driven-workflow](../.ai/rules/spec-driven-workflow.md).
 
 ## Feedback loop
 
