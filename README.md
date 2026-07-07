@@ -9,6 +9,8 @@ Employee Salary Management System MVP — monorepo scaffold for ACME HR operatio
 
 cp .env.example .env
 pnpm install
+docker compose up -d db     # start Postgres
+pnpm db:setup               # migrate + seed (~10k employees + admin)
 pnpm dev                    # web :3000 + api :3001 in parallel
 ```
 
@@ -23,9 +25,16 @@ pnpm dev                    # web :3000 + api :3001 in parallel
 | `pnpm typecheck` | TypeScript check across workspace |
 | `pnpm lint` | ESLint across workspace |
 | `pnpm test` | Vitest across workspace |
+| `pnpm test:e2e` | Playwright E2E suite (app must be running) |
+| `pnpm db:setup` | First-time DB bootstrap: migrate + seed |
+| `pnpm db:reset` | Clean slate: drop schema → migrate → seed |
+| `pnpm migrate` | Apply pending TypeORM migrations |
+| `pnpm seed` | Seed ~10k employees + admin |
 | `pnpm --filter api migration:run` | Run TypeORM migrations |
-| `pnpm --filter api seed` | Run seed (no-op scaffold) |
+| `pnpm --filter api migration:revert` | Roll back the most recent migration |
+| `pnpm --filter api schema:drop` | Drop all tables (destructive) |
 | `docker compose up -d db` | Start Postgres only |
+| `docker compose down -v` | Stop stack and delete the DB volume (full reset) |
 | `docker compose up --build` | Full stack: db + api + web |
 
 ## Documentation layout

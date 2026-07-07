@@ -81,9 +81,11 @@ Tests come **before** implementation. The per-task loop is strict:
 2. Write failing test(s) for the slice first — **RED**.
 3. Implement the smallest complete slice to make them pass — **GREEN**.
 4. Verify: `pnpm typecheck && pnpm lint && pnpm test`.
-5. Commit using [Conventional Commits](#conventions).
-6. Append a trace entry to [`../traces/<spec>.md`](../traces/) **in the same commit**.
-7. At checkpoints, evaluate against **spec intent**, not just passing tests.
+5. Update docs in the **same commit** if anything durable changed — a new
+   command/script, practice, convention, dependency, env var, or feature.
+6. Commit using [Conventional Commits](#conventions).
+7. Append a trace entry to [`../traces/<spec>.md`](../traces/) **in the same commit**.
+8. At checkpoints, evaluate against **spec intent**, not just passing tests.
 
 Never reorder steps 2 and 3. Tests are bound to the task/spec; `build` makes
 them go green. Skill: [`test-driven-development`](../.ai/skills/test-driven-development/SKILL.md).
@@ -126,15 +128,19 @@ salary-mgmt/
 │   │   ├── app/             → routes (employees, payroll, payslips, reporting)
 │   │   ├── components/      → app-level composed components
 │   │   ├── lib/             → client utils, API wiring
+│   │   ├── middleware.ts    → route protection (auth redirect)
 │   │   └── e2e/             → Playwright end-to-end tests
 │   └── api/                 → NestJS backend
 │       └── src/
+│           ├── auth/        → JWT auth (login, guards) for the HR operator
+│           ├── hr-users/    → HR user accounts (seeded admin)
 │           ├── employees/   → employee module (entity, service, controller)
 │           ├── salary/      → salary-structure module (effective-dated)
 │           ├── payroll/     → payroll generation (deterministic, idempotent)
 │           ├── payslips/    → payslip + history module
 │           ├── reporting/   → aggregate compensation queries
 │           ├── database/    → TypeORM data-source, migrations, seed
+│           ├── health/      → health check endpoint
 │           └── common/      → shared pipes, filters, money utils
 ├── packages/                → types, config, money, errors, store, ui
 ├── docs/                    → requirements, spec, specs/, plans/, decisions/
@@ -183,7 +189,7 @@ Where an ADR exists, it is the authoritative record.
 | Containerization | Docker + docker-compose | — |
 | Unit/component/integration tests | Vitest (+ Testing Library, `@nestjs/testing`) | [ADR-0003](./decisions/ADR-0003-vitest-backend-test-runner.md), [ADR-0008](./decisions/ADR-0008-msw-integration-test-network-interception.md) |
 | E2E tests | Playwright | — |
-| CI | GitHub Actions | — |
+| CI | GitHub Actions (planned — no workflow committed yet) | — |
 
 Full ADR list: [`decisions/README.md`](./decisions/README.md).
 
@@ -209,13 +215,16 @@ pnpm install
 # 5. Start Postgres (TypeORM connects on API boot)
 docker compose up -d db
 
-# 6. Apply migrations and seed ~10k employees + an admin user
-pnpm --filter api migration:run
-pnpm --filter api seed
+# 6. Prepare the database: apply migrations + seed ~10k employees + admin user
+pnpm db:setup       # = migration:run then seed (idempotent; safe to re-run)
 
 # 7. Run everything
 pnpm dev            # web :3000 + api :3001
 ```
+
+`pnpm db:setup` is the one-shot first-time DB bootstrap. It runs migrations and
+then the seed; both are idempotent, so re-running it to pick up new migrations
+is safe.
 
 Web: <http://localhost:3000> · API: <http://localhost:3001>. Environment
 variables (DB, JWT, CORS, seed admin, `NEXT_PUBLIC_API_URL`) are documented in
@@ -240,22 +249,40 @@ docker compose up --build    # full stack in containers: db + api + web
 ### Database and migrations
 
 Migrations are TypeORM, driven from `apps/api/src/database/data-source.ts`.
-Schema changes go through migrations — **ask before changing the schema**.
+Schema changes go through migrations — **ask before changing the schema**. All
+DB commands require Postgres running (`docker compose up -d db`).
+
+| Command | What it does | When to use |
+|---|---|---|
+| `pnpm db:setup` | `migration:run` then `seed` (repo-root shortcut) | First-time setup; after pulling new migrations |
+| `pnpm migrate` | Apply pending migrations (root shortcut for `--filter api migration:run`) | Update an existing DB to the latest schema |
+| `pnpm db:reset` | `schema:drop` → `migration:run` → `seed` | Wipe and rebuild a clean DB before re-testing flows |
+| `pnpm --filter api migration:run` | Apply pending migrations | Same as `pnpm migrate` |
+| `pnpm --filter api migration:generate` | Generate a migration from entity changes | After editing an entity (then review + commit it) |
+| `pnpm --filter api migration:revert` | Roll back the most recent migration | Undo the last migration during development |
+| `pnpm --filter api schema:drop` | Drop all tables (destructive) | Manual clean slate; prefer `db:reset` |
+
+**Full clean slate** (drops the Postgres volume too):
 
 ```bash
-docker compose up -d db                        # DB must be running first
-pnpm --filter api migration:run                # apply pending migrations
-pnpm --filter api migration:generate           # generate from entity changes
+docker compose down -v        # remove the db container AND its data volume
+docker compose up -d db
+pnpm db:setup
 ```
 
 ### Seeding data
 
 ```bash
-pnpm --filter api seed       # ~10k employees + salary structures + seed admin
+pnpm seed                    # root shortcut → ~10k employees + seed admin
+pnpm --filter api seed       # same, run from the api package
 ```
 
-The seed admin credentials come from `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD`
-in your `.env` (see [`.env.example`](../.env.example)).
+The seed inserts ~10k employees and the admin HR user — it does **not** generate
+salary structures or payroll runs (create those through the app/API). It is
+idempotent: it skips employee inserts once ~10k rows exist and skips the admin
+if it already exists. To force a fresh dataset, run `pnpm db:reset`.
+Seed admin credentials come from `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` in
+your `.env` (see [`.env.example`](../.env.example)).
 
 ## How to test
 
@@ -284,8 +311,11 @@ tests. Per-module "non-negotiable test cases" are defined in each domain spec.
 pnpm test                        # Vitest across the whole workspace (via Turbo)
 pnpm --filter api test           # backend only
 pnpm --filter web test           # frontend only
-pnpm test -- --coverage          # with coverage
+pnpm --filter web test -- --watch   # watch mode while developing
 ```
+
+> Coverage reporting is **not wired yet** — no `@vitest/coverage-v8` provider is
+> installed. Add it (a new dependency — ask first) before using `--coverage`.
 
 ### End-to-end (E2E) tests
 
@@ -297,7 +327,7 @@ before you run E2E.
 ```bash
 # Terminal 1 — bring up dependencies and the app
 docker compose up -d db
-pnpm --filter api migration:run && pnpm --filter api seed
+pnpm db:setup                 # migrate + seed (use pnpm db:reset for a clean run)
 pnpm dev
 
 # Terminal 2 — run the E2E suite
@@ -390,12 +420,18 @@ Run from the repo root unless noted.
 | `pnpm typecheck` | TypeScript check across workspace |
 | `pnpm lint` | ESLint across workspace |
 | `pnpm test` | Vitest across workspace |
-| `pnpm test -- --coverage` | Vitest with coverage |
 | `pnpm test:e2e` | Playwright E2E suite (app must be running) |
+| `pnpm db:setup` | First-time DB bootstrap: migrate + seed |
+| `pnpm db:reset` | Clean slate: drop schema → migrate → seed |
+| `pnpm migrate` | Apply pending migrations (root shortcut) |
+| `pnpm seed` | Seed ~10k employees + admin (root shortcut) |
 | `pnpm --filter api migration:run` | Apply TypeORM migrations |
 | `pnpm --filter api migration:generate` | Generate a migration from entity changes |
+| `pnpm --filter api migration:revert` | Roll back the most recent migration |
+| `pnpm --filter api schema:drop` | Drop all tables (destructive) |
 | `pnpm --filter api seed` | Seed ~10k employees + admin |
 | `docker compose up -d db` | Start Postgres only |
+| `docker compose down -v` | Stop stack and delete the DB volume (full reset) |
 | `docker compose up --build` | Full stack: db + api + web |
 
 ## Documentation map
