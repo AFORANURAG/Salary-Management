@@ -51,9 +51,9 @@ Branch: `feat/payroll-pr1-foundation`
 | PR3 | `TestDataSource` + `global-setup` updated with `PayrollResultEntity` and new migration; `truncateAll` covers `payroll_results` first (FK order) | (same commit) |
 
 **Acceptance**
-- [ ] Types exported from `@salary-mgmt/types`; build + typecheck pass.
-- [ ] Migration applies cleanly: table, unique constraint, 2 indexes, 2 FKs.
-- [ ] All existing tests remain green.
+- [x] Types exported from `@salary-mgmt/types`; build + typecheck pass.
+- [x] Migration applies cleanly: table, unique constraint, 2 indexes, 2 FKs.
+- [x] All existing tests remain green.
 
 ---
 
@@ -67,7 +67,7 @@ Branch: `feat/payroll-pr2-test-harness`
 | PR5 | Integration specs: 10× POST runs, 2× GET summary, 3× GET results | (same commit) |
 
 **Acceptance**
-- [ ] Tests fail for the right reason: missing service/controller, not harness errors.
+- [x] Tests fail for the right reason: missing service/controller, not harness errors.
 
 ---
 
@@ -83,9 +83,9 @@ Branch: `feat/payroll-pr3-implementation`
 | PR9 | `PayrollController` at `/payroll`; `PayrollModule` wired with TypeORM repos for all 4 entities | (same commit) |
 
 **Acceptance**
-- [ ] 12/12 unit tests GREEN.
-- [ ] 15/15 integration tests GREEN.
-- [ ] All prior tests still green.
+- [x] 12/12 unit tests GREEN.
+- [x] 15/15 integration tests GREEN.
+- [x] All prior tests still green.
 
 ---
 
@@ -99,8 +99,8 @@ Branch: `feat/payroll-pr4-scale`
 | PR11 | `payroll.scale.e2e-spec.ts` — seeds 10k, POST /v1/payroll/runs, asserts `processed=10000` and `elapsed < 30s` | (same commit) |
 
 **Acceptance**
-- [ ] Scale spec passes: 10k-employee run < 30s (actual: ~5s).
-- [ ] 104/104 total tests GREEN.
+- [x] Scale spec passes: 10k-employee run < 30s (actual: ~5s).
+- [x] 104/104 total tests GREEN.
 
 ---
 
@@ -114,8 +114,8 @@ Branch: `feat/payroll-fe-pr1-hooks-red`
 | PF4 | RED unit tests (9): `RunPayrollDialog` (3), `PayrollRunList` (2), `PayrollSummaryCard` (2), `PayrollResultsTable` (3) — all mocked via `vi.mock`; fail because components not yet implemented | (same commit) |
 
 **Acceptance**
-- [ ] `pnpm --filter @salary-mgmt/store typecheck` passes.
-- [ ] Unit tests fail RED: component files not found.
+- [x] `pnpm --filter @salary-mgmt/store typecheck` passes.
+- [x] Unit tests fail RED: component files not found.
 
 ---
 
@@ -129,8 +129,8 @@ Branch: `feat/payroll-fe-pr2-components`
 | PF3 | Detail page `apps/web/app/payroll/[period]/page.tsx`: `PayrollSummaryCard` + `PayrollResultsTable` + employeeId filter input | (same commit) |
 
 **Acceptance**
-- [ ] All 9 unit tests from PF4 now GREEN.
-- [ ] `pnpm --filter web typecheck` passes.
+- [x] All 9 unit tests from PF4 now GREEN.
+- [x] `pnpm --filter web typecheck` passes.
 
 ---
 
@@ -144,9 +144,9 @@ Branch: `feat/payroll-fe-pr3-tests`
 | PF6 | E2E tests (4 — PF01–PF04): hub load, dialog run flow, 409 conflict, detail summary+results | (same commit) |
 
 **Acceptance**
-- [ ] 4/4 integration tests GREEN.
-- [ ] 4/4 E2E tests GREEN against `docker compose up --build`.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` clean from repo root.
+- [x] 4/4 integration tests GREEN.
+- [x] 4/4 E2E tests GREEN against `docker compose up --build`.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` clean from repo root.
 
 ---
 
