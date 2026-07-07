@@ -48,7 +48,7 @@ Per-task loop:
 5. Update documentation in the **same commit** whenever the change introduces or
    alters anything durable — a new command/script, practice, convention,
    dependency, env var, or feature. Keep docs current: root `README.md`,
-   `docs/README.md`, the relevant `docs/specs/*` / `docs/plans/*`, ADRs, and any
+   the relevant `docs/specs/*` / `docs/plans/*`, ADRs, and any
    affected `AGENTS.md` / `CLAUDE.md`. Docs must never lag behind the code.
 6. Commit using Conventional Commits (see below).
 7. Append a trace entry to `traces/<spec>.md` **in the same commit** (include the

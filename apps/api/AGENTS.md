@@ -55,4 +55,4 @@ Database connection uses env vars from `.env` (see `.env.example`).
 
 Read the relevant domain spec → plan task → implement → `pnpm typecheck && pnpm lint && pnpm test` → commit → append trace.
 
-Rules: [`.ai/rules/`](../../.ai/rules/) · Skills: [`docs/README.md`](../../docs/README.md#agent-tooling)
+Rules: [`.ai/rules/`](../../.ai/rules/) · Skills: [`README.md`](../../README.md#agent-tooling)
