@@ -11,7 +11,11 @@
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "migrate": "pnpm --filter api migration:run",
+    "seed": "pnpm --filter api seed",
+    "db:setup": "pnpm --filter api db:setup",
+    "db:reset": "pnpm --filter api db:reset"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",

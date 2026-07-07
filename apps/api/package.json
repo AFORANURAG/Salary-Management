@@ -11,7 +11,11 @@
     "test": "vitest run --passWithNoTests",
     "migration:run": "typeorm-ts-node-commonjs migration:run -d src/database/data-source.ts",
     "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/database/data-source.ts",
-    "seed": "ts-node -r tsconfig-paths/register src/database/seed.ts"
+    "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/database/data-source.ts",
+    "schema:drop": "typeorm-ts-node-commonjs schema:drop -d src/database/data-source.ts",
+    "seed": "ts-node -r tsconfig-paths/register src/database/seed.ts",
+    "db:setup": "pnpm migration:run && pnpm seed",
+    "db:reset": "pnpm schema:drop && pnpm migration:run && pnpm seed"
   },
   "dependencies": {
     "@nestjs/common": "^10.4.15",
