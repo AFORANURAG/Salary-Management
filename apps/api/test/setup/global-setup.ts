@@ -3,6 +3,7 @@ import { DataSource } from "typeorm";
 import { EmployeeEntity } from "../../src/employees/employee.entity";
 import { HrUserEntity } from "../../src/hr-users/hr-user.entity";
 import { PayrollResultEntity } from "../../src/payroll/payroll-result.entity";
+import { PayrollRunEntity } from "../../src/payroll/payroll-run.entity";
 import { SalaryComponentEntity } from "../../src/salary/salary-component.entity";
 import { SalaryStructureEntity } from "../../src/salary/salary-structure.entity";
 import { CreateEmployees1751000000000 } from "../../src/database/migrations/1751000000000-CreateEmployees";
@@ -10,6 +11,8 @@ import { CreateSalaryStructure1751100000000 } from "../../src/database/migration
 import { AddSalaryStructureOpenVersionIndex1751200000000 } from "../../src/database/migrations/1751200000000-AddSalaryStructureOpenVersionIndex";
 import { CreatePayrollResults1751300000000 } from "../../src/database/migrations/1751300000000-CreatePayrollResults";
 import { CreateHrUsers1751400000000 } from "../../src/database/migrations/1751400000000-CreateHrUsers";
+import { CreatePayrollRuns1751500000000 } from "../../src/database/migrations/1751500000000-CreatePayrollRuns";
+import { ExpandPayrollRunCurrency1751600000000 } from "../../src/database/migrations/1751600000000-ExpandPayrollRunCurrency";
 
 const host = process.env.DB_HOST ?? "localhost";
 const port = Number(process.env.DB_PORT ?? 5432);
@@ -46,8 +49,8 @@ export async function setup(): Promise<void> {
     username,
     password,
     database: testDbName,
-    entities: [EmployeeEntity, HrUserEntity, SalaryStructureEntity, SalaryComponentEntity, PayrollResultEntity],
-    migrations: [CreateEmployees1751000000000, CreateSalaryStructure1751100000000, AddSalaryStructureOpenVersionIndex1751200000000, CreatePayrollResults1751300000000, CreateHrUsers1751400000000],
+    entities: [EmployeeEntity, HrUserEntity, SalaryStructureEntity, SalaryComponentEntity, PayrollResultEntity, PayrollRunEntity],
+    migrations: [CreateEmployees1751000000000, CreateSalaryStructure1751100000000, AddSalaryStructureOpenVersionIndex1751200000000, CreatePayrollResults1751300000000, CreateHrUsers1751400000000, CreatePayrollRuns1751500000000, ExpandPayrollRunCurrency1751600000000],
     synchronize: false,
     logging: false,
   });
