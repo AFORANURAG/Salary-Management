@@ -11,9 +11,12 @@ list, void a completed run (ADMIN only), and a period-to-period diff. The
 
 ## Architecture Decisions
 
-- **`VOIDED` status via migration** — `ALTER TYPE payroll_run_status_enum ADD
-  VALUE 'VOIDED'`; add `voidedAt` timestamptz nullable + `voidedBy` varchar
-  nullable columns to `payroll_runs`. Single migration.
+- **`payroll_runs` table via migration** — original payroll implementation had
+  no persisted run record. Phase 1 created the full `payroll_runs` table from
+  scratch (migration `1751500000000-CreatePayrollRuns`) with `status` enum
+  (PENDING | COMPLETED | VOIDED), void columns, and all totals columns.
+  A follow-up migration (`1751600000000-ExpandPayrollRunCurrency`) widened
+  `currency` from `varchar(3)` to `varchar(10)` to fit the `"MIXED"` sentinel.
 - **`GET /v1/payroll/runs` (list)** — new endpoint; existing
   `GET /v1/payroll/runs/:period` (single run) is unchanged.
 - **`void` is a PATCH-semantics POST** — `POST /v1/payroll/runs/:period/void`;
@@ -40,7 +43,7 @@ list, void a completed run (ADMIN only), and a period-to-period diff. The
 
 ### Phase 1 — Types & Migration
 
-Branch: `feat/payroll-ops-pr1-types-migration`
+Branch: `feat/payroll-ops-pr3-api`
 
 | Task | Description | Commit |
 |---|---|---|
@@ -49,15 +52,15 @@ Branch: `feat/payroll-ops-pr1-types-migration`
 | PO3 | `packages/types`: add `PayrollRunSummary`, `PayrollDiffEntry`, `PayrollDiffResponse`, `PayrollRunListQuery` interfaces | `feat(types): add payroll-ops contracts` |
 
 **Acceptance**
-- [ ] Migration runs: `pnpm --filter api migration:run`.
-- [ ] Types exported; `pnpm --filter @salary-mgmt/types build && pnpm typecheck` pass.
-- [ ] Existing payroll tests still GREEN (enum addition is additive).
+- [x] Migration runs: `pnpm --filter api migration:run`.
+- [x] Types exported; `pnpm --filter @salary-mgmt/types build && pnpm typecheck` pass.
+- [x] Existing payroll tests still GREEN (enum addition is additive).
 
 ---
 
 ### Phase 2 — RED
 
-Branch: `feat/payroll-ops-pr2-test-harness`
+Branch: `feat/payroll-ops-pr3-api`
 
 | Task | Description | Commit |
 |---|---|---|
@@ -69,7 +72,7 @@ Branch: `feat/payroll-ops-pr2-test-harness`
 | PO9 | Integration spec `GET /v1/payroll/runs/:period/diff?compareTo=`: 200 correct structure; 400 missing compareTo; 404 missing either period | `test(api): add failing diff integration spec (PO9)` |
 
 **Acceptance**
-- [ ] All specs fail RED — routes 404.
+- [x] All specs fail RED — routes 404.
 
 ---
 
@@ -86,17 +89,17 @@ Branch: `feat/payroll-ops-pr3-api`
 | PO14 | `PayrollController`: add `GET /v1/payroll/runs` (list); `POST /v1/payroll/runs/:period/void` (`@Roles(ADMIN)`); `GET /v1/payroll/runs/:period/diff` | `feat(api): add payroll-ops controller endpoints (PO14)` |
 
 **Acceptance**
-- [ ] All unit specs from PO4–PO6 GREEN.
-- [ ] All integration specs from PO7–PO9 GREEN.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green.
+- [x] All unit specs from PO4–PO6 GREEN. *(PO4/PO5 skipped — DB-backed methods covered by integration tests instead; PO6 covered via `computeDiff` pure helper unit tests)*
+- [x] All integration specs from PO7–PO9 GREEN.
+- [ ] `pnpm typecheck && pnpm lint && pnpm test` green. *(web typecheck blocked by FE consumers of new PayrollRunSummary shape — fixed in fe-pr2-history-page)*
 
 ### Checkpoint: Backend complete
-- [ ] Void preserves `PayrollResult` rows.
-- [ ] Diff covers all three change categories.
+- [x] Void preserves `PayrollResult` rows.
+- [x] Diff covers all three change categories.
 
 ---
 
-### Phase 5 — Frontend: Hooks
+### Phase 4 — Frontend: Hooks
 
 Branch: `feat/payroll-ops-fe-pr1-hooks`
 
@@ -111,7 +114,7 @@ Branch: `feat/payroll-ops-fe-pr1-hooks`
 
 ---
 
-### Phase 6 — Frontend: History Page
+### Phase 5 — Frontend: History Page
 
 Branch: `feat/payroll-ops-fe-pr2-history-page`
 
@@ -128,7 +131,7 @@ Branch: `feat/payroll-ops-fe-pr2-history-page`
 
 ---
 
-### Phase 7 — Frontend: Void
+### Phase 6 — Frontend: Void
 
 Branch: `feat/payroll-ops-fe-pr3-void`
 
@@ -145,7 +148,7 @@ Branch: `feat/payroll-ops-fe-pr3-void`
 
 ---
 
-### Phase 8 — Frontend: Diff Drawer
+### Phase 7 — Frontend: Diff Drawer
 
 Branch: `feat/payroll-ops-fe-pr4-diff-drawer`
 
@@ -162,7 +165,7 @@ Branch: `feat/payroll-ops-fe-pr4-diff-drawer`
 
 ---
 
-### Phase 9 — Tests
+### Phase 8 — Tests
 
 Branch: `feat/payroll-ops-fe-pr5-tests`
 
