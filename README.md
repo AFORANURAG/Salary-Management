@@ -6,20 +6,20 @@ ACME HR operations. This README explains how the project thinks, how to set it
 up, how to run and test it, and how to contribute. Authored docs live in
 [`docs/`](./docs); agent execution logs live in [`traces/`](./traces).
 
-> New here? Read [Philosophy](#philosophy) first, then jump to
-> [Setup on a new machine](#setup-on-a-new-machine).
+> New here? Start with [Architecture](#architecture) to orient yourself, then read [Philosophy](#philosophy) before jumping to [Setup on a new machine](#setup-on-a-new-machine).
 
 ## Table of contents
 
+- [Architecture](#architecture)
+  - [Technology stack](#technology-stack)
+  - [Decisions](#decisions)
+  - [Monorepo layout](#monorepo-layout)
+  - [Shared packages](#shared-packages)
 - [Philosophy](#philosophy)
   - [Spec-driven development](#spec-driven-development)
   - [Test-driven development](#test-driven-development)
   - [Feedback loop](#feedback-loop)
 - [Practices](#practices)
-- [Architecture](#architecture)
-  - [Monorepo layout](#monorepo-layout)
-  - [Shared packages](#shared-packages)
-  - [Technology stack](#technology-stack)
 - [Setup on a new machine](#setup-on-a-new-machine)
 - [Local development](#local-development)
   - [Running the stack](#running-the-stack)
@@ -37,9 +37,134 @@ up, how to run and test it, and how to contribute. Authored docs live in
 - [Documentation map](#documentation-map)
   - [Spec index](#spec-index)
   - [Where each artifact lives](#where-each-artifact-lives)
-- [Agent tooling](#agent-tooling)
+- [AI development](#ai-development)
+  - [Agent entry points](#agent-entry-points)
+  - [Rules](#rules)
+  - [Skills](#skills)
+  - [Traces](#traces)
 - [Adding a new domain spec](#adding-a-new-domain-spec)
 - [Related](#related)
+
+## Architecture
+
+### Technology stack
+
+Locked choices from [`docs/requirements.md`](./docs/requirements.md) and [`docs/spec.md`](./docs/spec.md).
+Where an ADR exists, it is the authoritative record for the decision and the alternatives considered.
+
+| Concern | Choice | ADR |
+|---|---|---|
+| Runtime | Node.js 20 LTS | — |
+| Language | TypeScript (strict) | — |
+| Monorepo | pnpm 9 + Turborepo 2 | [ADR-0001](./docs/decisions/ADR-0001-pnpm-turborepo-monorepo.md) |
+| Frontend | Next.js 14+ (App Router) | — |
+| Component library | shadcn/ui via `@salary-mgmt/ui` (Radix + Tailwind) | [ADR-0002](./docs/decisions/ADR-0002-shadcn-ui-component-library.md), [ADR-0004](./docs/decisions/ADR-0004-shared-fe-packages.md) |
+| Client data layer | TanStack Query + Zustand (`@salary-mgmt/store`) | [ADR-0004](./docs/decisions/ADR-0004-shared-fe-packages.md) |
+| Forms | react-hook-form + zod | [ADR-0006](./docs/decisions/ADR-0006-react-hook-form-zod-fe-forms.md) |
+| List/filter state | URL search params | [ADR-0007](./docs/decisions/ADR-0007-url-search-params-employee-filters.md) |
+| Backend | NestJS 10+ | [ADR-0005](./docs/decisions/ADR-0005-nestjs-backend-framework.md) |
+| Database | PostgreSQL 16 | — |
+| ORM | TypeORM 0.3+ | — |
+| Containerization | Docker + docker-compose | — |
+| Unit/component/integration tests | Vitest (+ Testing Library, `@nestjs/testing`) | [ADR-0003](./docs/decisions/ADR-0003-vitest-backend-test-runner.md), [ADR-0008](./docs/decisions/ADR-0008-msw-integration-test-network-interception.md) |
+| E2E tests | Playwright | — |
+| CI | GitHub Actions (planned) | — |
+
+**Why NestJS for the backend?** The API backs a domain-heavy payroll system
+with five bounded contexts (employees, salary, payroll, payslips, reporting)
+that must stay independently testable. NestJS was chosen because:
+
+- **SOLID by default** — each domain is an isolated `Module` with its own
+  controller, service, and entity; new domains add modules without touching
+  existing ones; constructor DI inverts dependencies so services are swappable
+  in tests.
+- **Structure is given, not invented** — controllers stay thin HTTP adapters,
+  services own domain logic, pipes/filters/guards centralize validation and
+  cross-cutting concerns. Multiple contributors (and agents) navigate the same
+  predictable layout without debate.
+- **TDD-ready** — `@nestjs/testing` builds isolated module graphs; services
+  unit-test by mocking injected dependencies; works with Vitest
+  ([ADR-0003](./docs/decisions/ADR-0003-vitest-backend-test-runner.md)) for a
+  single test runner across the whole monorepo.
+- **TypeScript-first** — decorators + metadata for declarative wiring; strong
+  typing for DTOs, entities, and service contracts aligns with the shared
+  `@salary-mgmt/types` package.
+- **Ecosystem fit** — official `@nestjs/typeorm` module, conventional file
+  naming (`*.module.ts`, `*.service.ts`, …) documented in the root spec, mature
+  patterns for migrations and seed scripts.
+
+→ Full rationale and alternatives considered: [ADR-0005](./docs/decisions/ADR-0005-nestjs-backend-framework.md).
+
+### Decisions
+
+Significant technical choices are recorded as Architecture Decision Records
+(ADRs) in [`docs/decisions/`](./docs/decisions/). Each ADR captures the
+context, the decision, the rationale, and the alternatives that were rejected —
+so the "why" survives long after the "what".
+
+| ADR | Decision |
+|---|---|
+| [ADR-0001](./docs/decisions/ADR-0001-pnpm-turborepo-monorepo.md) | pnpm + Turborepo as the monorepo toolchain |
+| [ADR-0002](./docs/decisions/ADR-0002-shadcn-ui-component-library.md) | shadcn/ui (copy-paste into `packages/ui`) as the component library |
+| [ADR-0003](./docs/decisions/ADR-0003-vitest-backend-test-runner.md) | Vitest (not Jest) as the backend test runner |
+| [ADR-0004](./docs/decisions/ADR-0004-shared-fe-packages.md) | Shared FE packages: `errors`, `store`, `ui` |
+| [ADR-0005](./docs/decisions/ADR-0005-nestjs-backend-framework.md) | NestJS as the backend framework |
+| [ADR-0006](./docs/decisions/ADR-0006-react-hook-form-zod-fe-forms.md) | react-hook-form + zod for frontend forms |
+| [ADR-0007](./docs/decisions/ADR-0007-url-search-params-employee-filters.md) | URL search params for employee list filter/search state |
+| [ADR-0008](./docs/decisions/ADR-0008-msw-integration-test-network-interception.md) | MSW v2 (`msw/node`) for integration test network interception |
+
+Full index: [`docs/decisions/README.md`](./docs/decisions/README.md).
+
+### Monorepo layout
+
+pnpm workspaces + Turborepo. Two apps, several shared packages.
+
+```
+salary-mgmt/
+├── apps/
+│   ├── web/                 → Next.js frontend (App Router)
+│   │   ├── app/             → routes (employees, payroll, payslips, reporting)
+│   │   ├── components/      → app-level composed components
+│   │   ├── lib/             → client utils, API wiring
+│   │   ├── middleware.ts    → route protection (auth redirect)
+│   │   └── e2e/             → Playwright end-to-end tests
+│   └── api/                 → NestJS backend
+│       └── src/
+│           ├── auth/        → JWT auth (login, guards) for the HR operator
+│           ├── hr-users/    → HR user accounts (seeded admin)
+│           ├── employees/   → employee module (entity, service, controller)
+│           ├── salary/      → salary-structure module (effective-dated)
+│           ├── payroll/     → payroll generation (deterministic, idempotent)
+│           ├── payslips/    → payslip + history module
+│           ├── reporting/   → aggregate compensation queries
+│           ├── database/    → TypeORM data-source, migrations, seed
+│           ├── health/      → health check endpoint
+│           └── common/      → shared pipes, filters, money utils
+├── packages/                → types, config, money, errors, store, ui
+├── docs/                    → requirements, spec, specs/, plans/, decisions/
+├── traces/                  → agent execution logs
+├── docker-compose.yml       → db + api + web
+├── turbo.json               → task pipeline
+└── pnpm-workspace.yaml
+```
+
+Per-area conventions live in nested `AGENTS.md` files:
+[`apps/api/AGENTS.md`](./apps/api/AGENTS.md), [`apps/web/AGENTS.md`](./apps/web/AGENTS.md).
+
+### Shared packages
+
+| Package | Purpose |
+|---|---|
+| [`@salary-mgmt/types`](./packages/types) | Shared FE↔BE contract types (built workspace package) |
+| [`@salary-mgmt/config`](./packages/config) | Shared tsconfig / eslint / prettier / tailwind presets |
+| [`@salary-mgmt/money`](./packages/money) | Integer minor-unit money helpers |
+| [`@salary-mgmt/errors`](./packages/errors) | Shared error types + user-facing messages (FE) |
+| [`@salary-mgmt/store`](./packages/store) | TanStack Query, API client, Zustand helpers (FE) |
+| [`@salary-mgmt/ui`](./packages/ui) | Shared shadcn/ui component library (FE) |
+
+> Import `@salary-mgmt/types` from the **built** package — never tsconfig-path
+> into another app/package `src/`. FE packages (`errors`, `store`, `ui`) export
+> TS source and are transpiled by Next.js via `transpilePackages`.
 
 ## Philosophy
 
@@ -116,84 +241,6 @@ Non-negotiables that apply to every change:
 
 **Ask first before:** DB schema changes, adding a dependency, monorepo
 structure changes, or CI changes. Full detail: [`spec.md` → Boundaries](./docs/spec.md#boundaries).
-
-## Architecture
-
-### Monorepo layout
-
-pnpm workspaces + Turborepo. Two apps, several shared packages.
-
-```
-salary-mgmt/
-├── apps/
-│   ├── web/                 → Next.js frontend (App Router)
-│   │   ├── app/             → routes (employees, payroll, payslips, reporting)
-│   │   ├── components/      → app-level composed components
-│   │   ├── lib/             → client utils, API wiring
-│   │   ├── middleware.ts    → route protection (auth redirect)
-│   │   └── e2e/             → Playwright end-to-end tests
-│   └── api/                 → NestJS backend
-│       └── src/
-│           ├── auth/        → JWT auth (login, guards) for the HR operator
-│           ├── hr-users/    → HR user accounts (seeded admin)
-│           ├── employees/   → employee module (entity, service, controller)
-│           ├── salary/      → salary-structure module (effective-dated)
-│           ├── payroll/     → payroll generation (deterministic, idempotent)
-│           ├── payslips/    → payslip + history module
-│           ├── reporting/   → aggregate compensation queries
-│           ├── database/    → TypeORM data-source, migrations, seed
-│           ├── health/      → health check endpoint
-│           └── common/      → shared pipes, filters, money utils
-├── packages/                → types, config, money, errors, store, ui
-├── docs/                    → requirements, spec, specs/, plans/, decisions/
-├── traces/                  → agent execution logs
-├── docker-compose.yml       → db + api + web
-├── turbo.json               → task pipeline
-└── pnpm-workspace.yaml
-```
-
-Per-area conventions live in nested `AGENTS.md` files:
-[`apps/api/AGENTS.md`](./apps/api/AGENTS.md), [`apps/web/AGENTS.md`](./apps/web/AGENTS.md).
-
-### Shared packages
-
-| Package | Purpose |
-|---|---|
-| [`@salary-mgmt/types`](./packages/types) | Shared FE↔BE contract types (built workspace package) |
-| [`@salary-mgmt/config`](./packages/config) | Shared tsconfig / eslint / prettier / tailwind presets |
-| [`@salary-mgmt/money`](./packages/money) | Integer minor-unit money helpers |
-| [`@salary-mgmt/errors`](./packages/errors) | Shared error types + user-facing messages (FE) |
-| [`@salary-mgmt/store`](./packages/store) | TanStack Query, API client, Zustand helpers (FE) |
-| [`@salary-mgmt/ui`](./packages/ui) | Shared shadcn/ui component library (FE) |
-
-> Import `@salary-mgmt/types` from the **built** package — never tsconfig-path
-> into another app/package `src/`. FE packages (`errors`, `store`, `ui`) export
-> TS source and are transpiled by Next.js via `transpilePackages`.
-
-### Technology stack
-
-Locked choices from [`docs/requirements.md`](./docs/requirements.md) and [`docs/spec.md`](./docs/spec.md).
-Where an ADR exists, it is the authoritative record.
-
-| Concern | Choice | ADR |
-|---|---|---|
-| Runtime | Node.js 20 LTS | — |
-| Language | TypeScript (strict) | — |
-| Monorepo | pnpm 9 + Turborepo 2 | [ADR-0001](./docs/decisions/ADR-0001-pnpm-turborepo-monorepo.md) |
-| Frontend | Next.js 14+ (App Router) | — |
-| Component library | shadcn/ui via `@salary-mgmt/ui` (Radix + Tailwind) | [ADR-0002](./docs/decisions/ADR-0002-shadcn-ui-component-library.md), [ADR-0004](./docs/decisions/ADR-0004-shared-fe-packages.md) |
-| Client data layer | TanStack Query + Zustand (`@salary-mgmt/store`) | [ADR-0004](./docs/decisions/ADR-0004-shared-fe-packages.md) |
-| Forms | react-hook-form + zod | [ADR-0006](./docs/decisions/ADR-0006-react-hook-form-zod-fe-forms.md) |
-| List/filter state | URL search params | [ADR-0007](./docs/decisions/ADR-0007-url-search-params-employee-filters.md) |
-| Backend | NestJS 10+ | [ADR-0005](./docs/decisions/ADR-0005-nestjs-backend-framework.md) |
-| Database | PostgreSQL 16 | — |
-| ORM | TypeORM 0.3+ | — |
-| Containerization | Docker + docker-compose | — |
-| Unit/component/integration tests | Vitest (+ Testing Library, `@nestjs/testing`) | [ADR-0003](./docs/decisions/ADR-0003-vitest-backend-test-runner.md), [ADR-0008](./docs/decisions/ADR-0008-msw-integration-test-network-interception.md) |
-| E2E tests | Playwright | — |
-| CI | GitHub Actions (planned — no workflow committed yet) | — |
-
-Full ADR list: [`docs/decisions/README.md`](./docs/decisions/README.md).
 
 ## Setup on a new machine
 
@@ -502,26 +549,61 @@ docs/
 
 **Flow:** requirements → spec → plan → implement → trace → evaluate against spec intent.
 
-## Agent tooling
+## AI development
 
-How humans and AI agents (Cursor, Claude Code, Codex, etc.) work on this repo.
-The single source of truth for agent rules is [`AGENTS.md`](./AGENTS.md) /
-[`CLAUDE.md`](./CLAUDE.md). Reusable situational playbooks live in
-[`.ai/skills/`](./.ai/skills/); codified rules in [`.ai/rules/`](./.ai/rules/).
+This repo is designed for AI-assisted development. The instructions, rules, and
+skills below are the authoritative interface for any AI agent (Claude Code,
+Cursor, Codex, Gemini, Copilot, etc.) working here.
+
+### Agent entry points
+
+| File / Folder | Purpose |
+|---|---|
+| [`CLAUDE.md`](./CLAUDE.md) | Primary instructions for **Claude Code** — read on every session start |
+| [`AGENTS.md`](./AGENTS.md) | Tool-agnostic agent rules — identical content, broader compatibility |
+| [`apps/api/AGENTS.md`](./apps/api/AGENTS.md) | API-specific conventions (NestJS, TypeORM, migrations) |
+| [`apps/web/AGENTS.md`](./apps/web/AGENTS.md) | Web-specific conventions (Next.js App Router, MSW, Playwright) |
+| [`.ai/rules/`](./.ai/rules/) | Codified project rules loaded by agents on demand |
+| [`.ai/skills/`](./.ai/skills/) | Reusable situational playbooks (loaded per phase, not always) |
+
+> `CLAUDE.md` and `AGENTS.md` are kept in sync. When one changes, update the other.
+
+### Rules
+
+Rules in [`.ai/rules/`](./.ai/rules/) encode durable patterns and constraints
+discovered during development. They are referenced from `CLAUDE.md` / `AGENTS.md`
+and promoted from `traces/` when a pattern proves general.
+
+| Rule | Purpose |
+|---|---|
+| [`.ai/rules/spec-driven-workflow.md`](./.ai/rules/spec-driven-workflow.md) | Full per-task loop (spec → plan → RED → GREEN → verify → commit → trace) |
+| [`.ai/rules/commit-conventions.md`](./.ai/rules/commit-conventions.md) | Conventional Commits format, scope list, staging protocol |
+| [`.ai/rules/scaffolding-learnings.md`](./.ai/rules/scaffolding-learnings.md) | Local-dev and monorepo gotchas discovered during scaffolding |
+
+### Skills
+
+Skills in [`.ai/skills/`](./.ai/skills/) are situational playbooks — load the
+relevant `SKILL.md` at the start of each phase. They are not always loaded;
+only when the work matches the phase.
 
 | Skill | Use when | Path |
 |---|---|---|
-| Spec-driven development | Starting a feature with no spec | [`spec-driven-development`](./.ai/skills/spec-driven-development/SKILL.md) |
-| Planning and task breakdown | Turning a spec into ordered tasks | [`planning-and-task-breakdown`](./.ai/skills/planning-and-task-breakdown/SKILL.md) |
-| Test-driven development | Implementing logic, fixing a bug | [`test-driven-development`](./.ai/skills/test-driven-development/SKILL.md) |
-| Code review and quality | Before merging any change | [`code-review-and-quality`](./.ai/skills/code-review-and-quality/SKILL.md) |
-| Security and hardening | Untrusted input, auth, storage | [`security-and-hardening`](./.ai/skills/security-and-hardening/SKILL.md) |
-| Observability | Logging, metrics, tracing | [`observability-and-instrumentation`](./.ai/skills/observability-and-instrumentation/SKILL.md) |
-| Documentation and ADRs | Architectural decisions, API changes | [`documentation-and-adrs`](./.ai/skills/documentation-and-adrs/SKILL.md) |
-| Git workflow and versioning | Committing, branching, conflicts | [`git-workflow-and-versioning`](./.ai/skills/git-workflow-and-versioning/SKILL.md) |
-| Browser testing with DevTools | Building/debugging browser behavior | [`browser-testing-with-devtools`](./.ai/skills/browser-testing-with-devtools/SKILL.md) |
+| Spec-driven development | Starting a feature with no spec | [`.ai/skills/spec-driven-development/SKILL.md`](./.ai/skills/spec-driven-development/SKILL.md) |
+| Planning and task breakdown | Turning a spec into ordered tasks | [`.ai/skills/planning-and-task-breakdown/SKILL.md`](./.ai/skills/planning-and-task-breakdown/SKILL.md) |
+| Test-driven development | Implementing logic, fixing a bug | [`.ai/skills/test-driven-development/SKILL.md`](./.ai/skills/test-driven-development/SKILL.md) |
+| Code review and quality | Before merging any change | [`.ai/skills/code-review-and-quality/SKILL.md`](./.ai/skills/code-review-and-quality/SKILL.md) |
+| Security and hardening | Untrusted input, auth, storage | [`.ai/skills/security-and-hardening/SKILL.md`](./.ai/skills/security-and-hardening/SKILL.md) |
+| Observability and instrumentation | Logging, metrics, tracing | [`.ai/skills/observability-and-instrumentation/SKILL.md`](./.ai/skills/observability-and-instrumentation/SKILL.md) |
+| Documentation and ADRs | Architectural decisions, API changes | [`.ai/skills/documentation-and-adrs/SKILL.md`](./.ai/skills/documentation-and-adrs/SKILL.md) |
+| Git workflow and versioning | Committing, branching, conflicts | [`.ai/skills/git-workflow-and-versioning/SKILL.md`](./.ai/skills/git-workflow-and-versioning/SKILL.md) |
+| Browser testing with DevTools | Building/debugging browser behavior | [`.ai/skills/browser-testing-with-devtools/SKILL.md`](./.ai/skills/browser-testing-with-devtools/SKILL.md) |
 
-Per-spec execution logs and trace format: [`traces/README.md`](./traces/README.md).
+### Traces
+
+Every task an agent completes appends a trace entry to [`traces/<spec>.md`](./traces/)
+**in the same commit**. Traces are the observability layer — what actually ran,
+what was unexpected, what was promoted to a rule. Format and template:
+[`traces/README.md`](./traces/README.md).
 
 ## Adding a new domain spec
 
