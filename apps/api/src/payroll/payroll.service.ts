@@ -4,12 +4,17 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import type { ComponentKind, PayrollResult, PayrollRunSummary } from "@salary-mgmt/types";
+import type {
+  ComponentKind,
+  PayrollResult,
+  PayrollRunSummary,
+} from "@salary-mgmt/types";
 import { Repository } from "typeorm";
 import { EmployeeEntity } from "../employees/employee.entity";
 import { SalaryComponentEntity } from "../salary/salary-component.entity";
 import { SalaryStructureEntity } from "../salary/salary-structure.entity";
 import { PayrollResultEntity } from "./payroll-result.entity";
+import { PayrollRunEntity } from "./payroll-run.entity";
 import type { PayrollResultQueryDto } from "./dto/payroll-result-query.dto";
 
 // ---------------------------------------------------------------------------
@@ -34,7 +39,6 @@ export function computePayroll(
 export function resolvePeriodStructure<
   T extends { effectiveFrom: string; effectiveTo: string | null },
 >(versions: T[], period: string): T | null {
-  // Period start is YYYY-MM-01; compare as ISO date strings (lexicographic = chronological)
   const periodStart = `${period}-01`;
   const match = versions.find(
     (v) =>
@@ -53,6 +57,8 @@ export class PayrollService {
   constructor(
     @InjectRepository(PayrollResultEntity)
     private readonly payrollRepo: Repository<PayrollResultEntity>,
+    @InjectRepository(PayrollRunEntity)
+    private readonly runRepo: Repository<PayrollRunEntity>,
     @InjectRepository(SalaryStructureEntity)
     private readonly structureRepo: Repository<SalaryStructureEntity>,
     @InjectRepository(SalaryComponentEntity)
@@ -62,21 +68,21 @@ export class PayrollService {
   ) {}
 
   async run(period: string): Promise<PayrollRunSummary> {
-    // Hard 409 if any results already exist for this period
-    const existingCount = await this.payrollRepo.count({ where: { period } });
-    if (existingCount > 0) {
+    const existingRun = await this.runRepo.findOne({ where: { period } });
+    if (existingRun) {
       throw new ConflictException(`Payroll already run for period ${period}`);
     }
 
+    // Create PENDING run record
+    const run = this.runRepo.create({ period, status: "PENDING" });
+    await this.runRepo.save(run);
+
     const employees = await this.employeeRepo.find();
 
-    // Load all structures without per-employee WHERE — avoids generating 10k OR
-    // conditions that exhaust the Postgres bind-parameter limit (65535).
     const structures = await this.structureRepo.find({
       relations: ["components"],
     });
 
-    // Group all structure versions by employeeId
     const byEmployee = new Map<string, SalaryStructureEntity[]>();
     for (const s of structures) {
       const list = byEmployee.get(s.employeeId) ?? [];
@@ -85,21 +91,19 @@ export class PayrollService {
     }
 
     const results: Omit<PayrollResultEntity, "id" | "generatedAt" | "employee" | "structure">[] = [];
-    const skipped: string[] = [];
+    const currencies = new Set<string>();
 
     for (const emp of employees) {
       const versions = byEmployee.get(emp.id) ?? [];
       const activeStructure = resolvePeriodStructure(versions, period);
 
-      if (!activeStructure) {
-        skipped.push(emp.id);
-        continue;
-      }
+      if (!activeStructure) continue;
 
       const { grossMinor, deductionsMinor, netMinor } = computePayroll(
         activeStructure.components,
       );
 
+      currencies.add(activeStructure.currency);
       results.push({
         employeeId: emp.id,
         period,
@@ -111,8 +115,7 @@ export class PayrollService {
       });
     }
 
-    // Chunked bulk insert — Postgres bind-param limit is 65535; 7 columns × 500
-    // rows = 3500 params per chunk, well within budget.
+    // Chunked bulk insert (Postgres bind-param limit: 65535; 7 cols × 500 = 3500/chunk)
     const INSERT_CHUNK = 500;
     for (let i = 0; i < results.length; i += INSERT_CHUNK) {
       await this.payrollRepo
@@ -125,33 +128,29 @@ export class PayrollService {
     }
 
     const totalGrossMinor = results.reduce((s, r) => s + r.grossMinor, 0);
+    const totalDeductionsMinor = results.reduce((s, r) => s + r.deductionsMinor, 0);
     const totalNetMinor = results.reduce((s, r) => s + r.netMinor, 0);
+    const currency = currencies.size === 1 ? [...currencies][0]! : "MIXED";
 
-    return {
-      period,
-      processed: results.length,
-      skipped,
-      totalGrossMinor,
-      totalNetMinor,
-    };
+    // Update run to COMPLETED
+    run.status = "COMPLETED";
+    run.headcount = results.length;
+    run.totalGrossMinor = totalGrossMinor;
+    run.totalDeductionsMinor = totalDeductionsMinor;
+    run.totalNetMinor = totalNetMinor;
+    run.currency = currency;
+    run.ranAt = new Date();
+    await this.runRepo.save(run);
+
+    return toRunSummary(run);
   }
 
   async findSummary(period: string): Promise<PayrollRunSummary> {
-    const rows = await this.payrollRepo.find({ where: { period } });
-    if (rows.length === 0) {
+    const run = await this.runRepo.findOne({ where: { period } });
+    if (!run) {
       throw new NotFoundException(`No payroll run found for period ${period}`);
     }
-
-    const totalGrossMinor = rows.reduce((s, r) => s + r.grossMinor, 0);
-    const totalNetMinor = rows.reduce((s, r) => s + r.netMinor, 0);
-
-    return {
-      period,
-      processed: rows.length,
-      skipped: [],
-      totalGrossMinor,
-      totalNetMinor,
-    };
+    return toRunSummary(run);
   }
 
   async findResults(
@@ -164,11 +163,26 @@ export class PayrollService {
     }
 
     const rows = await this.payrollRepo.find({ where });
-    return rows.map(toResponse);
+    return rows.map(toResultResponse);
   }
 }
 
-function toResponse(r: PayrollResultEntity): PayrollResult {
+function toRunSummary(run: PayrollRunEntity): PayrollRunSummary {
+  return {
+    period: run.period,
+    status: run.status,
+    headcount: run.headcount,
+    totalGrossMinor: Number(run.totalGrossMinor),
+    totalDeductionsMinor: Number(run.totalDeductionsMinor),
+    totalNetMinor: Number(run.totalNetMinor),
+    currency: run.currency,
+    ranAt: run.ranAt?.toISOString() ?? null,
+    voidedAt: run.voidedAt?.toISOString() ?? null,
+    voidedBy: run.voidedBy,
+  };
+}
+
+function toResultResponse(r: PayrollResultEntity): PayrollResult {
   return {
     id: r.id,
     employeeId: r.employeeId,
