@@ -50,10 +50,14 @@ Per-task loop:
    dependency, env var, or feature. Keep docs current: root `README.md`,
    the relevant `docs/specs/*` / `docs/plans/*`, ADRs, and any
    affected `AGENTS.md` / `CLAUDE.md`. Docs must never lag behind the code.
-6. Commit using Conventional Commits (see below).
-7. Append a trace entry to `traces/<spec>.md` **in the same commit** (include the
+6. Tick plan checkboxes in the **same commit**: mark `- [ ]` → `- [x]` in
+   `docs/plans/<spec>.md` for every task and acceptance criterion completed in
+   this commit. When all phases of a spec are done, tick the Success Criteria
+   checkboxes in `docs/specs/<spec>.md` too.
+7. Commit using Conventional Commits (see below).
+8. Append a trace entry to `traces/<spec>.md` **in the same commit** (include the
    commit SHA).
-8. At checkpoints, evaluate against spec intent — not just passing tests.
+9. At checkpoints, evaluate against spec intent — not just passing tests.
 
 ### Workflow Lifecycle (skill-bound)
 
