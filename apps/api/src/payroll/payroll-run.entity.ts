@@ -31,7 +31,7 @@ export class PayrollRunEntity {
   @Column({ name: "total_net_minor", type: "bigint", default: 0 })
   totalNetMinor!: number;
 
-  @Column({ type: "varchar", length: 3, default: "USD" })
+  @Column({ type: "varchar", length: 10, default: "USD" })
   currency!: string;
 
   @Column({ name: "ran_at", type: "timestamptz", nullable: true })
