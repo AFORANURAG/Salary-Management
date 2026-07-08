@@ -48,6 +48,52 @@ export function resolvePeriodStructure<
   return match ?? null;
 }
 
+export interface DiffResultRow {
+  employeeId: string;
+  employeeCode: string;
+  name: string;
+  department: string;
+  netMinor: number;
+  currency: string;
+}
+
+export function computeDiff(
+  baseRows: DiffResultRow[],
+  compareRows: DiffResultRow[],
+): {
+  newHires: DiffResultRow[];
+  terminations: DiffResultRow[];
+  salaryChanges: Array<DiffResultRow & { baseNetMinor: number; compareNetMinor: number; deltaMinor: number }>;
+  baseTotalNetMinor: number;
+  compareTotalNetMinor: number;
+} {
+  const compareMap = new Map(compareRows.map((r) => [r.employeeId, r]));
+  const baseMap = new Map(baseRows.map((r) => [r.employeeId, r]));
+
+  const newHires: DiffResultRow[] = [];
+  const salaryChanges: Array<DiffResultRow & { baseNetMinor: number; compareNetMinor: number; deltaMinor: number }> = [];
+
+  for (const base of baseRows) {
+    const compare = compareMap.get(base.employeeId);
+    if (!compare) {
+      newHires.push(base);
+    } else if (base.netMinor !== compare.netMinor) {
+      salaryChanges.push({
+        ...base,
+        baseNetMinor: base.netMinor,
+        compareNetMinor: compare.netMinor,
+        deltaMinor: base.netMinor - compare.netMinor,
+      });
+    }
+  }
+
+  const terminations = compareRows.filter((r) => !baseMap.has(r.employeeId));
+  const baseTotalNetMinor = baseRows.reduce((s, r) => s + r.netMinor, 0);
+  const compareTotalNetMinor = compareRows.reduce((s, r) => s + r.netMinor, 0);
+
+  return { newHires, terminations, salaryChanges, baseTotalNetMinor, compareTotalNetMinor };
+}
+
 // ---------------------------------------------------------------------------
 // Service
 // ---------------------------------------------------------------------------
