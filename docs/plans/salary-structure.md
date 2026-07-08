@@ -49,25 +49,25 @@ Branch: `feat/salary-structure-pr1-db-models`
 | SS3 | Test harness update | Add `SalaryStructureEntity` + `SalaryComponentEntity` to `TestDataSource` entities list; extend `truncateAll` to include both tables; add `buildSalaryStructureInput` fixture factory | `test(api): extend test harness for salary-structure` |
 
 **SS1 acceptance**
-- [ ] `SalaryStructure` has `id`, `employeeId`, `effectiveFrom`, `effectiveTo | null`, `currency`, `createdAt`, `components`.
-- [ ] `SalaryComponent` has `id`, `structureId`, `code`, `kind: ComponentKind`, `amountMinor`.
-- [ ] `UpsertSalaryStructureInput` has `effectiveFrom`, `currency`, `components: ComponentInput[]`.
-- [ ] Verification: `pnpm --filter @salary-mgmt/types build && pnpm typecheck`.
+- [x] `SalaryStructure` has `id`, `employeeId`, `effectiveFrom`, `effectiveTo | null`, `currency`, `createdAt`, `components`.
+- [x] `SalaryComponent` has `id`, `structureId`, `code`, `kind: ComponentKind`, `amountMinor`.
+- [x] `UpsertSalaryStructureInput` has `effectiveFrom`, `currency`, `components: ComponentInput[]`.
+- [x] Verification: `pnpm --filter @salary-mgmt/types build && pnpm typecheck`.
 
 **SS2 acceptance** (ask-first: schema)
-- [ ] `salary_structures` table: uuid PK, FK→employees, `effective_from` date, `effective_to` date nullable, `currency` varchar(3), `created_at` timestamptz. Index on `employee_id`.
-- [ ] `salary_components` table: uuid PK, FK→salary_structures (CASCADE DELETE), `code` varchar(64), `kind` enum `EARNING|DEDUCTION`, `amount_minor` integer (not null). Index on `structure_id`.
-- [ ] Migration runs clean on compose db.
-- [ ] Verification: `pnpm --filter api migration:run`.
+- [x] `salary_structures` table: uuid PK, FK→employees, `effective_from` date, `effective_to` date nullable, `currency` varchar(3), `created_at` timestamptz. Index on `employee_id`.
+- [x] `salary_components` table: uuid PK, FK→salary_structures (CASCADE DELETE), `code` varchar(64), `kind` enum `EARNING|DEDUCTION`, `amount_minor` integer (not null). Index on `structure_id`.
+- [x] Migration runs clean on compose db.
+- [x] Verification: `pnpm --filter api migration:run`.
 
 **SS3 acceptance**
-- [ ] `TestDataSource.entities` includes both new entities.
-- [ ] `truncateAll` truncates `salary_components` then `salary_structures` (order respects FK).
-- [ ] Fixture factory `buildSalaryStructureInput` produces a valid `UpsertSalaryStructureInput` with at least one EARNING component.
-- [ ] Verification: existing harness test still green: `pnpm --filter api test`.
+- [x] `TestDataSource.entities` includes both new entities.
+- [x] `truncateAll` truncates `salary_components` then `salary_structures` (order respects FK).
+- [x] Fixture factory `buildSalaryStructureInput` produces a valid `UpsertSalaryStructureInput` with at least one EARNING component.
+- [x] Verification: existing harness test still green: `pnpm --filter api test`.
 
 ### Checkpoint: Foundation
-- [ ] `pnpm typecheck && pnpm lint` clean; migration runs; existing tests unaffected.
+- [x] `pnpm typecheck && pnpm lint` clean; migration runs; existing tests unaffected.
 
 ---
 
@@ -79,27 +79,27 @@ All tests in this phase must **fail for the right reason** (missing impl, not ha
 
 **SS4 — Unit specs** (`src/salary/*.spec.ts`) — `test(api): add failing salary-structure unit specs`
 
-- [ ] `effectiveTo` computation: closing a version sets `effectiveTo = effectiveFrom - 1 day`.
-- [ ] Overlap guard: new `effectiveFrom` ≤ current `effectiveFrom` throws `ConflictException`.
-- [ ] Active-version resolution: `effectiveFrom <= date AND (effectiveTo IS NULL OR effectiveTo >= date)` selects the correct version for a given date.
-- [ ] Historical resolution returns the version active at a past date, not the latest.
+- [x] `effectiveTo` computation: closing a version sets `effectiveTo = effectiveFrom - 1 day`.
+- [x] Overlap guard: new `effectiveFrom` ≤ current `effectiveFrom` throws `ConflictException`.
+- [x] Active-version resolution: `effectiveFrom <= date AND (effectiveTo IS NULL OR effectiveTo >= date)` selects the correct version for a given date.
+- [x] Historical resolution returns the version active at a past date, not the latest.
 
 **SS5 — Integration specs** (`test/salary-structure/*.e2e-spec.ts`) — `test(api): add failing salary-structure integration specs`
 
-- [ ] `PUT` first structure (no prior version): 201; `effectiveTo` is null; components persisted correctly.
-- [ ] `PUT` second structure: prior version's `effectiveTo` set to `newEffectiveFrom - 1 day`; prior components byte-for-byte unchanged; new version has its own components.
-- [ ] `PUT` with `effectiveFrom` ≤ current `effectiveFrom` returns 409.
-- [ ] `PUT` for non-existent `employeeId` returns 404.
-- [ ] `GET current` for employee with active structure returns the open version with components.
-- [ ] `GET current` for employee with no structure returns 404.
-- [ ] `GET current` returns correct version after an update (new version, not old).
-- [ ] `GET history` returns all versions in `effectiveFrom` ascending order.
-- [ ] `GET history` returns empty array for employee with no structures.
-- [ ] No two versions for the same employee have overlapping `[effectiveFrom, effectiveTo]` ranges (invariant test).
+- [x] `PUT` first structure (no prior version): 201; `effectiveTo` is null; components persisted correctly.
+- [x] `PUT` second structure: prior version's `effectiveTo` set to `newEffectiveFrom - 1 day`; prior components byte-for-byte unchanged; new version has its own components.
+- [x] `PUT` with `effectiveFrom` ≤ current `effectiveFrom` returns 409.
+- [x] `PUT` for non-existent `employeeId` returns 404.
+- [x] `GET current` for employee with active structure returns the open version with components.
+- [x] `GET current` for employee with no structure returns 404.
+- [x] `GET current` returns correct version after an update (new version, not old).
+- [x] `GET history` returns all versions in `effectiveFrom` ascending order.
+- [x] `GET history` returns empty array for employee with no structures.
+- [x] No two versions for the same employee have overlapping `[effectiveFrom, effectiveTo]` ranges (invariant test).
 
 ### Checkpoint: RED confirmed
-- [ ] SS4/SS5 fail for the right reason (routes 404, service not found).
-- [ ] Go/no-go gate before any implementation.
+- [x] SS4/SS5 fail for the right reason (routes 404, service not found).
+- [x] Go/no-go gate before any implementation.
 
 ---
 
@@ -114,17 +114,17 @@ Branch: `feat/salary-structure-pr3-implementation`
 | SS8 | Controller + Module | `SalaryStructureController` under `/employees/:employeeId/salary-structure`; wire into `SalaryModule`; register entities in module | `feat(api): add salary-structure controller and module` |
 
 **SS6–SS8 acceptance**
-- [ ] All SS4 unit specs green.
-- [ ] All SS5 integration specs green.
-- [ ] `amountMinor` is always integer; no float arithmetic anywhere.
-- [ ] Supersede + insert runs in a single TypeORM transaction (no partial state on failure).
-- [ ] Verification: `pnpm --filter api typecheck && pnpm --filter api lint && pnpm --filter api test`.
+- [x] All SS4 unit specs green.
+- [x] All SS5 integration specs green.
+- [x] `amountMinor` is always integer; no float arithmetic anywhere.
+- [x] Supersede + insert runs in a single TypeORM transaction (no partial state on failure).
+- [x] Verification: `pnpm --filter api typecheck && pnpm --filter api lint && pnpm --filter api test`.
 
 ### Checkpoint: Complete
-- [ ] All spec Non-Negotiable Test Cases pass.
-- [ ] All Success Criteria met.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
-- [ ] Ready for review.
+- [x] All spec Non-Negotiable Test Cases pass.
+- [x] All Success Criteria met.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] Ready for review.
 
 ---
 
