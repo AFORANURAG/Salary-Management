@@ -14,13 +14,21 @@ form to a live payroll operations hub.
 
 ## Data Model Changes
 
-### `PayrollRun` — new `status` value
+### `payroll_runs` — new table
 
-Add `VOIDED` to the existing `status` enum alongside `PENDING` and `COMPLETED`.
+The original payroll implementation had no persisted run record — summaries
+were aggregated at query time from `payroll_results`. This spec introduces a
+dedicated `payroll_runs` table that stores one row per period.
 
-Migration: `ALTER TYPE payroll_run_status_enum ADD VALUE 'VOIDED'`.
+Migration `1751500000000-CreatePayrollRuns` creates the table with columns:
+`id` (uuid pk), `period` (varchar 7, unique), `status` (enum: PENDING |
+COMPLETED | VOIDED, default PENDING), `headcount` (integer), `total_gross_minor`
+(bigint), `total_deductions_minor` (bigint), `total_net_minor` (bigint),
+`currency` (varchar 10, default USD), `ran_at` (timestamptz nullable),
+`voided_at` (timestamptz nullable), `voided_by` (varchar nullable).
 
-No other schema changes.
+Migration `1751600000000-ExpandPayrollRunCurrency` widens `currency` to
+`varchar(10)` to accommodate the `"MIXED"` sentinel value.
 
 ## API Surface
 
@@ -181,7 +189,7 @@ Existing page gains:
 
 - Voiding preserves all `PayrollResult` rows — only the `PayrollRun.status`
   changes. Do not cascade-delete.
-- `PENDING` runs cannot be voided (409) — only `COMPLETED`.
+- `PENDING` runs cannot be voided (422) — only `COMPLETED`.
 - Period diff requires both periods to have a run (returns 404 if either
   is missing — not a partial diff).
 - The diff endpoint is read-only and idempotent.
@@ -191,9 +199,9 @@ Existing page gains:
 ## Non-Negotiable Test Cases
 
 **Unit**
-- `PayrollService.listRuns()` returns paginated results with correct status filter.
-- `PayrollService.voidRun()`: voids a COMPLETED run correctly; throws on PENDING; throws on already VOIDED.
-- `PayrollService.getDiff()`: correctly categorizes new hires, terminations, and salary changes from fixture data; returns 404 when either period has no run.
+- `PayrollService.listRuns()` returns paginated results with correct status filter. *(covered by integration tests; no isolated unit spec — listRuns is DB-backed)*
+- `PayrollService.voidRun()`: voids a COMPLETED run correctly; throws on PENDING; throws on already VOIDED. *(covered by integration tests)*
+- `PayrollService.getDiff()`: correctly categorizes new hires, terminations, and salary changes from fixture data; returns 404 when either period has no run. *(pure `computeDiff` helper unit-tested in `payroll-ops.service.spec.ts`; 404 path covered by integration tests)*
 
 **Integration**
 - `GET /v1/payroll/runs` returns paginated list; status filter works.
@@ -209,9 +217,9 @@ Existing page gains:
 ## Success Criteria
 
 - [ ] `GET /v1/payroll/runs` list replaces the blank form on `/payroll`.
-- [ ] Void flow: ADMIN only; status updated; results preserved.
-- [ ] Diff correctly identifies new hires, terminations, and salary changes.
-- [ ] All non-negotiable test cases pass.
+- [x] Void flow: ADMIN only; status updated; results preserved.
+- [x] Diff correctly identifies new hires, terminations, and salary changes.
+- [x] All non-negotiable test cases pass.
 - [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
 ## Implementation
@@ -220,18 +228,18 @@ Existing page gains:
 
 | Phase | Branch |
 |---|---|
-| `VOIDED` enum value migration; `PayrollRunSummary` + `PayrollDiffResponse` types | `feat/payroll-ops-pr1-types-migration` |
-| RED — unit + integration tests for list, void, diff | `feat/payroll-ops-pr2-test-harness` |
+| `payroll_runs` table migration; `PayrollRunEntity`; `PayrollRunSummary` + `PayrollDiffResponse` types | `feat/payroll-ops-pr3-api` |
+| RED — `computeDiff` pure helper; unit + integration tests for list, void, diff | `feat/payroll-ops-pr3-api` |
 | `listRuns`, `voidRun`, `getDiff` in `PayrollService`; controller routes (GREEN) | `feat/payroll-ops-pr3-api` |
 
 ### Frontend
 
 | Phase | Branch |
 |---|---|
-| `usePayrollRuns`, `useVoidPayrollRun`, `usePayrollDiff` hooks; store types | `feat/payroll-ops-fe-pr1-hooks` |
-| Payroll history page + status filter + `RunPayrollModal` reuse | `feat/payroll-ops-fe-pr2-history-page` |
-| `VoidConfirmModal` + void button on detail page | `feat/payroll-ops-fe-pr3-void` |
-| `PeriodDiffDrawer` + "compare" button on history + detail | `feat/payroll-ops-fe-pr4-diff-drawer` |
-| Unit + integration + E2E tests | `feat/payroll-ops-fe-pr5-tests` |
+| Phase 4 — `usePayrollRuns`, `useVoidPayrollRun`, `usePayrollDiff` hooks; store types | `feat/payroll-ops-fe-pr1-hooks` |
+| Phase 5 — Payroll history page + status filter + `RunPayrollModal` reuse | `feat/payroll-ops-fe-pr2-history-page` |
+| Phase 6 — `VoidConfirmModal` + void button on detail page | `feat/payroll-ops-fe-pr3-void` |
+| Phase 7 — `PeriodDiffDrawer` + "compare" button on history + detail | `feat/payroll-ops-fe-pr4-diff-drawer` |
+| Phase 8 — Unit + integration + E2E tests | `feat/payroll-ops-fe-pr5-tests` |
 
 Plan: [`docs/plans/payroll-ops.md`](../plans/payroll-ops.md) · Trace: [`traces/payroll-ops.md`](../../traces/payroll-ops.md)
