@@ -182,12 +182,57 @@ export interface PayrollResult {
   readonly generatedAt: string;
 }
 
+export type PayrollRunStatus = "PENDING" | "COMPLETED" | "VOIDED";
+
 export interface PayrollRunSummary {
   readonly period: string;
-  readonly processed: number;
-  readonly skipped: readonly string[];
+  readonly status: PayrollRunStatus;
+  readonly headcount: number;
   readonly totalGrossMinor: number;
+  readonly totalDeductionsMinor: number;
   readonly totalNetMinor: number;
+  readonly currency: string;
+  readonly ranAt: string | null;
+  readonly voidedAt: string | null;
+  readonly voidedBy: string | null;
+}
+
+export interface PayrollRunListQuery {
+  readonly page?: number;
+  readonly pageSize?: number;
+  readonly status?: PayrollRunStatus | PayrollRunStatus[];
+}
+
+export interface PayrollDiffEntry {
+  readonly employeeCode: string;
+  readonly name: string;
+  readonly department: string;
+  readonly netMinor: number;
+  readonly currency: string;
+}
+
+export interface PayrollSalaryChangeEntry {
+  readonly employeeCode: string;
+  readonly name: string;
+  readonly department: string;
+  readonly baseNetMinor: number;
+  readonly compareNetMinor: number;
+  readonly deltaMinor: number;
+  readonly currency: string;
+}
+
+export interface PayrollDiffResponse {
+  readonly basePeriod: string;
+  readonly comparePeriod: string;
+  readonly newHires: readonly PayrollDiffEntry[];
+  readonly terminations: readonly PayrollDiffEntry[];
+  readonly salaryChanges: readonly PayrollSalaryChangeEntry[];
+  readonly totals: {
+    readonly baseTotalNetMinor: number;
+    readonly compareTotalNetMinor: number;
+    readonly deltaTotalMinor: number;
+    readonly currency: string;
+  };
 }
 
 export interface PayrollResultQuery {
