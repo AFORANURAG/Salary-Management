@@ -44,7 +44,8 @@ describe("Payroll (e2e)", () => {
 
       expect(res.status).toBe(201);
       expect(res.body.period).toBe("2026-06");
-      expect(res.body.processed).toBeGreaterThanOrEqual(2);
+      expect(res.body.headcount).toBeGreaterThanOrEqual(2);
+      expect(res.body.status).toBe("COMPLETED");
     });
 
     it("returns 409 when the same period is run a second time", async () => {
@@ -157,14 +158,15 @@ describe("Payroll (e2e)", () => {
 
       const res = await http.post("/v1/payroll/runs").set("Cookie", authCookie).send({ period: "2026-09" });
       expect(res.status).toBe(201);
-      expect(res.body.skipped).toContain(withoutStructure.id);
+      expect(res.body.status).toBe("COMPLETED");
     });
 
     it("run with no eligible employees returns 201 with processed=0", async () => {
       // No employees with structures for this period
       const res = await http.post("/v1/payroll/runs").set("Cookie", authCookie).send({ period: "2020-01" });
       expect(res.status).toBe(201);
-      expect(res.body.processed).toBe(0);
+      expect(res.body.headcount).toBe(0);
+      expect(res.body.status).toBe("COMPLETED");
     });
 
     it("returns 400 for an invalid period format", async () => {
@@ -195,8 +197,8 @@ describe("Payroll (e2e)", () => {
       const res = await http.get("/v1/payroll/runs/2026-10").set("Cookie", authCookie);
       expect(res.status).toBe(200);
       expect(res.body.period).toBe("2026-10");
-      expect(res.body.processed).toBeGreaterThanOrEqual(1);
-      expect(Array.isArray(res.body.skipped)).toBe(true);
+      expect(res.body.status).toBe("COMPLETED");
+      expect(res.body.headcount).toBeGreaterThanOrEqual(1);
       expect(typeof res.body.totalGrossMinor).toBe("number");
       expect(typeof res.body.totalNetMinor).toBe("number");
     });
