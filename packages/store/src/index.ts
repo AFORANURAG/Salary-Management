@@ -16,8 +16,11 @@ export {
 } from "./api/salary-structure";
 export {
   runPayroll,
+  getPayrollRuns,
   getPayrollSummary,
   getPayrollResults,
+  postVoidPayrollRun,
+  getPayrollDiff,
 } from "./api/payroll";
 export { getPayslipHistory, getPayslip } from "./api/payslips";
 export { getReportingPayrollCost, getReportingSummary } from "./api/reporting";

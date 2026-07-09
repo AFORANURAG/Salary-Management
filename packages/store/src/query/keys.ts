@@ -18,12 +18,15 @@ export const queryKeys = {
   },
   payroll: {
     all: () => ["payroll"] as const,
-    runs: () => [...queryKeys.payroll.all(), "run"] as const,
-    run: (period: string) => [...queryKeys.payroll.runs(), period] as const,
+    runs: (query?: Record<string, unknown>) =>
+      [...queryKeys.payroll.all(), "runs", { query }] as const,
+    run: (period: string) => [...queryKeys.payroll.all(), "run", period] as const,
     summary: (period: string) =>
       [...queryKeys.payroll.run(period), "summary"] as const,
     results: (period: string, employeeId?: string) =>
       [...queryKeys.payroll.run(period), "results", { employeeId }] as const,
+    diff: (basePeriod: string, comparePeriod: string) =>
+      [...queryKeys.payroll.all(), "diff", basePeriod, comparePeriod] as const,
   },
   payslips: {
     all: () => ["payslips"] as const,

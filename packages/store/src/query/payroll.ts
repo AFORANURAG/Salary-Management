@@ -1,17 +1,25 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import type { PayrollResult, PayrollRunSummary } from "@salary-mgmt/types";
-import { runPayroll, getPayrollSummary, getPayrollResults } from "../api/payroll";
+import type {
+  PaginatedResponse,
+  PayrollDiffResponse,
+  PayrollResult,
+  PayrollRunListQuery,
+  PayrollRunSummary,
+} from "@salary-mgmt/types";
+import {
+  runPayroll,
+  getPayrollRuns,
+  getPayrollSummary,
+  getPayrollResults,
+  postVoidPayrollRun,
+  getPayrollDiff,
+} from "../api/payroll";
 import { queryKeys } from "./keys";
 
-export function usePayrollRuns() {
-  return useQuery<PayrollRunSummary[]>({
-    queryKey: queryKeys.payroll.runs(),
-    queryFn: async () => {
-      // The API has no list-all-runs endpoint; return empty array as placeholder.
-      // Components that need a list drive it from their own fetched periods.
-      return [];
-    },
-    staleTime: 0,
+export function usePayrollRuns(query?: PayrollRunListQuery) {
+  return useQuery<PaginatedResponse<PayrollRunSummary>>({
+    queryKey: queryKeys.payroll.runs(query as Record<string, unknown>),
+    queryFn: () => getPayrollRuns(query),
   });
 }
 
@@ -43,5 +51,24 @@ export function useRunPayroll() {
       void queryClient.invalidateQueries({ queryKey: queryKeys.payroll.runs() });
       queryClient.setQueryData(queryKeys.payroll.summary(data.period), data);
     },
+  });
+}
+
+export function useVoidPayrollRun() {
+  const queryClient = useQueryClient();
+  return useMutation<PayrollRunSummary, Error, string>({
+    mutationFn: (period) => postVoidPayrollRun(period),
+    onSuccess: (data) => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.payroll.runs() });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.payroll.run(data.period) });
+    },
+  });
+}
+
+export function usePayrollDiff(basePeriod: string, compareTo: string) {
+  return useQuery<PayrollDiffResponse>({
+    queryKey: queryKeys.payroll.diff(basePeriod, compareTo),
+    queryFn: () => getPayrollDiff(basePeriod, compareTo),
+    enabled: Boolean(basePeriod) && Boolean(compareTo),
   });
 }
