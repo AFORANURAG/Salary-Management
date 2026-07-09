@@ -2,10 +2,13 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnprocessableEntityException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import type {
   ComponentKind,
+  PaginatedResponse,
+  PayrollDiffResponse,
   PayrollResult,
   PayrollRunSummary,
 } from "@salary-mgmt/types";
@@ -176,7 +179,7 @@ export class PayrollService {
     const totalGrossMinor = results.reduce((s, r) => s + r.grossMinor, 0);
     const totalDeductionsMinor = results.reduce((s, r) => s + r.deductionsMinor, 0);
     const totalNetMinor = results.reduce((s, r) => s + r.netMinor, 0);
-    const currency = currencies.size === 1 ? [...currencies][0]! : "MIXED";
+    const currency = currencies.size === 0 ? "USD" : currencies.size === 1 ? [...currencies][0]! : "MIXED";
 
     // Update run to COMPLETED
     run.status = "COMPLETED";
@@ -210,6 +213,110 @@ export class PayrollService {
 
     const rows = await this.payrollRepo.find({ where });
     return rows.map(toResultResponse);
+  }
+
+  async listRuns(
+    page: number,
+    pageSize: number,
+    status?: string[],
+  ): Promise<PaginatedResponse<PayrollRunSummary>> {
+    const qb = this.runRepo.createQueryBuilder("r").orderBy("r.ranAt", "DESC", "NULLS LAST");
+
+    if (status && status.length > 0) {
+      qb.andWhere("r.status IN (:...statuses)", { statuses: status });
+    }
+
+    const [rows, total] = await qb
+      .skip((page - 1) * pageSize)
+      .take(pageSize)
+      .getManyAndCount();
+
+    return { data: rows.map(toRunSummary), page, pageSize, total };
+  }
+
+  async voidRun(period: string, actorEmail: string): Promise<PayrollRunSummary> {
+    const run = await this.runRepo.findOne({ where: { period } });
+    if (!run) {
+      throw new NotFoundException(`No payroll run found for period ${period}`);
+    }
+    if (run.status === "VOIDED") {
+      throw new ConflictException(`Payroll run for ${period} is already voided`);
+    }
+    if (run.status === "PENDING") {
+      throw new UnprocessableEntityException(`Cannot void a PENDING payroll run for ${period}`);
+    }
+
+    run.status = "VOIDED";
+    run.voidedAt = new Date();
+    run.voidedBy = actorEmail;
+    await this.runRepo.save(run);
+
+    return toRunSummary(run);
+  }
+
+  async getDiff(basePeriod: string, comparePeriod: string): Promise<PayrollDiffResponse> {
+    const [baseRun, compareRun] = await Promise.all([
+      this.runRepo.findOne({ where: { period: basePeriod } }),
+      this.runRepo.findOne({ where: { period: comparePeriod } }),
+    ]);
+
+    if (!baseRun) {
+      throw new NotFoundException(`No payroll run found for period ${basePeriod}`);
+    }
+    if (!compareRun) {
+      throw new NotFoundException(`No payroll run found for period ${comparePeriod}`);
+    }
+
+    const [baseResults, compareResults] = await Promise.all([
+      this.payrollRepo
+        .createQueryBuilder("pr")
+        .innerJoin("pr.employee", "e")
+        .select([
+          "pr.employeeId as \"employeeId\"",
+          "e.employeeCode as \"employeeCode\"",
+          "e.name as \"name\"",
+          "e.department as \"department\"",
+          "pr.netMinor as \"netMinor\"",
+          "pr.currency as \"currency\"",
+        ])
+        .where("pr.period = :period", { period: basePeriod })
+        .getRawMany<DiffResultRow>(),
+      this.payrollRepo
+        .createQueryBuilder("pr")
+        .innerJoin("pr.employee", "e")
+        .select([
+          "pr.employeeId as \"employeeId\"",
+          "e.employeeCode as \"employeeCode\"",
+          "e.name as \"name\"",
+          "e.department as \"department\"",
+          "pr.netMinor as \"netMinor\"",
+          "pr.currency as \"currency\"",
+        ])
+        .where("pr.period = :period", { period: comparePeriod })
+        .getRawMany<DiffResultRow>(),
+    ]);
+
+    const normaliseRows = (rows: DiffResultRow[]) =>
+      rows.map((r) => ({ ...r, netMinor: Number(r.netMinor) }));
+
+    const { newHires, terminations, salaryChanges, baseTotalNetMinor, compareTotalNetMinor } =
+      computeDiff(normaliseRows(baseResults), normaliseRows(compareResults));
+
+    const dominantCurrency = baseRun.currency === "MIXED" ? compareRun.currency : baseRun.currency;
+
+    return {
+      basePeriod,
+      comparePeriod,
+      newHires,
+      terminations,
+      salaryChanges,
+      totals: {
+        baseTotalNetMinor,
+        compareTotalNetMinor,
+        deltaTotalMinor: baseTotalNetMinor - compareTotalNetMinor,
+        currency: dominantCurrency,
+      },
+    };
   }
 }
 
