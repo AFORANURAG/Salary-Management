@@ -130,21 +130,6 @@
 
 ---
 
-## Phase 9 — Tests
-
-**Branch:** `feat/payroll-ops-fe-pr5-tests`
-
-**Commits:**
-- `97d02a0` — `test(web): add payroll-ops MSW integration specs and E2E tests (PO29–PO30)`
-
-**Notes:**
-- PO29: 7 MSW integration cases covering history list, status filter, diff drawer (from history row + from detail page), void modal (200 success + 409 inline error), and totals delta sign.
-- PO30: 5 Playwright E2E cases — history loads with badge; ADMIN void flow; HR_MANAGER no void button (manager user created via API in test); diff drawer from history row; diff drawer from detail page.
-- PF04 `"Processed"` → `"Headcount"` + `status-badge-completed` assertion also fixed in this commit (was stale from before Phase 4 test-harness-fixes branch landed on this stack).
-- E2E tests require a running full stack (`docker compose up --build`) — not run in CI yet.
-
----
-
 ## Phase 8 — Frontend: Diff Drawer
 
 **Branch:** `feat/payroll-ops-fe-pr4-diff-drawer`
@@ -153,6 +138,7 @@
 - `047eea7` — `feat(web): add PeriodDiffDrawer and wire onto history and detail pages (PO25–PO27)`
 - `8f1fea3` — `test(web): add PeriodDiffDrawer unit spec and MSW diff fixture (PO28)`
 - `1f26e6c` — `docs(payroll-ops): tick Phase 7 acceptance criteria and add trace entry`
+- `d44e8be` — `docs(payroll-ops): fix trace ordering, fill in pending commits, correct branch count`
 
 **Notes:**
 - `PeriodDiffDrawer` uses Sheet from `@salary-mgmt/ui` (right-side, overriding the default left-side slide direction via className).
@@ -162,3 +148,19 @@
 - Diff icon button on history table rows only renders for COMPLETED runs (PENDING/VOIDED have no comparable payroll result data).
 - "Compare with previous" on the detail page also only renders for COMPLETED status.
 - MSW handler added for `GET /v1/payroll/runs/:period/diff`; `mockPayrollDiff` fixture exported from `test/msw/handlers/payroll.ts`.
+
+---
+
+## Phase 9 — Tests
+
+**Branch:** `feat/payroll-ops-fe-pr5-tests`
+
+**Commits:**
+- `97d02a0` — `test(web): add payroll-ops MSW integration specs and E2E tests (PO29–PO30)`
+- `d018300` — `docs(payroll-ops): tick Phase 8 acceptance and add Phase 9 trace entry`
+
+**Notes:**
+- PO29: 7 MSW integration cases covering history list, status filter, diff drawer (from history row + from detail page), void modal (200 success + 409 inline error), and totals delta sign.
+- PO30: 5 Playwright E2E cases — history loads with badge; ADMIN void flow; HR_MANAGER no void button (manager user created via API in test); diff drawer from history row; diff drawer from detail page.
+- PF04 `"Processed"` → `"Headcount"` + `status-badge-completed` assertion also fixed in this commit (was stale from before Phase 4 test-harness-fixes branch landed on this stack).
+- E2E tests require a running full stack (`docker compose up --build`) — not run in CI yet.

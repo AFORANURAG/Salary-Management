@@ -99,7 +99,22 @@ Branch: `feat/payroll-ops-pr3-api`
 
 ---
 
-### Phase 4 — Frontend: Hooks
+### Phase 4 — Test Harness Fixes
+
+Branch: `feat/payroll-ops-pr4-test-harness-fixes`
+
+| Task | Description | Commit |
+|---|---|---|
+| — | Add `payroll_runs` to `truncateAll()`; fix stale `processed`/`skipped` API assertions | `e5668e6` |
+| — | Fix PF04 e2e: `"Processed"` → `"Headcount"` + `status-badge-completed` | `cc31600` |
+
+**Acceptance**
+- [x] API tests no longer get 409 conflicts from leftover run rows between test cases.
+- [x] PF04 e2e label assertions match current `PayrollSummaryCard` output.
+
+---
+
+### Phase 5 — Frontend: Hooks
 
 Branch: `feat/payroll-ops-fe-pr1-hooks`
 
@@ -114,7 +129,7 @@ Branch: `feat/payroll-ops-fe-pr1-hooks`
 
 ---
 
-### Phase 5 — Frontend: History Page
+### Phase 6 — Frontend: History Page
 
 Branch: `feat/payroll-ops-fe-pr2-history-page`
 
@@ -131,7 +146,7 @@ Branch: `feat/payroll-ops-fe-pr2-history-page`
 
 ---
 
-### Phase 6 — Frontend: Void
+### Phase 7 — Frontend: Void
 
 Branch: `feat/payroll-ops-fe-pr3-void`
 
@@ -148,7 +163,7 @@ Branch: `feat/payroll-ops-fe-pr3-void`
 
 ---
 
-### Phase 7 — Frontend: Diff Drawer
+### Phase 8 — Frontend: Diff Drawer
 
 Branch: `feat/payroll-ops-fe-pr4-diff-drawer`
 
@@ -165,14 +180,14 @@ Branch: `feat/payroll-ops-fe-pr4-diff-drawer`
 
 ---
 
-### Phase 8 — Tests
+### Phase 9 — Tests
 
 Branch: `feat/payroll-ops-fe-pr5-tests`
 
 | Task | Description | Commit |
 |---|---|---|
-| PO29 | Integration spec (MSW): payroll history renders list from MSW fixture; status filter changes request param; void modal MSW 200 → toast; void modal MSW 409 → inline error; diff drawer MSW fixture renders salary changes | `test(web): add payroll-ops integration specs` |
-| PO30 | E2E: history page loads with seeded runs; ADMIN voids a run — status updates to VOIDED badge; HR_MANAGER no void button; diff drawer opens — salary changes table renders; totals delta visible | |
+| PO29 | Integration spec (MSW): payroll history renders list from MSW fixture; status filter changes request param; void modal MSW 200 → toast; void modal MSW 409 → inline error; diff drawer MSW fixture renders salary changes | `97d02a0` |
+| PO30 | E2E: history page loads with seeded runs; ADMIN voids a run — status updates to VOIDED badge; HR_MANAGER no void button; diff drawer opens — salary changes table renders; totals delta visible | `97d02a0` |
 
 **Acceptance**
 - [x] Integration specs GREEN.
