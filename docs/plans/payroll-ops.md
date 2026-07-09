@@ -107,7 +107,7 @@ Branch: `feat/payroll-ops-fe-pr1-hooks`
 | PO17 | `getPayrollDiff(period, compareTo)` + `usePayrollDiff(period, compareTo)` hook — `queryKey: ['payroll', 'diff', period, compareTo]` | `feat(store): add usePayrollDiff hook` |
 
 **Acceptance**
-- [ ] `pnpm --filter @salary-mgmt/store typecheck` passes.
+- [x] `pnpm --filter @salary-mgmt/store typecheck` passes.
 
 ---
 
