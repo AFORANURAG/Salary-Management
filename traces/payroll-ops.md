@@ -7,7 +7,7 @@
 
 ## Phase 1 — Types & Migration
 
-**Branch:** `feat/payroll-ops-pr3-api` (all backend phases landed on same branch due to stacking)
+**Branch:** `feat/payroll-ops-pr3-api`
 
 **Commits:**
 - `5ae44ab` — `feat(types): add payroll-ops type contracts (PO3)`
@@ -43,7 +43,12 @@
 
 **Branch:** `feat/payroll-ops-pr3-api`
 
-**Commits:** (pending — current working state, to be committed)
+**Commits:**
+- `b2dd55d` — `feat(api): expand payroll_runs.currency to varchar(10) for MIXED sentinel`
+- `1fec4b4` — `feat(api): implement listRuns, voidRun, getDiff service methods (PO10–PO13)`
+- `bb19c6d` — `feat(api): add payroll-ops controller endpoints (PO14)`
+- `761bf9b` — `test(api): fix global-setup migration list and scale test assertions`
+- `4bf3a20` — `docs(payroll-ops): add trace, sync spec and plan for backend phases`
 
 **Notes:**
 - `listRuns`: QueryBuilder with optional `IN (:...statuses)` filter; ordered `ranAt DESC NULLS LAST`; returns `PaginatedResponse<PayrollRunSummary>`.
@@ -53,41 +58,22 @@
 - `payroll.scale.e2e-spec.ts` still asserted old `processed`/`skipped` shape — updated to `headcount`/`status` in this phase (should have been caught in Phase 2).
 - `global-setup.ts` updated to include `PayrollRunEntity` and both new migrations.
 - All 192 API tests GREEN after these fixes.
-- Phase 3 trace note: the spec trace said "pending — current working state" for commits; all backend commits are now captured via cherry-picks onto the history-page branch.
 
 ---
 
-## Phase 8 — Frontend: Diff Drawer
+## Phase 4 — Test Harness Fixes
 
-**Branch:** `feat/payroll-ops-fe-pr4-diff-drawer`
+**Branch:** `feat/payroll-ops-pr4-test-harness-fixes`
 
 **Commits:**
-- `047eea7` — `feat(web): add PeriodDiffDrawer and wire onto history and detail pages (PO25–PO27)`
-- `8f1fea3` — `test(web): add PeriodDiffDrawer unit spec and MSW diff fixture (PO28)`
+- `e5668e6` — `test(api): add payroll_runs to truncateAll and fix stale processed/skipped assertions`
+- `cc31600` — `test(web): fix PF04 e2e assertion for new PayrollSummaryCard labels`
+- `28d4c09` — `docs(payroll-ops): add Phase 4 test-harness-fixes to plan and trace`
 
 **Notes:**
-- `PeriodDiffDrawer` uses Sheet from `@salary-mgmt/ui` (right-side, overriding the default left-side slide direction via className).
-- `compareTo` defaults to `prevMonth(basePeriod)` — user can override with a `<input type="month">` in the header.
-- Diff query is disabled when `open === false` to avoid fetching on every page load.
-- Three collapsible sections (Salary Changes, New Hires, Terminations) start expanded; chevron toggles them.
-- Diff icon button on history table rows only renders for COMPLETED runs (PENDING/VOIDED have no comparable payroll result data).
-- "Compare with previous" on the detail page also only renders for COMPLETED status.
-- MSW handler added for `GET /v1/payroll/runs/:period/diff`; `mockPayrollDiff` fixture exported from `test/msw/handlers/payroll.ts`.
-
----
-
-## Phase 7 — Frontend: Void
-
-**Branch:** `feat/payroll-ops-fe-pr3-void`
-
-**Commits:** (pending — current working state, to be committed)
-
-**Notes:**
-- `VoidConfirmModal`: 409 shows inline error without closing the modal; success calls `toast()` then closes.
-- `useVoidPayrollRun` and `usePayrollDiff` were missing from `packages/store/src/query/index.ts` — added exports.
-- `Toaster` was not mounted in the app; added to `components/providers.tsx`.
-- Detail page void button only rendered for `ADMIN` and only when `status === "COMPLETED"` — VOIDED runs don't show it again.
-- Status badge on detail page uses same colour mapping as the history list (PENDING=yellow, COMPLETED=green, VOIDED=red).
+- `payroll_runs` was missing from `truncateAll()` in the test data source, causing 409 conflicts between test cases (persisted run records from prior tests).
+- PF04 e2e assertion referenced old `"Processed"` label — updated to `"Headcount"` + `"COMPLETED"` badge.
+- These fixes were out of scope for the history-page branch; extracted into a dedicated branch to keep each PR focused.
 
 ---
 
@@ -124,3 +110,40 @@
 - MSW handler updated: added `GET /v1/payroll/runs` list handler returning `PaginatedResponse<PayrollRunSummary>`; fixture `mockPayrollRunsList` exported for test overrides; status filter param respected.
 - `payroll-detail.integration.test.tsx` assertion fixed: `mockPayrollSummary.processed` → `mockPayrollSummary.headcount`.
 - This branch carries cherry-picks of backend commits (all pr1/pr3 API work) to keep the workspace typechecking green — those commits will be removed on this branch once the upstream PRs merge.
+
+---
+
+## Phase 7 — Frontend: Void
+
+**Branch:** `feat/payroll-ops-fe-pr3-void`
+
+**Commits:**
+- `8b21778` — `feat(web): add VoidConfirmModal and void button on payroll detail page (PO21–PO23)`
+- `c1d1eea` — `test(web): add VoidConfirmModal unit spec; tick Phase 7 acceptance (PO24)`
+
+**Notes:**
+- `VoidConfirmModal`: 409 shows inline error without closing the modal; success calls `toast()` then closes.
+- `useVoidPayrollRun` and `usePayrollDiff` were missing from `packages/store/src/query/index.ts` — added exports.
+- `Toaster` was not mounted in the app; added to `components/providers.tsx`.
+- Detail page void button only rendered for `ADMIN` and only when `status === "COMPLETED"` — VOIDED runs don't show it again.
+- Status badge on detail page uses same colour mapping as the history list (PENDING=yellow, COMPLETED=green, VOIDED=red).
+
+---
+
+## Phase 8 — Frontend: Diff Drawer
+
+**Branch:** `feat/payroll-ops-fe-pr4-diff-drawer`
+
+**Commits:**
+- `047eea7` — `feat(web): add PeriodDiffDrawer and wire onto history and detail pages (PO25–PO27)`
+- `8f1fea3` — `test(web): add PeriodDiffDrawer unit spec and MSW diff fixture (PO28)`
+- `1f26e6c` — `docs(payroll-ops): tick Phase 7 acceptance criteria and add trace entry`
+
+**Notes:**
+- `PeriodDiffDrawer` uses Sheet from `@salary-mgmt/ui` (right-side, overriding the default left-side slide direction via className).
+- `compareTo` defaults to `prevMonth(basePeriod)` — user can override with a `<input type="month">` in the header.
+- Diff query is disabled when `open === false` to avoid fetching on every page load.
+- Three collapsible sections (Salary Changes, New Hires, Terminations) start expanded; chevron toggles them.
+- Diff icon button on history table rows only renders for COMPLETED runs (PENDING/VOIDED have no comparable payroll result data).
+- "Compare with previous" on the detail page also only renders for COMPLETED status.
+- MSW handler added for `GET /v1/payroll/runs/:period/diff`; `mockPayrollDiff` fixture exported from `test/msw/handlers/payroll.ts`.

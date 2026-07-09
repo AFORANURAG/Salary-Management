@@ -6,8 +6,8 @@
 
 Extends the payroll module with three new capabilities: a paginated run history
 list, void a completed run (ADMIN only), and a period-to-period diff. The
-`/payroll` page becomes a full payroll operations hub. Eight stacked branches
-(3 backend, 5 frontend).
+`/payroll` page becomes a full payroll operations hub. Nine stacked branches
+(3 backend phases on pr3-api + 1 test-harness fix branch, 5 frontend).
 
 ## Architecture Decisions
 
@@ -91,7 +91,7 @@ Branch: `feat/payroll-ops-pr3-api`
 **Acceptance**
 - [x] All unit specs from PO4–PO6 GREEN. *(PO4/PO5 skipped — DB-backed methods covered by integration tests instead; PO6 covered via `computeDiff` pure helper unit tests)*
 - [x] All integration specs from PO7–PO9 GREEN.
-- [x] `pnpm typecheck && pnpm lint && pnpm test` green. *(web typecheck fixed in fe-pr2-history-page; all 166 API + 107 web tests pass)*
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green. *(web typecheck fixed in fe-pr2-history-page; all API + 117 web tests pass)*
 
 ### Checkpoint: Backend complete
 - [x] Void preserves `PayrollResult` rows.
