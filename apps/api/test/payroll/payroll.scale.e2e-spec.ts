@@ -35,8 +35,8 @@ describe("Payroll at scale (e2e)", () => {
       const elapsed = performance.now() - start;
 
       expect(res.status).toBe(201);
-      expect(res.body.processed).toBe(SCALE);
-      expect(res.body.skipped).toHaveLength(0);
+      expect(res.body.headcount).toBe(SCALE);
+      expect(res.body.status).toBe("COMPLETED");
       expect(elapsed).toBeLessThan(BUDGET_MS);
     },
     60_000,
