@@ -17,7 +17,7 @@ describe("Payroll detail — integration", () => {
     renderWithFreshClient(<PayrollDetailPage />);
 
     await waitFor(() =>
-      expect(screen.getByText(String(mockPayrollSummary.processed))).toBeInTheDocument()
+      expect(screen.getByText(String(mockPayrollSummary.headcount))).toBeInTheDocument()
     );
 
     const firstResult = mockPayrollResults[0];

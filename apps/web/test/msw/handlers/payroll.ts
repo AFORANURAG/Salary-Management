@@ -1,14 +1,26 @@
 import { http, HttpResponse } from "msw";
-import type { PayrollResult, PayrollRunSummary } from "@salary-mgmt/types";
+import type { PaginatedResponse, PayrollResult, PayrollRunSummary } from "@salary-mgmt/types";
 
 const API_BASE = "http://localhost:3001";
 
 export const mockPayrollSummary: PayrollRunSummary = {
   period: "2026-06",
-  processed: 3,
-  skipped: [],
+  status: "COMPLETED",
+  headcount: 3,
   totalGrossMinor: 1_800_000,
+  totalDeductionsMinor: 180_000,
   totalNetMinor: 1_620_000,
+  currency: "USD",
+  ranAt: "2026-06-01T00:00:00.000Z",
+  voidedAt: null,
+  voidedBy: null,
+};
+
+export const mockPayrollRunsList: PaginatedResponse<PayrollRunSummary> = {
+  data: [mockPayrollSummary],
+  page: 1,
+  pageSize: 20,
+  total: 1,
 };
 
 export const mockPayrollResults: PayrollResult[] = [
@@ -48,6 +60,22 @@ export const mockPayrollResults: PayrollResult[] = [
 ];
 
 export const payrollHandlers = [
+  http.get(`${API_BASE}/v1/payroll/runs`, ({ request }) => {
+    const url = new URL(request.url);
+    const statusParam = url.searchParams.getAll("status");
+    if (statusParam.length > 0) {
+      const filtered = mockPayrollRunsList.data.filter((r) =>
+        statusParam.includes(r.status),
+      );
+      return HttpResponse.json({
+        ...mockPayrollRunsList,
+        data: filtered,
+        total: filtered.length,
+      });
+    }
+    return HttpResponse.json(mockPayrollRunsList);
+  }),
+
   http.post(`${API_BASE}/v1/payroll/runs`, async ({ request }) => {
     const body = await request.json() as { period: string };
     if (body.period === "2099-13") {
@@ -61,10 +89,15 @@ export const payrollHandlers = [
     }
     const summary: PayrollRunSummary = {
       period: body.period,
-      processed: 3,
-      skipped: [],
+      status: "COMPLETED",
+      headcount: 3,
       totalGrossMinor: 1_800_000,
+      totalDeductionsMinor: 180_000,
       totalNetMinor: 1_620_000,
+      currency: "USD",
+      ranAt: new Date().toISOString(),
+      voidedAt: null,
+      voidedBy: null,
     };
     return HttpResponse.json(summary, { status: 201 });
   }),
