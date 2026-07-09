@@ -24,10 +24,10 @@ export function PayrollSummaryCard({ summary, isLoading }: PayrollSummaryCardPro
 
   return (
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-      <Stat label="Processed" value={String(summary.processed)} />
-      <Stat label="Skipped" value={String(summary.skipped.length)} />
-      <Stat label="Total Gross" value={formatMinor(summary.totalGrossMinor, "USD")} />
-      <Stat label="Total Net" value={formatMinor(summary.totalNetMinor, "USD")} />
+      <Stat label="Status" value={summary.status} />
+      <Stat label="Headcount" value={String(summary.headcount)} />
+      <Stat label="Total Gross" value={formatMinor(summary.totalGrossMinor, summary.currency)} />
+      <Stat label="Total Net" value={formatMinor(summary.totalNetMinor, summary.currency)} />
     </div>
   );
 }

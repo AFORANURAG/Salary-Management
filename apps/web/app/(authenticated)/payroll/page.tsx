@@ -5,14 +5,17 @@ import { usePayrollRuns } from "@salary-mgmt/store";
 import { Button } from "@salary-mgmt/ui";
 import { PayrollRunList } from "./components/payroll-run-list";
 import { RunPayrollDialog } from "./components/run-payroll-dialog";
-import type { PayrollRunSummary } from "@salary-mgmt/types";
+import type { PayrollRunStatus } from "@salary-mgmt/types";
 
 export default function PayrollPage() {
-  const { data: runs = [], isLoading } = usePayrollRuns();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [recentRuns, setRecentRuns] = useState<PayrollRunSummary[]>([]);
+  const [statusFilter, setStatusFilter] = useState<PayrollRunStatus | undefined>(undefined);
 
-  const allRuns = [...recentRuns, ...runs.filter((r) => !recentRuns.find((rr) => rr.period === r.period))];
+  const { data, isLoading } = usePayrollRuns(
+    statusFilter ? { status: statusFilter } : undefined,
+  );
+
+  const runs = data?.data ? [...data.data] : [];
 
   return (
     <div className="mx-auto max-w-5xl space-y-4 p-6">
@@ -24,13 +27,16 @@ export default function PayrollPage() {
       {isLoading ? (
         <div className="text-muted-foreground text-sm">Loading…</div>
       ) : (
-        <PayrollRunList runs={allRuns} />
+        <PayrollRunList
+          runs={runs}
+          statusFilter={statusFilter}
+          onStatusFilter={setStatusFilter}
+        />
       )}
 
       <RunPayrollDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
-        onSuccess={(summary) => setRecentRuns((prev) => [summary, ...prev.filter((r) => r.period !== summary.period)])}
       />
     </div>
   );
