@@ -6,8 +6,8 @@
 
 Extends the payroll module with three new capabilities: a paginated run history
 list, void a completed run (ADMIN only), and a period-to-period diff. The
-`/payroll` page becomes a full payroll operations hub. Eight stacked branches
-(3 backend, 5 frontend).
+`/payroll` page becomes a full payroll operations hub. Nine stacked branches
+(4 backend/harness, 5 frontend).
 
 ## Architecture Decisions
 
@@ -99,7 +99,23 @@ Branch: `feat/payroll-ops-pr3-api`
 
 ---
 
-### Phase 4 — Frontend: Hooks
+### Phase 4 — Test Harness Fixes
+
+Branch: `feat/payroll-ops-pr4-test-harness-fixes`
+
+| Task | Description | Commit |
+|---|---|---|
+| PO-TH1 | `test-data-source.ts`: add `PayrollRunEntity` to entities list; add `payroll_runs` to `TRUNCATE` statement — missing entry caused 409 conflicts between API test cases | `test(api): add payroll_runs to truncateAll and fix stale processed/skipped assertions` |
+| PO-TH2 | `payroll.e2e-spec.ts` + `payroll.scale.e2e-spec.ts`: update `processed`/`skipped` → `headcount`/`status` assertions to match new `PayrollRunSummary` shape | *(same commit)* |
+| PO-TH3 | `apps/web/e2e/payroll/payroll.spec.ts` PF04: assert `Headcount` + `COMPLETED` labels instead of old `Processed` label | `test(web): fix PF04 e2e assertion for new PayrollSummaryCard labels` |
+
+**Acceptance**
+- [x] All 166 API tests GREEN with Postgres running.
+- [x] All 35 Playwright e2e tests GREEN against live stack.
+
+---
+
+### Phase 5 — Frontend: Hooks
 
 Branch: `feat/payroll-ops-fe-pr1-hooks`
 
@@ -114,7 +130,7 @@ Branch: `feat/payroll-ops-fe-pr1-hooks`
 
 ---
 
-### Phase 5 — Frontend: History Page
+### Phase 6 — Frontend: History Page
 
 Branch: `feat/payroll-ops-fe-pr2-history-page`
 
@@ -131,7 +147,7 @@ Branch: `feat/payroll-ops-fe-pr2-history-page`
 
 ---
 
-### Phase 6 — Frontend: Void
+### Phase 7 — Frontend: Void
 
 Branch: `feat/payroll-ops-fe-pr3-void`
 
@@ -148,7 +164,7 @@ Branch: `feat/payroll-ops-fe-pr3-void`
 
 ---
 
-### Phase 7 — Frontend: Diff Drawer
+### Phase 8 — Frontend: Diff Drawer
 
 Branch: `feat/payroll-ops-fe-pr4-diff-drawer`
 
@@ -165,7 +181,7 @@ Branch: `feat/payroll-ops-fe-pr4-diff-drawer`
 
 ---
 
-### Phase 8 — Tests
+### Phase 9 — Tests
 
 Branch: `feat/payroll-ops-fe-pr5-tests`
 
