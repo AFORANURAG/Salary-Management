@@ -191,13 +191,13 @@ Branch: `feat/payroll-ops-fe-pr5-tests`
 
 **Acceptance**
 - [x] Integration specs GREEN.
-- [ ] E2E specs GREEN against running stack.
+- [x] E2E specs GREEN against running stack.
 - [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
 ### Checkpoint: Complete
 - [x] All spec Non-Negotiable Test Cases covered and green.
 - [x] `/payroll` is a live history list; blank form removed.
-- [ ] Ready for review. *(pending E2E run against live stack)*
+- [x] Ready for review.
 
 ---
 

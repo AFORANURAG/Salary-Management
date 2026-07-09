@@ -135,13 +135,25 @@ async function createHrManagerUser(adminCookieHeader: string): Promise<{ email: 
   const email = `e2e-mgr-${ts}@acme-test.example.com`;
   const password = "Test1234!";
 
-  const res = await fetch(`${API}/auth/users`, {
+  // Step 1: invite — returns inviteToken
+  const inviteRes = await fetch(`${API}/auth/invite`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Cookie: adminCookieHeader },
-    body: JSON.stringify({ email, name: "E2E Manager", role: "HR_MANAGER", password }),
+    body: JSON.stringify({ email, name: "E2E Manager", role: "HR_MANAGER" }),
   });
-  if (!res.ok) {
-    throw new Error(`createHrManagerUser failed: ${res.status} ${await res.text()}`);
+  if (!inviteRes.ok) {
+    throw new Error(`invite failed: ${inviteRes.status} ${await inviteRes.text()}`);
+  }
+  const { inviteToken } = await inviteRes.json() as { inviteToken: string };
+
+  // Step 2: setup — sets password using the token
+  const setupRes = await fetch(`${API}/auth/setup`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token: inviteToken, name: "E2E Manager", password }),
+  });
+  if (!setupRes.ok) {
+    throw new Error(`setup failed: ${setupRes.status} ${await setupRes.text()}`);
   }
   return { email, password };
 }
@@ -166,7 +178,10 @@ test.describe("Payroll — ops (PO30)", () => {
       await page.goto("/payroll");
       await expect(page.getByText("Loading…")).not.toBeVisible({ timeout: 15_000 });
       await expect(page.getByText(period)).toBeVisible({ timeout: 10_000 });
-      await expect(page.getByTestId(`status-badge-completed`)).toBeVisible({ timeout: 10_000 });
+      // Scope badge check to the specific row to avoid strict-mode violation (many runs in DB)
+      await expect(
+        page.getByRole("row", { name: new RegExp(period) }).getByTestId("status-badge-completed")
+      ).toBeVisible({ timeout: 10_000 });
     } finally {
       await deleteEmployee(emp.id, cookieHeader);
     }
