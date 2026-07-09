@@ -175,14 +175,14 @@ Branch: `feat/payroll-ops-fe-pr5-tests`
 | PO30 | E2E: history page loads with seeded runs; ADMIN voids a run — status updates to VOIDED badge; HR_MANAGER no void button; diff drawer opens — salary changes table renders; totals delta visible | |
 
 **Acceptance**
-- [ ] Integration specs GREEN.
+- [x] Integration specs GREEN.
 - [ ] E2E specs GREEN against running stack.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
 ### Checkpoint: Complete
-- [ ] All spec Non-Negotiable Test Cases covered and green.
-- [ ] `/payroll` is a live history list; blank form removed.
-- [ ] Ready for review.
+- [x] All spec Non-Negotiable Test Cases covered and green.
+- [x] `/payroll` is a live history list; blank form removed.
+- [ ] Ready for review. *(pending E2E run against live stack)*
 
 ---
 
