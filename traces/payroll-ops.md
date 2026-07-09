@@ -77,7 +77,10 @@
 
 **Branch:** `feat/payroll-ops-fe-pr2-history-page`
 
-**Commits:** (pending — current working state, to be committed)
+**Commits:**
+- `f69b536` — `feat(web): update payroll list and page to new PayrollRunSummary shape (PO18–PO19)`
+- `a45c138` — `test(web): fix payroll tests for new run shape and add status filter specs (PO20)`
+- `79b6e7e` — `docs(payroll-ops): tick Phase 4/5 acceptance criteria, add Phase 5/6 trace entries`
 
 **Notes:**
 - `PayrollRunList` now accepts `statusFilter` and `onStatusFilter` props; filter pills only render when `onStatusFilter` is provided.

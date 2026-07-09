@@ -82,8 +82,8 @@ export function PayrollRunList({
                 <th className="px-4 py-2 text-left font-medium">Period</th>
                 <th className="px-4 py-2 text-left font-medium">Status</th>
                 <th className="px-4 py-2 text-right font-medium">Headcount</th>
-                <th className="px-4 py-2 text-right font-medium">Total Gross</th>
                 <th className="px-4 py-2 text-right font-medium">Total Net</th>
+                <th className="px-4 py-2 text-right font-medium">Date</th>
               </tr>
             </thead>
             <tbody>
@@ -102,10 +102,10 @@ export function PayrollRunList({
                   </td>
                   <td className="px-4 py-2 text-right">{run.headcount}</td>
                   <td className="px-4 py-2 text-right">
-                    {formatMinor(run.totalGrossMinor, run.currency)}
-                  </td>
-                  <td className="px-4 py-2 text-right">
                     {formatMinor(run.totalNetMinor, run.currency)}
+                  </td>
+                  <td className="px-4 py-2 text-right text-muted-foreground">
+                    {run.ranAt ? new Date(run.ranAt).toLocaleDateString() : "—"}
                   </td>
                 </tr>
               ))}
