@@ -110,7 +110,7 @@ Branch: `feat/payroll-ops-fe-pr1-hooks`
 | PO17 | `getPayrollDiff(period, compareTo)` + `usePayrollDiff(period, compareTo)` hook — `queryKey: ['payroll', 'diff', period, compareTo]` | `feat(store): add usePayrollDiff hook` |
 
 **Acceptance**
-- [ ] `pnpm --filter @salary-mgmt/store typecheck` passes.
+- [x] `pnpm --filter @salary-mgmt/store typecheck` passes.
 
 ---
 
@@ -125,9 +125,9 @@ Branch: `feat/payroll-ops-fe-pr2-history-page`
 | PO20 | Unit spec: history table renders period, status badge, headcount, net total; empty state; status filter pill updates query | `test(web): add payroll history page unit specs` |
 
 **Acceptance**
-- [ ] Unit specs GREEN.
-- [ ] Old blank payroll form page removed.
-- [ ] `pnpm typecheck` passes.
+- [x] Unit specs GREEN.
+- [x] Old blank payroll form page removed.
+- [x] `pnpm typecheck` passes.
 
 ---
 

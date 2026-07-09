@@ -53,3 +53,37 @@
 - `payroll.scale.e2e-spec.ts` still asserted old `processed`/`skipped` shape — updated to `headcount`/`status` in this phase (should have been caught in Phase 2).
 - `global-setup.ts` updated to include `PayrollRunEntity` and both new migrations.
 - All 192 API tests GREEN after these fixes.
+- Phase 3 trace note: the spec trace said "pending — current working state" for commits; all backend commits are now captured via cherry-picks onto the history-page branch.
+
+---
+
+## Phase 5 — Frontend: Hooks
+
+**Branch:** `feat/payroll-ops-fe-pr1-hooks`
+
+**Commits:**
+- `7a8398b` — `feat(store): add payroll-ops hooks and API functions (PO15–PO17)`
+- `4470317` — `docs(payroll-ops): tick Phase 4 acceptance criteria`
+
+**Notes:**
+- `usePayrollRuns(query?)` returns `PaginatedResponse<PayrollRunSummary>` — callers must destructure via `data?.data`.
+- `useVoidPayrollRun()` invalidates `payroll.runs()` (all filter variants) and the specific `payroll.run(period)` on success.
+- `usePayrollDiff()` is enabled only when both `basePeriod` and `compareTo` are non-empty strings.
+- Query keys updated: `payroll.runs(query?)` namespaced under `["payroll", "runs", { query }]` for per-filter cache isolation; `payroll.run(period)` branches off `payroll.all()` directly (not `runs()`).
+
+---
+
+## Phase 6 — Frontend: History Page
+
+**Branch:** `feat/payroll-ops-fe-pr2-history-page`
+
+**Commits:** (pending — current working state, to be committed)
+
+**Notes:**
+- `PayrollRunList` now accepts `statusFilter` and `onStatusFilter` props; filter pills only render when `onStatusFilter` is provided.
+- Status badge: COMPLETED=green, PENDING=yellow, VOIDED=red using Tailwind utility classes.
+- `page.tsx` removes `recentRuns` local state — `useRunPayroll` already invalidates `payroll.runs()` so the list auto-refreshes after a successful run.
+- `payroll-summary-card.tsx` updated: `processed`/`skipped` removed; now shows `status`/`headcount`.
+- MSW handler updated: added `GET /v1/payroll/runs` list handler returning `PaginatedResponse<PayrollRunSummary>`; fixture `mockPayrollRunsList` exported for test overrides; status filter param respected.
+- `payroll-detail.integration.test.tsx` assertion fixed: `mockPayrollSummary.processed` → `mockPayrollSummary.headcount`.
+- This branch carries cherry-picks of backend commits (all pr1/pr3 API work) to keep the workspace typechecking green — those commits will be removed on this branch once the upstream PRs merge.
