@@ -57,6 +57,21 @@
 
 ---
 
+## Phase 7 — Frontend: Void
+
+**Branch:** `feat/payroll-ops-fe-pr3-void`
+
+**Commits:** (pending — current working state, to be committed)
+
+**Notes:**
+- `VoidConfirmModal`: 409 shows inline error without closing the modal; success calls `toast()` then closes.
+- `useVoidPayrollRun` and `usePayrollDiff` were missing from `packages/store/src/query/index.ts` — added exports.
+- `Toaster` was not mounted in the app; added to `components/providers.tsx`.
+- Detail page void button only rendered for `ADMIN` and only when `status === "COMPLETED"` — VOIDED runs don't show it again.
+- Status badge on detail page uses same colour mapping as the history list (PENDING=yellow, COMPLETED=green, VOIDED=red).
+
+---
+
 ## Phase 5 — Frontend: Hooks
 
 **Branch:** `feat/payroll-ops-fe-pr1-hooks`
