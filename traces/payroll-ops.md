@@ -57,6 +57,25 @@
 
 ---
 
+## Phase 8 — Frontend: Diff Drawer
+
+**Branch:** `feat/payroll-ops-fe-pr4-diff-drawer`
+
+**Commits:**
+- `047eea7` — `feat(web): add PeriodDiffDrawer and wire onto history and detail pages (PO25–PO27)`
+- `8f1fea3` — `test(web): add PeriodDiffDrawer unit spec and MSW diff fixture (PO28)`
+
+**Notes:**
+- `PeriodDiffDrawer` uses Sheet from `@salary-mgmt/ui` (right-side, overriding the default left-side slide direction via className).
+- `compareTo` defaults to `prevMonth(basePeriod)` — user can override with a `<input type="month">` in the header.
+- Diff query is disabled when `open === false` to avoid fetching on every page load.
+- Three collapsible sections (Salary Changes, New Hires, Terminations) start expanded; chevron toggles them.
+- Diff icon button on history table rows only renders for COMPLETED runs (PENDING/VOIDED have no comparable payroll result data).
+- "Compare with previous" on the detail page also only renders for COMPLETED status.
+- MSW handler added for `GET /v1/payroll/runs/:period/diff`; `mockPayrollDiff` fixture exported from `test/msw/handlers/payroll.ts`.
+
+---
+
 ## Phase 7 — Frontend: Void
 
 **Branch:** `feat/payroll-ops-fe-pr3-void`

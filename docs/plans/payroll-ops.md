@@ -160,8 +160,8 @@ Branch: `feat/payroll-ops-fe-pr4-diff-drawer`
 | PO28 | Unit spec: drawer renders totals tile with correct delta; salary changes table; headcount sections; empty state when no diff | `test(web): add PeriodDiffDrawer unit spec` |
 
 **Acceptance**
-- [ ] Unit specs GREEN.
-- [ ] Drawer opens from both history table and detail page.
+- [x] Unit specs GREEN.
+- [x] Drawer opens from both history table and detail page.
 
 ---
 
