@@ -112,6 +112,12 @@ Branch: `feat/payroll-ops-pr4-test-harness-fixes`
 **Acceptance**
 - [x] All 166 API tests GREEN with Postgres running.
 - [x] All 35 Playwright e2e tests GREEN against live stack.
+| — | Add `payroll_runs` to `truncateAll()`; fix stale `processed`/`skipped` API assertions | `e5668e6` |
+| — | Fix PF04 e2e: `"Processed"` → `"Headcount"` + `status-badge-completed` | `cc31600` |
+
+**Acceptance**
+- [x] API tests no longer get 409 conflicts from leftover run rows between test cases.
+- [x] PF04 e2e label assertions match current `PayrollSummaryCard` output.
 
 ---
 
@@ -187,18 +193,18 @@ Branch: `feat/payroll-ops-fe-pr5-tests`
 
 | Task | Description | Commit |
 |---|---|---|
-| PO29 | Integration spec (MSW): payroll history renders list from MSW fixture; status filter changes request param; void modal MSW 200 → toast; void modal MSW 409 → inline error; diff drawer MSW fixture renders salary changes | `test(web): add payroll-ops integration specs` |
-| PO30 | E2E: history page loads with seeded runs; ADMIN voids a run — status updates to VOIDED badge; HR_MANAGER no void button; diff drawer opens — salary changes table renders; totals delta visible | |
+| PO29 | Integration spec (MSW): payroll history renders list from MSW fixture; status filter changes request param; void modal MSW 200 → toast; void modal MSW 409 → inline error; diff drawer MSW fixture renders salary changes | `97d02a0` |
+| PO30 | E2E: history page loads with seeded runs; ADMIN voids a run — status updates to VOIDED badge; HR_MANAGER no void button; diff drawer opens — salary changes table renders; totals delta visible | `97d02a0` |
 
 **Acceptance**
-- [ ] Integration specs GREEN.
-- [ ] E2E specs GREEN against running stack.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] Integration specs GREEN.
+- [x] E2E specs GREEN against running stack.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
 ### Checkpoint: Complete
-- [ ] All spec Non-Negotiable Test Cases covered and green.
-- [ ] `/payroll` is a live history list; blank form removed.
-- [ ] Ready for review.
+- [x] All spec Non-Negotiable Test Cases covered and green.
+- [x] `/payroll` is a live history list; blank form removed.
+- [x] Ready for review.
 
 ---
 
