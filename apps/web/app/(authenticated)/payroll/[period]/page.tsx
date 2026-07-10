@@ -8,6 +8,7 @@ import { useSessionContext } from "@/components/session-provider";
 import { PayrollSummaryCard } from "./components/payroll-summary-card";
 import { PayrollResultsTable } from "./components/payroll-results-table";
 import { VoidConfirmModal } from "../components/void-confirm-modal";
+import { PeriodDiffDrawer } from "../components/period-diff-drawer";
 import type { PayrollRunStatus } from "@salary-mgmt/types";
 
 const STATUS_BADGE_CLASSES: Record<PayrollRunStatus, string> = {
@@ -22,6 +23,7 @@ export default function PayrollDetailPage() {
   const { user } = useSessionContext();
   const { data: summary, isLoading, isError } = usePayrollSummary(period);
   const [voidOpen, setVoidOpen] = useState(false);
+  const [diffOpen, setDiffOpen] = useState(false);
 
   const isAdmin = user?.role === "ADMIN";
 
@@ -54,6 +56,11 @@ export default function PayrollDetailPage() {
           )}
         </div>
         <div className="flex gap-2">
+          {summary?.status === "COMPLETED" && (
+            <Button variant="outline" onClick={() => setDiffOpen(true)}>
+              Compare with previous
+            </Button>
+          )}
           {isAdmin && summary?.status === "COMPLETED" && (
             <Button variant="destructive" onClick={() => setVoidOpen(true)}>
               Void Run
@@ -73,6 +80,12 @@ export default function PayrollDetailPage() {
         period={period}
         open={voidOpen}
         onOpenChange={setVoidOpen}
+      />
+
+      <PeriodDiffDrawer
+        basePeriod={period}
+        open={diffOpen}
+        onOpenChange={setDiffOpen}
       />
     </div>
   );

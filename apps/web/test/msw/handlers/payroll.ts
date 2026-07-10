@@ -1,5 +1,10 @@
 import { http, HttpResponse } from "msw";
-import type { PaginatedResponse, PayrollResult, PayrollRunSummary } from "@salary-mgmt/types";
+import type {
+  PaginatedResponse,
+  PayrollDiffResponse,
+  PayrollResult,
+  PayrollRunSummary,
+} from "@salary-mgmt/types";
 
 const API_BASE = "http://localhost:3001";
 
@@ -59,6 +64,38 @@ export const mockPayrollResults: PayrollResult[] = [
   },
 ];
 
+export const mockPayrollDiff: PayrollDiffResponse = {
+  basePeriod: "2026-06",
+  comparePeriod: "2026-05",
+  newHires: [
+    {
+      employeeCode: "EMP-004",
+      name: "Dana Lee",
+      department: "Engineering",
+      netMinor: 500_000,
+      currency: "USD",
+    },
+  ],
+  terminations: [],
+  salaryChanges: [
+    {
+      employeeCode: "EMP-001",
+      name: "Alice Smith",
+      department: "Engineering",
+      baseNetMinor: 600_000,
+      compareNetMinor: 540_000,
+      deltaMinor: 60_000,
+      currency: "USD",
+    },
+  ],
+  totals: {
+    baseTotalNetMinor: 1_620_000,
+    compareTotalNetMinor: 1_080_000,
+    deltaTotalMinor: 540_000,
+    currency: "USD",
+  },
+};
+
 export const payrollHandlers = [
   http.get(`${API_BASE}/v1/payroll/runs`, ({ request }) => {
     const url = new URL(request.url);
@@ -107,6 +144,19 @@ export const payrollHandlers = [
       return HttpResponse.json({ message: "Not found" }, { status: 404 });
     }
     return HttpResponse.json({ ...mockPayrollSummary, period: params.period as string });
+  }),
+
+  http.get(`${API_BASE}/v1/payroll/runs/:period/diff`, ({ request, params }) => {
+    const url = new URL(request.url);
+    const compareTo = url.searchParams.get("compareTo");
+    if (!compareTo) {
+      return HttpResponse.json({ message: "compareTo is required" }, { status: 400 });
+    }
+    return HttpResponse.json({
+      ...mockPayrollDiff,
+      basePeriod: params.period as string,
+      comparePeriod: compareTo,
+    });
   }),
 
   http.get(`${API_BASE}/v1/payroll/runs/:period/results`, ({ request, params }) => {

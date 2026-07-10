@@ -2,6 +2,7 @@
 
 import type { PayrollRunStatus, PayrollRunSummary } from "@salary-mgmt/types";
 import { formatMinor } from "@salary-mgmt/money";
+import { ArrowLeftRight } from "lucide-react";
 import Link from "next/link";
 
 const STATUS_LABELS: Record<PayrollRunStatus, string> = {
@@ -38,12 +39,14 @@ interface PayrollRunListProps {
   runs: PayrollRunSummary[];
   statusFilter?: PayrollRunStatus;
   onStatusFilter?: (status: PayrollRunStatus | undefined) => void;
+  onDiff?: (period: string) => void;
 }
 
 export function PayrollRunList({
   runs,
   statusFilter,
   onStatusFilter,
+  onDiff,
 }: PayrollRunListProps) {
   return (
     <div className="space-y-3">
@@ -84,6 +87,7 @@ export function PayrollRunList({
                 <th className="px-4 py-2 text-right font-medium">Headcount</th>
                 <th className="px-4 py-2 text-right font-medium">Total Net</th>
                 <th className="px-4 py-2 text-right font-medium">Date</th>
+                {onDiff && <th className="px-4 py-2" />}
               </tr>
             </thead>
             <tbody>
@@ -107,6 +111,21 @@ export function PayrollRunList({
                   <td className="px-4 py-2 text-right text-muted-foreground">
                     {run.ranAt ? new Date(run.ranAt).toLocaleDateString() : "—"}
                   </td>
+                  {onDiff && (
+                    <td className="px-4 py-2 text-right">
+                      {run.status === "COMPLETED" && (
+                        <button
+                          type="button"
+                          aria-label={`Compare ${run.period}`}
+                          data-testid={`diff-btn-${run.period}`}
+                          className="rounded p-1 text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
+                          onClick={() => onDiff(run.period)}
+                        >
+                          <ArrowLeftRight className="h-3.5 w-3.5" />
+                        </button>
+                      )}
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>

@@ -5,11 +5,13 @@ import { usePayrollRuns } from "@salary-mgmt/store";
 import { Button } from "@salary-mgmt/ui";
 import { PayrollRunList } from "./components/payroll-run-list";
 import { RunPayrollDialog } from "./components/run-payroll-dialog";
+import { PeriodDiffDrawer } from "./components/period-diff-drawer";
 import type { PayrollRunStatus } from "@salary-mgmt/types";
 
 export default function PayrollPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState<PayrollRunStatus | undefined>(undefined);
+  const [diffPeriod, setDiffPeriod] = useState<string | null>(null);
 
   const { data, isLoading } = usePayrollRuns(
     statusFilter ? { status: statusFilter } : undefined,
@@ -31,6 +33,7 @@ export default function PayrollPage() {
           runs={runs}
           statusFilter={statusFilter}
           onStatusFilter={setStatusFilter}
+          onDiff={setDiffPeriod}
         />
       )}
 
@@ -38,6 +41,14 @@ export default function PayrollPage() {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
       />
+
+      {diffPeriod && (
+        <PeriodDiffDrawer
+          basePeriod={diffPeriod}
+          open={diffPeriod !== null}
+          onOpenChange={(open) => { if (!open) setDiffPeriod(null); }}
+        />
+      )}
     </div>
   );
 }
