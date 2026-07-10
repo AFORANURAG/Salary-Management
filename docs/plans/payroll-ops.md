@@ -91,7 +91,7 @@ Branch: `feat/payroll-ops-pr3-api`
 **Acceptance**
 - [x] All unit specs from PO4–PO6 GREEN. *(PO4/PO5 skipped — DB-backed methods covered by integration tests instead; PO6 covered via `computeDiff` pure helper unit tests)*
 - [x] All integration specs from PO7–PO9 GREEN.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green. *(web typecheck blocked by FE consumers of new PayrollRunSummary shape — fixed in fe-pr2-history-page)*
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green. *(web typecheck fixed in fe-pr2-history-page; all 166 API + 107 web tests pass)*
 
 ### Checkpoint: Backend complete
 - [x] Void preserves `PayrollResult` rows.
@@ -125,9 +125,9 @@ Branch: `feat/payroll-ops-fe-pr2-history-page`
 | PO20 | Unit spec: history table renders period, status badge, headcount, net total; empty state; status filter pill updates query | `test(web): add payroll history page unit specs` |
 
 **Acceptance**
-- [ ] Unit specs GREEN.
-- [ ] Old blank payroll form page removed.
-- [ ] `pnpm typecheck` passes.
+- [x] Unit specs GREEN.
+- [x] Old blank payroll form page removed.
+- [x] `pnpm typecheck` passes.
 
 ---
 

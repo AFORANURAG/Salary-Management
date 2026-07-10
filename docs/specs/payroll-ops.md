@@ -216,11 +216,11 @@ Existing page gains:
 
 ## Success Criteria
 
-- [ ] `GET /v1/payroll/runs` list replaces the blank form on `/payroll`.
+- [x] `GET /v1/payroll/runs` list replaces the blank form on `/payroll`.
 - [x] Void flow: ADMIN only; status updated; results preserved.
 - [x] Diff correctly identifies new hires, terminations, and salary changes.
 - [x] All non-negotiable test cases pass.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
 ## Implementation
 
@@ -232,14 +232,20 @@ Existing page gains:
 | RED — `computeDiff` pure helper; unit + integration tests for list, void, diff | `feat/payroll-ops-pr3-api` |
 | `listRuns`, `voidRun`, `getDiff` in `PayrollService`; controller routes (GREEN) | `feat/payroll-ops-pr3-api` |
 
+### Test Harness
+
+| Phase | Branch |
+|---|---|
+| Phase 4 — Fix `truncateAll`, stale API assertions, PF04 e2e label | `feat/payroll-ops-pr4-test-harness-fixes` |
+
 ### Frontend
 
 | Phase | Branch |
 |---|---|
-| Phase 4 — `usePayrollRuns`, `useVoidPayrollRun`, `usePayrollDiff` hooks; store types | `feat/payroll-ops-fe-pr1-hooks` |
-| Phase 5 — Payroll history page + status filter + `RunPayrollModal` reuse | `feat/payroll-ops-fe-pr2-history-page` |
-| Phase 6 — `VoidConfirmModal` + void button on detail page | `feat/payroll-ops-fe-pr3-void` |
-| Phase 7 — `PeriodDiffDrawer` + "compare" button on history + detail | `feat/payroll-ops-fe-pr4-diff-drawer` |
-| Phase 8 — Unit + integration + E2E tests | `feat/payroll-ops-fe-pr5-tests` |
+| Phase 5 — `usePayrollRuns`, `useVoidPayrollRun`, `usePayrollDiff` hooks; store types | `feat/payroll-ops-fe-pr1-hooks` |
+| Phase 6 — Payroll history page + status filter + `RunPayrollModal` reuse | `feat/payroll-ops-fe-pr2-history-page` |
+| Phase 7 — `VoidConfirmModal` + void button on detail page | `feat/payroll-ops-fe-pr3-void` |
+| Phase 8 — `PeriodDiffDrawer` + "compare" button on history + detail | `feat/payroll-ops-fe-pr4-diff-drawer` |
+| Phase 9 — Unit + integration + E2E tests | `feat/payroll-ops-fe-pr5-tests` |
 
 Plan: [`docs/plans/payroll-ops.md`](../plans/payroll-ops.md) · Trace: [`traces/payroll-ops.md`](../../traces/payroll-ops.md)
