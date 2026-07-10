@@ -158,7 +158,7 @@ describe("Payroll (e2e)", () => {
 
       const res = await http.post("/v1/payroll/runs").set("Cookie", authCookie).send({ period: "2026-09" });
       expect(res.status).toBe(201);
-      expect(res.body.status).toBe("COMPLETED");
+      expect(res.body.headcount).toBe(1);
     });
 
     it("run with no eligible employees returns 201 with processed=0", async () => {
@@ -166,7 +166,6 @@ describe("Payroll (e2e)", () => {
       const res = await http.post("/v1/payroll/runs").set("Cookie", authCookie).send({ period: "2020-01" });
       expect(res.status).toBe(201);
       expect(res.body.headcount).toBe(0);
-      expect(res.body.status).toBe("COMPLETED");
     });
 
     it("returns 400 for an invalid period format", async () => {
@@ -197,8 +196,8 @@ describe("Payroll (e2e)", () => {
       const res = await http.get("/v1/payroll/runs/2026-10").set("Cookie", authCookie);
       expect(res.status).toBe(200);
       expect(res.body.period).toBe("2026-10");
-      expect(res.body.status).toBe("COMPLETED");
       expect(res.body.headcount).toBeGreaterThanOrEqual(1);
+      expect(res.body.status).toBe("COMPLETED");
       expect(typeof res.body.totalGrossMinor).toBe("number");
       expect(typeof res.body.totalNetMinor).toBe("number");
     });

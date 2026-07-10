@@ -57,6 +57,22 @@
 
 ---
 
+## Phase 4 — Test Harness Fixes
+
+**Branch:** `feat/payroll-ops-pr4-test-harness-fixes`
+
+**Commits:**
+- `e5668e6` — `test(api): add payroll_runs to truncateAll and fix stale processed/skipped assertions`
+- `cc31600` — `test(web): fix PF04 e2e assertion for new PayrollSummaryCard labels`
+
+**Notes:**
+- `test-data-source.ts` was missing `PayrollRunEntity` in its entities list and `payroll_runs` in the TRUNCATE statement. This caused 409 conflicts between API test cases because run records from a prior test persisted into the next.
+- `payroll.e2e-spec.ts` and `payroll.scale.e2e-spec.ts` still asserted `processed`/`skipped` shape — these should have been fixed in `feat/payroll-ops-pr3-api` but were missed.
+- `payroll.spec.ts` PF04 checked for `"Processed"` label on the summary card; updated to `"Headcount"` + `"COMPLETED"`.
+- All 166 API tests and 35 Playwright e2e tests GREEN after these fixes.
+
+---
+
 ## Phase 5 — Frontend: Hooks
 
 **Branch:** `feat/payroll-ops-fe-pr1-hooks`

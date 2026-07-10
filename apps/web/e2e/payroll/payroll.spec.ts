@@ -117,7 +117,8 @@ test.describe("Payroll — detail", () => {
       await page.waitForLoadState("networkidle");
 
       // PayrollSummaryCard stat labels
-      await expect(page.getByText("Processed", { exact: true })).toBeVisible({ timeout: 15_000 });
+      await expect(page.getByText("Headcount", { exact: true })).toBeVisible({ timeout: 15_000 });
+      await expect(page.getByText("COMPLETED", { exact: true })).toBeVisible({ timeout: 10_000 });
       await expect(page.getByText(emp.id)).toBeVisible({ timeout: 10_000 });
     } finally {
       await deleteEmployee(emp.id, cookieHeader);
