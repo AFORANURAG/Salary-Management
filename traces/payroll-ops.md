@@ -71,7 +71,6 @@
 - `payroll.spec.ts` PF04 checked for `"Processed"` label on the summary card; updated to `"Headcount"` + `"COMPLETED"`.
 - All 166 API tests and 35 Playwright e2e tests GREEN after these fixes.
 
----
 
 ## Phase 5 — Frontend: Hooks
 
@@ -106,3 +105,19 @@
 - MSW handler updated: added `GET /v1/payroll/runs` list handler returning `PaginatedResponse<PayrollRunSummary>`; fixture `mockPayrollRunsList` exported for test overrides; status filter param respected.
 - `payroll-detail.integration.test.tsx` assertion fixed: `mockPayrollSummary.processed` → `mockPayrollSummary.headcount`.
 - This branch carries cherry-picks of backend commits (all pr1/pr3 API work) to keep the workspace typechecking green — those commits will be removed on this branch once the upstream PRs merge.
+
+
+## Phase 7 — Frontend: Void
+
+**Branch:** `feat/payroll-ops-fe-pr3-void`
+
+**Commits:** (pending — current working state, to be committed)
+
+**Notes:**
+- `VoidConfirmModal`: 409 shows inline error without closing the modal; success calls `toast()` then closes.
+- `useVoidPayrollRun` and `usePayrollDiff` were missing from `packages/store/src/query/index.ts` — added exports.
+- `Toaster` was not mounted in the app; added to `components/providers.tsx`.
+- Detail page void button only rendered for `ADMIN` and only when `status === "COMPLETED"` — VOIDED runs don't show it again.
+- Status badge on detail page uses same colour mapping as the history list (PENDING=yellow, COMPLETED=green, VOIDED=red).
+
+---

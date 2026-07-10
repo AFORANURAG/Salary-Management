@@ -159,8 +159,8 @@ Branch: `feat/payroll-ops-fe-pr3-void`
 | PO24 | Unit spec: `VoidConfirmModal` submit calls hook; 409 shows inline error without closing; modal absent for non-ADMIN | `test(web): add VoidConfirmModal unit spec` |
 
 **Acceptance**
-- [ ] Unit specs GREEN.
-- [ ] ADMIN sees void button; HR_MANAGER does not.
+- [x] Unit specs GREEN.
+- [x] ADMIN sees void button; HR_MANAGER does not.
 
 ---
 

@@ -15,6 +15,8 @@ export {
   usePayrollSummary,
   usePayrollResults,
   useRunPayroll,
+  useVoidPayrollRun,
+  usePayrollDiff,
 } from "./payroll";
 export { usePayslipHistory, usePayslip } from "./payslips";
 export { useReportingPayrollCost, useReportingSummary } from "./reporting";
