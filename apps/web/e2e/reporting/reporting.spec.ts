@@ -63,7 +63,6 @@ test.describe("Reporting", () => {
       await page.goto("/reporting");
       // Set period in the month input
       await page.getByLabel("Period").fill(period);
-      await page.waitForLoadState("networkidle");
 
       // Summary section heading is visible
       await expect(page.getByRole("heading", { name: "Summary" })).toBeVisible({
@@ -133,7 +132,6 @@ test.describe("Reporting", () => {
 
     // Use a period far in the future that has never had a payroll run
     await page.getByLabel("Period").fill("2099-12");
-    await page.waitForLoadState("networkidle");
 
     await expect(
       page.getByText("No results for this period."),

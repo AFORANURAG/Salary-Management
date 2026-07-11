@@ -114,7 +114,7 @@ test.describe("Payroll — detail", () => {
 
     try {
       await page.goto(`/payroll/${period}`);
-      await page.waitForLoadState("networkidle");
+      await expect(page.getByTestId("status-badge-completed")).toBeVisible({ timeout: 15_000 });
 
       // PayrollSummaryCard stat labels (updated shape: Headcount replaces Processed)
       await expect(page.getByText("Headcount", { exact: true })).toBeVisible({ timeout: 15_000 });
@@ -199,8 +199,6 @@ test.describe("Payroll — ops (PO30)", () => {
 
     try {
       await page.goto(`/payroll/${period}`);
-      await page.waitForLoadState("networkidle");
-
       await expect(page.getByTestId("status-badge-completed")).toBeVisible({ timeout: 15_000 });
       await expect(page.getByRole("button", { name: /void run/i })).toBeVisible();
 
@@ -235,7 +233,6 @@ test.describe("Payroll — ops (PO30)", () => {
     try {
       const mgrPage = await mgrContext.newPage();
       await mgrPage.goto(`/payroll/${period}`);
-      await mgrPage.waitForLoadState("networkidle");
       await expect(mgrPage.getByTestId("status-badge-completed")).toBeVisible({ timeout: 15_000 });
       await expect(mgrPage.getByRole("button", { name: /void run/i })).not.toBeVisible();
     } finally {
@@ -285,7 +282,7 @@ test.describe("Payroll — ops (PO30)", () => {
 
     try {
       await page.goto(`/payroll/${basePeriod}`);
-      await page.waitForLoadState("networkidle");
+      await expect(page.getByTestId("status-badge-completed")).toBeVisible({ timeout: 15_000 });
 
       await expect(page.getByRole("button", { name: /compare with previous/i })).toBeVisible({ timeout: 15_000 });
       await page.getByRole("button", { name: /compare with previous/i }).click();

@@ -56,7 +56,7 @@ test.describe("Payslips — employee detail + detail page", () => {
 
     try {
       await page.goto(`/employees/${emp.id}`);
-      await page.waitForLoadState("networkidle");
+      await expect(page.getByRole("heading", { name: emp.name })).toBeVisible({ timeout: 10_000 });
 
       await expect(page.getByText(period)).toBeVisible({ timeout: 15_000 });
     } finally {
@@ -73,7 +73,7 @@ test.describe("Payslips — employee detail + detail page", () => {
 
     try {
       await page.goto(`/employees/${emp.id}`);
-      await page.waitForLoadState("networkidle");
+      await expect(page.getByRole("heading", { name: emp.name })).toBeVisible({ timeout: 10_000 });
 
       const periodLink = page.getByRole("link", { name: new RegExp(period) });
       await expect(periodLink).toBeVisible({ timeout: 15_000 });
@@ -97,7 +97,7 @@ test.describe("Payslips — employee detail + detail page", () => {
 
     try {
       await page.goto(`/employees/${emp.id}`);
-      await page.waitForLoadState("networkidle");
+      await expect(page.getByRole("heading", { name: emp.name })).toBeVisible({ timeout: 10_000 });
 
       // Capture the net pay text from the history row
       const historyRow = page.getByRole("link", { name: new RegExp(period) });
