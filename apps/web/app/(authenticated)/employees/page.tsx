@@ -2,10 +2,11 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState, Suspense } from "react";
-import { useEmployees } from "@salary-mgmt/store";
+import { useEmployees, useSession } from "@salary-mgmt/store";
 import type { Department, Employee, EmployeeListQuery, EmploymentStatus } from "@salary-mgmt/types";
 import { EMPLOYEE_PAGE_SIZE_DEFAULT } from "@salary-mgmt/types";
 import { Button } from "@salary-mgmt/ui";
+import { BulkActionToolbar } from "./components/bulk-action-toolbar";
 import { EmployeeList } from "./components/employee-list";
 import { EmployeeSearch } from "./components/employee-search";
 import { EmployeeFilters } from "./components/employee-filters";
@@ -41,8 +42,11 @@ function EmployeesPageContent() {
   const searchParams = useSearchParams();
   const query = parseQuery(searchParams);
   const [dialog, setDialog] = useState<DialogState>({ type: "none" });
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const { data, isLoading, isError } = useEmployees(query);
+  const { user } = useSession();
+  const canBulkEdit = user?.role === "ADMIN" || user?.role === "HR_MANAGER";
 
   const setParams = useCallback(
     (updates: Partial<Record<string, string | string[] | undefined>>) => {
@@ -55,6 +59,7 @@ function EmployeesPageContent() {
           next.set(key, value);
         }
       }
+      setSelectedIds([]);
       router.replace(`/employees?${next.toString()}`);
     },
     [searchParams, router]
@@ -98,7 +103,16 @@ function EmployeesPageContent() {
         onRowClick={(id) => router.push(`/employees/${id}`)}
         onEdit={(employee) => setDialog({ type: "edit", employee })}
         onDelete={(employee) => setDialog({ type: "delete", employee })}
+        selectedIds={canBulkEdit ? selectedIds : undefined}
+        onSelectionChange={canBulkEdit ? setSelectedIds : undefined}
       />
+
+      {canBulkEdit && (
+        <BulkActionToolbar
+          selectedIds={selectedIds}
+          onDeselect={() => setSelectedIds([])}
+        />
+      )}
 
       {data && data.total > 0 && (
         <EmployeePagination

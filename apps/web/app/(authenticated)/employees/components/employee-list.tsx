@@ -25,6 +25,8 @@ interface EmployeeListProps {
   onRowClick?: (id: string) => void;
   onEdit?: (employee: Employee) => void;
   onDelete?: (employee: Employee) => void;
+  selectedIds?: string[];
+  onSelectionChange?: (ids: string[]) => void;
 }
 
 const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive"> = {
@@ -40,7 +42,26 @@ export function EmployeeList({
   onRowClick,
   onEdit,
   onDelete,
+  selectedIds = [],
+  onSelectionChange,
 }: EmployeeListProps) {
+  const selectable = Boolean(onSelectionChange);
+  const pageIds = data?.data.map((e) => e.id) ?? [];
+  const allSelected = pageIds.length > 0 && pageIds.every((id) => selectedIds.includes(id));
+
+  function toggleAll() {
+    if (!onSelectionChange) return;
+    onSelectionChange(allSelected ? [] : pageIds);
+  }
+
+  function toggleOne(id: string) {
+    if (!onSelectionChange) return;
+    onSelectionChange(
+      selectedIds.includes(id)
+        ? selectedIds.filter((s) => s !== id)
+        : [...selectedIds, id],
+    );
+  }
   if (isError) {
     return (
       <p className="text-destructive py-8 text-center text-sm">
@@ -74,6 +95,17 @@ export function EmployeeList({
     <Table>
       <TableHeader>
         <TableRow>
+          {selectable && (
+            <TableHead className="w-10">
+              <input
+                type="checkbox"
+                aria-label="Select all"
+                checked={allSelected}
+                onChange={toggleAll}
+                className="h-4 w-4 cursor-pointer rounded border-input accent-primary"
+              />
+            </TableHead>
+          )}
           <TableHead>Name</TableHead>
           <TableHead>Code</TableHead>
           <TableHead>Email</TableHead>
@@ -90,7 +122,19 @@ export function EmployeeList({
             key={emp.id}
             className={onRowClick ? "cursor-pointer" : undefined}
             onClick={() => onRowClick?.(emp.id)}
+            data-selected={selectedIds.includes(emp.id) ? "true" : undefined}
           >
+            {selectable && (
+              <TableCell onClick={(e) => e.stopPropagation()}>
+                <input
+                  type="checkbox"
+                  aria-label={`Select ${emp.name}`}
+                  checked={selectedIds.includes(emp.id)}
+                  onChange={() => toggleOne(emp.id)}
+                  className="h-4 w-4 cursor-pointer rounded border-input accent-primary"
+                />
+              </TableCell>
+            )}
             <TableCell className="font-medium">{emp.name}</TableCell>
             <TableCell>{emp.employeeCode}</TableCell>
             <TableCell>{emp.email}</TableCell>
