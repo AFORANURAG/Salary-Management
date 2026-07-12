@@ -110,15 +110,15 @@ Branch: `feat/employee-bulk-ops-fe-pr2-import-wizard`
 |---|---|---|
 | BO14 | `@salary-mgmt/store`: `postEmployeeImport(file: File)` API fn (FormData); `useEmployeeImport()` mutation | `feat(store): add employee import mutation` |
 | BO15 | Static CSV template at `apps/web/public/templates/employees-import-template.csv` with correct header row | `chore(web): add employees import CSV template` |
-| BO16 | `/employees/bulk-import` route (`app/(authenticated)/employees/bulk-import/page.tsx`); add "Import CSV" button on employee list page (HR_MANAGER/ADMIN only) + sidebar link under Workforce section | `feat(web): add bulk import page route and entry points` |
+| BO16 | `/employees/bulk` route (`app/(authenticated)/employees/bulk/page.tsx`); add "Import CSV" button on employee list page (HR_MANAGER/ADMIN only); sidebar "Bulk Operations" link (already present) points to this route | `feat(web): add bulk import page route and entry points` |
 | BO17 | Step 1 — Upload: drag-and-drop zone + browse; `.csv` file type filter; client-side size check (2 MB); file name + size shown; "Download template" anchor; "Preview & Import" button calls `useEmployeeImport()` | `feat(web): add CSV upload step for import wizard` |
 | BO18 | Step 2 — Results: "N employees imported successfully"; failure table (row, fields, errors) when `failed.length > 0`; "Import More" resets to Step 1; "View Employees" navigates to `/employees` | `feat(web): add import results step` |
 | BO19 | Unit specs: upload step rejects non-CSV; rejects >2 MB client-side; results step renders failure rows; "Import More" resets state | `test(web): add import wizard unit specs` |
 
 **Acceptance**
-- [ ] Unit specs GREEN.
-- [ ] Template file committed with correct headers.
-- [ ] `pnpm typecheck` passes.
+- [x] Unit specs GREEN.
+- [x] Template file committed with correct headers.
+- [x] `pnpm typecheck` passes.
 
 ---
 

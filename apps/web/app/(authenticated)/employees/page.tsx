@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState, Suspense } from "react";
 import { useEmployees, useSession } from "@salary-mgmt/store";
@@ -69,7 +70,14 @@ function EmployeesPageContent() {
     <div className="mx-auto w-full max-w-7xl space-y-4 p-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">Employees</h1>
-        <Button onClick={() => setDialog({ type: "create" })}>Add Employee</Button>
+        <div className="flex gap-2">
+          {canBulkEdit && (
+            <Button variant="outline" asChild>
+              <Link href="/employees/bulk">Import CSV</Link>
+            </Button>
+          )}
+          <Button onClick={() => setDialog({ type: "create" })}>Add Employee</Button>
+        </div>
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">

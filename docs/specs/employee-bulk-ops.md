@@ -80,10 +80,10 @@ Rules:
     cache on success → shows toast.
 - Toolbar is not shown for `HR_VIEWER` (role check at render time).
 
-### Import Page: `/employees/bulk-import`
+### Import Page: `/employees/bulk`
 
-New route; accessible from Employees sidebar item and a "Import CSV" button on
-the list page (visible to `HR_MANAGER`/`ADMIN` only).
+Accessible from the "Bulk Operations" sidebar item (Workforce section) and an
+"Import CSV" button on the list page (visible to `HR_MANAGER`/`ADMIN` only).
 
 Wizard — 2 steps:
 
@@ -167,7 +167,7 @@ Wizard — 2 steps:
 | Phase | Branch |
 |---|---|
 | Row checkboxes, select-all, bulk action toolbar on employee list | `feat/employee-bulk-ops-fe-pr1-list-select` |
-| Import wizard page (`/employees/bulk-import`): upload step + results step | `feat/employee-bulk-ops-fe-pr2-import-wizard` |
+| Import wizard page (`/employees/bulk`): upload step + results step | `feat/employee-bulk-ops-fe-pr2-import-wizard` |
 | Unit + integration + E2E tests | `feat/employee-bulk-ops-fe-pr3-tests` |
 
 Plan: [`docs/plans/employee-bulk-ops.md`](../plans/employee-bulk-ops.md) · Trace: [`traces/employee-bulk-ops.md`](../../traces/employee-bulk-ops.md)
