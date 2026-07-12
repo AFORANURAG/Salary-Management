@@ -64,4 +64,4 @@ Branch: `feat/employee-bulk-ops-fe-pr2-import-wizard`
 - BO18: Results step — imported count, failure table (row, code, errors), "Import More" reset, "View Employees" navigate.
 - BO19: 11 unit tests GREEN. Notable: `userEvent.upload` doesn't trigger `onChange` on hidden inputs in jsdom — used `fireEvent.change` with `Object.defineProperty(input, "files", ...)` helper.
 
-Commit: `pending`
+Commit: `97b3e07`
