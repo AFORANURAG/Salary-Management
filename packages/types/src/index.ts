@@ -310,3 +310,28 @@ export interface PayrollSummaryResponse {
   readonly period: string;
   readonly buckets: readonly PayrollSummaryBucket[];
 }
+
+// ---------------------------------------------------------------------------
+// Employee Bulk Operations
+// ---------------------------------------------------------------------------
+
+export interface BulkStatusRequest {
+  readonly ids: readonly string[];
+  readonly status: EmploymentStatus;
+}
+
+export interface BulkStatusResponse {
+  readonly updated: number;
+  readonly skipped: number;
+}
+
+export interface ImportFailedRow {
+  readonly row: number;
+  readonly employeeCode: string | null;
+  readonly errors: readonly string[];
+}
+
+export interface ImportResponse {
+  readonly imported: number;
+  readonly failed: readonly ImportFailedRow[];
+}
