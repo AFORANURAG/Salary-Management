@@ -16,7 +16,7 @@
 | [`specs/reporting.md`](./specs/reporting.md) | Aggregate compensation queries | `apps/api/src/reporting` | Complete |
 | [`specs/payroll-ops.md`](./specs/payroll-ops.md) | Payroll operations — void, diff, history | `apps/api/src/payroll` | Complete |
 | [`specs/app-shell.md`](./specs/app-shell.md) | App chrome — sidebar, header, authenticated layout | `apps/web/components/shell` | Complete |
-| [`specs/employee-bulk-ops.md`](./specs/employee-bulk-ops.md) | CSV bulk import/update for employees | `apps/api/src/employees/bulk` | In Progress |
+| [`specs/employee-bulk-ops.md`](./specs/employee-bulk-ops.md) | CSV bulk import/update for employees | `apps/api/src/employees/bulk` | Complete |
 | [`specs/audit-log.md`](./specs/audit-log.md) | Immutable audit trail for all mutations | `apps/api/src/audit` | **Out of Scope (MVP)** |
 | [`specs/data-export.md`](./specs/data-export.md) | CSV/Excel data export for reports and payroll | `apps/api/src/export` | **Out of Scope (MVP)** |
 

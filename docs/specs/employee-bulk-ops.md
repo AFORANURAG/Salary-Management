@@ -146,11 +146,11 @@ Wizard — 2 steps:
 
 ## Success Criteria
 
-- [ ] Bulk status change updates N rows in a single SQL statement.
-- [ ] CSV import partial-success: valid rows inserted even when some fail.
-- [ ] `HR_VIEWER` cannot see or use bulk actions (toolbar absent, import route 403).
-- [ ] All non-negotiable test cases pass.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] Bulk status change updates N rows in a single SQL statement.
+- [x] CSV import partial-success: valid rows inserted even when some fail.
+- [x] `HR_VIEWER` cannot see or use bulk actions (toolbar absent, import route 403).
+- [x] All non-negotiable test cases pass.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
 ## Implementation
 
