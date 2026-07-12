@@ -49,4 +49,4 @@ Branch: `feat/employee-bulk-ops-fe-pr1-list-select`
 - Selection state in `employees/page.tsx`; clears on page/filter change; `canBulkEdit` role guard (BO12).
 - 8 unit tests for `BulkActionToolbar` GREEN (BO13).
 
-<!-- COMMIT_SHA: pending -->
+Commit: `177e382`
