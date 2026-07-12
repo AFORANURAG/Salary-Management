@@ -44,7 +44,7 @@ test.describe("Salary Structure — detail page", () => {
 
     try {
       await page.goto(`/employees/${emp.id}`);
-      await page.waitForLoadState("networkidle");
+      await expect(page.getByRole("heading", { name: emp.name })).toBeVisible({ timeout: 10_000 });
 
       // Use table cell locator to avoid ambiguity with history rows
       await expect(page.getByRole("cell", { name: "BASIC" })).toBeVisible({ timeout: 10000 });
@@ -66,7 +66,7 @@ test.describe("Salary Structure — detail page", () => {
 
     try {
       await page.goto(`/employees/${emp.id}`);
-      await page.waitForLoadState("networkidle");
+      await expect(page.getByRole("heading", { name: emp.name })).toBeVisible({ timeout: 10_000 });
 
       await expect(page.getByRole("cell", { name: "BASIC" })).toBeVisible({ timeout: 10000 });
 
@@ -108,7 +108,7 @@ test.describe("Salary Structure — detail page", () => {
 
     try {
       await page.goto(`/employees/${emp.id}`);
-      await page.waitForLoadState("networkidle");
+      await expect(page.getByRole("heading", { name: emp.name })).toBeVisible({ timeout: 10_000 });
 
       // History starts expanded; both versions visible
       await expect(page.getByText("2024-07-01").first()).toBeVisible({ timeout: 10000 });

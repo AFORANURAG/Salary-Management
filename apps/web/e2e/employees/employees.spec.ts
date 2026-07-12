@@ -127,7 +127,10 @@ test.describe("Employees — create", () => {
     const email = `cre-${Date.now()}@example.com`;
 
     await page.goto("/employees");
-    await page.getByRole("button", { name: /add employee/i }).click();
+    const addBtn = page.getByRole("button", { name: /add employee/i });
+    await expect(addBtn).toBeVisible({ timeout: 10_000 });
+    await addBtn.scrollIntoViewIfNeeded();
+    await addBtn.click();
 
     const dialog = page.getByRole("dialog");
     await dialog.getByLabel(/employee code/i).fill(code);
