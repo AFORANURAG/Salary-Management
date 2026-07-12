@@ -168,11 +168,11 @@ breadcrumb renders).
 
 ## Success Criteria
 
-- [ ] All authenticated routes render inside the shell — no page bypasses the layout.
-- [ ] Admin section invisible to non-ADMIN (DOM-absent, not CSS-hidden).
-- [ ] Sidebar collapse preference survives full page reload.
-- [ ] All non-negotiable test cases pass.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] All authenticated routes render inside the shell — no page bypasses the layout.
+- [x] Admin section invisible to non-ADMIN (DOM-absent, not CSS-hidden).
+- [x] Sidebar collapse preference survives full page reload.
+- [x] All non-negotiable test cases pass.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
 ## Implementation
 
