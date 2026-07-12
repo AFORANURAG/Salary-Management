@@ -43,7 +43,7 @@ Branch: `feat/employee-bulk-ops-pr1-types`
 | BO1 | `packages/types`: add `BulkStatusRequest`, `BulkStatusResponse`, `ImportResultRow`, `ImportResponse` interfaces | `feat(types): add employee bulk-ops contracts` |
 
 **Acceptance**
-- [ ] Types exported; `pnpm --filter @salary-mgmt/types build && pnpm typecheck` pass.
+- [x] Types exported; `pnpm --filter @salary-mgmt/types build && pnpm typecheck` pass.
 
 ---
 
