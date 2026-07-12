@@ -1,4 +1,6 @@
 import type {
+  BulkStatusRequest,
+  BulkStatusResponse,
   Employee,
   EmployeeListQuery,
   CreateEmployeeInput,
@@ -47,4 +49,8 @@ export function updateEmployee(id: string, input: UpdateEmployeeInput): Promise<
 
 export function deleteEmployee(id: string): Promise<Employee> {
   return api.delete<Employee>(`/v1/employees/${id}`);
+}
+
+export function postBulkStatusChange(body: BulkStatusRequest): Promise<BulkStatusResponse> {
+  return api.post<BulkStatusResponse>("/v1/employees/bulk-status", body);
 }

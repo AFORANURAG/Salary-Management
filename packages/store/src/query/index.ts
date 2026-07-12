@@ -1,7 +1,7 @@
 export { createQueryClient, getQueryClient, STALE_TIMES, CACHE_TIMES } from "./client";
 export { useSession, useLogin, useLogout, type SessionState } from "./session";
 export { useEmployees, useEmployee } from "./employees";
-export { useCreateEmployee, useUpdateEmployee, useDeleteEmployee } from "./employee-mutations";
+export { useCreateEmployee, useUpdateEmployee, useDeleteEmployee, useBulkStatusChange } from "./employee-mutations";
 export { QueryProvider } from "./provider";
 export { queryKeys } from "./keys";
 export { useOptimisticMutation, type OptimisticMutationOptions } from "./mutations";

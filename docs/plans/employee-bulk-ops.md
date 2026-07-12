@@ -97,8 +97,8 @@ Branch: `feat/employee-bulk-ops-fe-pr1-list-select`
 | BO13 | Unit spec: toolbar hidden when 0 selected; appears when ≥1 selected; submit calls `useBulkStatusChange`; HR_VIEWER: toolbar never renders | `test(web): add BulkActionToolbar unit specs` |
 
 **Acceptance**
-- [ ] Unit specs GREEN.
-- [ ] `pnpm typecheck` passes.
+- [x] Unit specs GREEN.
+- [x] `pnpm typecheck` passes.
 
 ---
 
