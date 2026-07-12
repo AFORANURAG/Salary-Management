@@ -65,3 +65,17 @@ Branch: `feat/employee-bulk-ops-fe-pr2-import-wizard`
 - BO19: 11 unit tests GREEN. Notable: `userEvent.upload` doesn't trigger `onChange` on hidden inputs in jsdom — used `fireEvent.change` with `Object.defineProperty(input, "files", ...)` helper.
 
 Commit: `97b3e07`
+
+---
+
+## Phase 6 — Tests
+
+Branch: `feat/employee-bulk-ops-fe-pr3-tests`
+
+- BO20: 3 MSW integration specs for bulk status — select all → toolbar count → confirm → list refetches + toolbar disappears; deselect clears; individual checkbox selects one row.
+- BO21: 4 MSW integration specs for import wizard — all-valid 201, partial 201 with failure table, server 400 error shown, Import More resets.
+- BO22: 4 Playwright E2E specs — select 3 rows → Set Inactive → toast → INACTIVE badges; valid CSV upload → results; 2-invalid-row CSV → failure table; template link href + download attribute.
+
+Notable: integration tests check list refetch count and toolbar visibility instead of toast text (Toaster not mounted in renderWithFreshClient wrapper — consistent with all other integration tests in this repo).
+
+Commit: `pending`
