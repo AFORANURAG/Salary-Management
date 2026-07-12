@@ -78,4 +78,4 @@ Branch: `feat/employee-bulk-ops-fe-pr3-tests`
 
 Notable: integration tests check list refetch count and toolbar visibility instead of toast text (Toaster not mounted in renderWithFreshClient wrapper — consistent with all other integration tests in this repo).
 
-Commit: `pending`
+Commit: `25f3e52`
