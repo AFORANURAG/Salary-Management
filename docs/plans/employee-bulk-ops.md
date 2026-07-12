@@ -59,7 +59,7 @@ Branch: `feat/employee-bulk-ops-pr2-test-harness`
 | BO5 | Integration spec `POST /v1/employees/import`: 201 all valid CSV; partial result for mixed CSV; 400 non-CSV file; 400 missing header row; 413 >2 MB file | `test(api): add failing csv-import integration spec (BO5)` |
 
 **Acceptance**
-- [ ] All specs fail RED — routes 404, service methods not yet implemented.
+- [x] All specs fail RED — routes 404, service methods not yet implemented.
 
 ---
 
