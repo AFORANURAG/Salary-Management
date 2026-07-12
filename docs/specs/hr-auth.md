@@ -133,12 +133,12 @@ Cookie is read by `cookie-parser` middleware registered in `main.ts`.
 
 ## Success Criteria
 
-- [ ] All existing API endpoints return 401 without a valid cookie.
-- [ ] Invite → setup → login → me → logout works end-to-end.
-- [ ] Role matrix enforced; 403 returned (not 401) for authenticated but
+- [x] All existing API endpoints return 401 without a valid cookie.
+- [x] Invite → setup → login → me → logout works end-to-end.
+- [x] Role matrix enforced; 403 returned (not 401) for authenticated but
       insufficient role.
-- [ ] Seed admin boots without an existing ADMIN record; idempotent on re-runs.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
+- [x] Seed admin boots without an existing ADMIN record; idempotent on re-runs.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
 ## New Dependencies
 

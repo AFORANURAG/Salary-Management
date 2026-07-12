@@ -4,15 +4,21 @@
 
 ## Spec Index
 
-| Spec | Owns | Maps to |
-|---|---|---|
-| **(this file)** | Objective, tech stack, commands, structure, code style, boundaries, global success criteria | repo-wide |
-| [`specs/scaffolding.md`](./specs/scaffolding.md) | **Foundation** — monorepo, app shells, shared packages, docker-compose, base tooling (precedes all domain specs) | repo-wide skeleton |
-| [`specs/employees.md`](./specs/employees.md) | Employee model, CRUD, search/filter/pagination | `apps/api/src/employees` |
-| [`specs/salary-structure.md`](./specs/salary-structure.md) | Effective-dated/versioned salary structures | `apps/api/src/salary` |
-| [`specs/payroll.md`](./specs/payroll.md) | Deterministic, idempotent payroll generation | `apps/api/src/payroll` |
-| [`specs/payslips.md`](./specs/payslips.md) | Payslip view + salary history reconstruction | `apps/api/src/payslips` |
-| [`specs/reporting.md`](./specs/reporting.md) | Aggregate compensation queries | `apps/api/src/reporting` |
+| Spec | Owns | Maps to | Status |
+|---|---|---|---|
+| **(this file)** | Objective, tech stack, commands, structure, code style, boundaries, global success criteria | repo-wide | — |
+| [`specs/scaffolding.md`](./specs/scaffolding.md) | **Foundation** — monorepo, app shells, shared packages, docker-compose, base tooling (precedes all domain specs) | repo-wide skeleton | Complete |
+| [`specs/hr-auth.md`](./specs/hr-auth.md) | Authentication, RBAC, session management | `apps/api/src/auth`, `apps/web/app/(auth)` | Complete |
+| [`specs/employees.md`](./specs/employees.md) | Employee model, CRUD, search/filter/pagination | `apps/api/src/employees` | Complete |
+| [`specs/salary-structure.md`](./specs/salary-structure.md) | Effective-dated/versioned salary structures | `apps/api/src/salary` | Complete |
+| [`specs/payroll.md`](./specs/payroll.md) | Deterministic, idempotent payroll generation | `apps/api/src/payroll` | Complete |
+| [`specs/payslips.md`](./specs/payslips.md) | Payslip view + salary history reconstruction | `apps/api/src/payslips` | Complete |
+| [`specs/reporting.md`](./specs/reporting.md) | Aggregate compensation queries | `apps/api/src/reporting` | Complete |
+| [`specs/payroll-ops.md`](./specs/payroll-ops.md) | Payroll operations — void, diff, history | `apps/api/src/payroll` | Complete |
+| [`specs/app-shell.md`](./specs/app-shell.md) | App chrome — sidebar, header, authenticated layout | `apps/web/components/shell` | Complete |
+| [`specs/employee-bulk-ops.md`](./specs/employee-bulk-ops.md) | CSV bulk import/update for employees | `apps/api/src/employees/bulk` | In Progress |
+| [`specs/audit-log.md`](./specs/audit-log.md) | Immutable audit trail for all mutations | `apps/api/src/audit` | **Out of Scope (MVP)** |
+| [`specs/data-export.md`](./specs/data-export.md) | CSV/Excel data export for reports and payroll | `apps/api/src/export` | **Out of Scope (MVP)** |
 
 ## Objective
 
@@ -164,14 +170,18 @@ Per-module "non-negotiable test cases" are defined in each domain spec.
 
 Cross-cutting, repo-level criteria. Module-specific criteria live in each domain spec.
 
-- [ ] `docker compose up --build` brings up db + api + web from a clean checkout; `pnpm seed` populates ~10k employees.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` pass from the repo root.
-- [ ] Core domain logic (`payroll`, `salary`, `money`) at ~80% coverage with each module's non-negotiable test cases passing.
-- [ ] All four compensation questions in the Objective are answerable through the running system.
+- [x] `docker compose up --build` brings up db + api + web from a clean checkout; `pnpm seed` populates ~10k employees.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` pass from the repo root.
+- [x] Core domain logic (`payroll`, `salary`, `money`) at ~80% coverage with each module's non-negotiable test cases passing.
+- [x] All four compensation questions in the Objective are answerable through the running system.
 
 ## Out of Scope (from requirements §6)
 
 Tax filings/statutory compliance, variable CTC (bonuses/incentives), statutory engine (PF/ESIC/PT/TDS), country-specific tax rules, payment/bank disbursement, leave/attendance/overtime, auth/RBAC, full immutable audit trail, notifications, employee self-service, BI dashboards, PDF payslip export (stretch only).
+
+**Deferred from MVP (specs exist but will not be implemented):**
+- `specs/audit-log.md` — immutable audit trail for all mutations. Deferred: adds significant complexity (event sourcing / change-data-capture) with low immediate business value for an internal trusted-operator tool.
+- `specs/data-export.md` — CSV/Excel export for reports and payroll. Deferred: the reporting and payroll views already surface the data; export is a convenience feature and not required for core operations.
 
 ## Open Questions
 
