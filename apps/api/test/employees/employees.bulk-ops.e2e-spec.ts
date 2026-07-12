@@ -85,7 +85,7 @@ describe("Employees Bulk Ops (e2e)", () => {
 
     it("silently skips unknown IDs and reflects them in skipped count", async () => {
       const emp = await persistEmployee({ employmentStatus: "ACTIVE" });
-      const unknownId = "00000000-0000-0000-0000-000000000099";
+      const unknownId = "00000000-0000-4000-8000-000000000099";
 
       const res = await http
         .post("/v1/employees/bulk-status")
@@ -108,7 +108,7 @@ describe("Employees Bulk Ops (e2e)", () => {
     });
 
     it("returns 400 when ids array exceeds 200", async () => {
-      const ids = Array.from({ length: 201 }, (_, i) => `00000000-0000-0000-0000-${String(i).padStart(12, "0")}`);
+      const ids = Array.from({ length: 201 }, (_, i) => `00000000-0000-4000-8000-${String(i).padStart(12, "0")}`);
       const res = await http
         .post("/v1/employees/bulk-status")
         .set("Cookie", adminCookie)

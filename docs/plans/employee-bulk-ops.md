@@ -75,13 +75,13 @@ Branch: `feat/employee-bulk-ops-pr3-api`
 | BO9 | `EmployeesController`: `POST /v1/employees/bulk-status` (registered before `/:id`); `POST /v1/employees/import` with `FileInterceptor('file')` + size + type validators | `feat(api): add bulk-status and import controller endpoints (BO9)` |
 
 **Acceptance**
-- [ ] All unit specs from BO2–BO3 GREEN.
-- [ ] All integration specs from BO4–BO5 GREEN.
-- [ ] `pnpm typecheck && pnpm lint && pnpm test` green.
+- [x] All unit specs from BO2–BO3 GREEN.
+- [x] All integration specs from BO4–BO5 GREEN.
+- [x] `pnpm typecheck && pnpm lint && pnpm test` green.
 
 ### Checkpoint: Backend complete
-- [ ] Partial import: valid rows committed even when some fail.
-- [ ] `POST /v1/employees/bulk-status` uses a single SQL UPDATE.
+- [x] Partial import: valid rows committed even when some fail.
+- [x] `POST /v1/employees/bulk-status` uses a single SQL UPDATE.
 
 ---
 

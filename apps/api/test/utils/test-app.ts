@@ -4,6 +4,7 @@ import request from "supertest";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const cookieParser = require("cookie-parser") as typeof import("cookie-parser");
 import { AppModule } from "../../src/app.module";
+import { MulterExceptionFilter } from "../../src/common/multer-exception.filter";
 import { persistActiveAdmin } from "./hr-user-factory";
 
 /**
@@ -21,6 +22,7 @@ export async function createTestApp(): Promise<INestApplication> {
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }),
   );
+  app.useGlobalFilters(new MulterExceptionFilter());
   await app.init();
   return app;
 }
