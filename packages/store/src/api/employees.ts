@@ -5,8 +5,10 @@ import type {
   EmployeeListQuery,
   CreateEmployeeInput,
   UpdateEmployeeInput,
+  ImportResponse,
   PaginatedResponse,
 } from "@salary-mgmt/types";
+import { ApiError } from "./client";
 import { createApiClient } from "./client";
 
 const API_BASE = typeof window !== "undefined"
@@ -53,4 +55,24 @@ export function deleteEmployee(id: string): Promise<Employee> {
 
 export function postBulkStatusChange(body: BulkStatusRequest): Promise<BulkStatusResponse> {
   return api.post<BulkStatusResponse>("/v1/employees/bulk-status", body);
+}
+
+export async function postEmployeeImport(file: File): Promise<ImportResponse> {
+  const form = new FormData();
+  form.append("file", file);
+  const response = await fetch(`${API_BASE}/v1/employees/import`, {
+    method: "POST",
+    credentials: "include",
+    body: form,
+  });
+  if (!response.ok) {
+    let payload: unknown;
+    try { payload = await response.json(); } catch { /* ignore */ }
+    const message =
+      typeof payload === "object" && payload !== null && "message" in payload
+        ? String((payload as Record<string, unknown>).message)
+        : `Request failed with status ${response.status}`;
+    throw new ApiError(message, response.status);
+  }
+  return response.json() as Promise<ImportResponse>;
 }

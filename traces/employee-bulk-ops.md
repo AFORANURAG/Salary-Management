@@ -50,3 +50,18 @@ Branch: `feat/employee-bulk-ops-fe-pr1-list-select`
 - 8 unit tests for `BulkActionToolbar` GREEN (BO13).
 
 Commit: `177e382`
+
+---
+
+## Phase 5 — Frontend: Import Wizard
+
+Branch: `feat/employee-bulk-ops-fe-pr2-import-wizard`
+
+- BO14: `postEmployeeImport(file)` API fn (raw `fetch` with `FormData` — skips `Content-Type: application/json` from base client); `useEmployeeImport()` mutation in store.
+- BO15: Static template at `apps/web/public/templates/employees-import-template.csv` with correct header row + one example row.
+- BO16: Replaced placeholder `/employees/bulk` with full import wizard; "Import CSV" button added to employee list page (ADMIN/HR_MANAGER only); existing sidebar "Bulk Operations" item already points to this route.
+- BO17: Upload step — drag-drop zone, browse button, CSV/size validation client-side, file name+size display, "Download template" link, "Preview & Import" button.
+- BO18: Results step — imported count, failure table (row, code, errors), "Import More" reset, "View Employees" navigate.
+- BO19: 11 unit tests GREEN. Notable: `userEvent.upload` doesn't trigger `onChange` on hidden inputs in jsdom — used `fireEvent.change` with `Object.defineProperty(input, "files", ...)` helper.
+
+Commit: `pending`

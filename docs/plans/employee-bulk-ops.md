@@ -116,9 +116,9 @@ Branch: `feat/employee-bulk-ops-fe-pr2-import-wizard`
 | BO19 | Unit specs: upload step rejects non-CSV; rejects >2 MB client-side; results step renders failure rows; "Import More" resets state | `test(web): add import wizard unit specs` |
 
 **Acceptance**
-- [ ] Unit specs GREEN.
-- [ ] Template file committed with correct headers.
-- [ ] `pnpm typecheck` passes.
+- [x] Unit specs GREEN.
+- [x] Template file committed with correct headers.
+- [x] `pnpm typecheck` passes.
 
 ---
 

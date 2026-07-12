@@ -9,6 +9,7 @@ export {
   updateEmployee,
   deleteEmployee,
   postBulkStatusChange,
+  postEmployeeImport,
 } from "./api/employees";
 export {
   getSalaryStructure,

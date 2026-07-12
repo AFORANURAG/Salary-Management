@@ -1,0 +1,2 @@
+employeeCode,name,email,department,designation,country,currency,joiningDate,employmentStatus
+EMP001,Jane Smith,jane.smith@acme.com,ENGINEERING,Software Engineer,US,USD,2024-01-15,ACTIVE

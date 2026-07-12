@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { BulkStatusRequest, CreateEmployeeInput, UpdateEmployeeInput } from "@salary-mgmt/types";
-import { createEmployee, deleteEmployee, postBulkStatusChange, updateEmployee } from "../api/employees";
+import { createEmployee, deleteEmployee, postBulkStatusChange, postEmployeeImport, updateEmployee } from "../api/employees";
 import { queryKeys } from "./keys";
 
 export function useCreateEmployee() {
@@ -42,5 +42,11 @@ export function useBulkStatusChange() {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.employees.lists() });
     },
+  });
+}
+
+export function useEmployeeImport() {
+  return useMutation({
+    mutationFn: (file: File) => postEmployeeImport(file),
   });
 }
