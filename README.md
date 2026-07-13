@@ -11,6 +11,7 @@ up, how to run and test it, and how to contribute. Authored docs live in
 ## Table of contents
 
 - [Architecture](#architecture)
+  - [Diagrams](#diagrams)
   - [Technology stack](#technology-stack)
   - [Decisions](#decisions)
   - [Monorepo layout](#monorepo-layout)
@@ -46,6 +47,25 @@ up, how to run and test it, and how to contribute. Authored docs live in
 - [Related](#related)
 
 ## Architecture
+
+### Diagrams
+
+Visual walkthroughs of every API flow and data model live in a shared FigJam board:
+
+**[ACME HRMS — Architecture Diagrams](https://www.figma.com/board/FyPi5bLQtaxKDmNMfaykS2/Ache-HRs-diagram?node-id=0-1&t=uJkghHdaAS12VEBD-1)**
+
+The board contains, per domain spec:
+
+| Domain | What you'll find |
+|---|---|
+| Auth | Detailed request flow (invite → setup → login → session → logout) + `hr_users` ER diagram |
+| Employees | Detailed request flow (CRUD, soft delete, bulk status, CSV import) + `employees` ER diagram |
+| Salary Structure | Detailed request flow (upsert with versioning, current, history) + `employees → salary_structures → salary_components` ER diagram |
+| Payroll | Detailed request flow (run, list, void, diff, payslips) + `payroll_runs → payroll_results` ER diagram |
+| Reporting | Detailed request flow (payroll summary + cost breakdown by dept/country/costCenter) |
+| Master ER | All 6 entities and their relationships in a single ER diagram |
+
+Each flow diagram uses phase swimlanes, numbered steps, decision diamonds, and explicit error terminals (401/403/404/409). ER diagrams show all fields, types, constraints, and cardinality.
 
 ### Technology stack
 
