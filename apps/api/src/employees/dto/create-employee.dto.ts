@@ -19,10 +19,11 @@ const EMPLOYMENT_STATUSES: EmploymentStatus[] = [
 ];
 
 export class CreateEmployeeDto {
+  @IsOptional()
   @IsString()
   @MinLength(1)
   @MaxLength(64)
-  employeeCode!: string;
+  employeeCode?: string;
 
   @IsString()
   @MinLength(1)

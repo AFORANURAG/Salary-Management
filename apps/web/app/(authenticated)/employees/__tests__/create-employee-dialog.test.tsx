@@ -23,7 +23,6 @@ describe("CreateEmployeeDialog", () => {
 
     render(<CreateEmployeeDialog open onOpenChange={vi.fn()} />);
 
-    await user.type(screen.getByLabelText(/employee code/i), "EMP001");
     await user.type(screen.getByLabelText(/full name/i), "Alice Smith");
     await user.type(screen.getByLabelText(/email/i), "alice@example.com");
     await user.click(screen.getByRole("combobox", { name: /department/i }));
