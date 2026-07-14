@@ -65,7 +65,7 @@ Scaffolding produces exactly the tree defined in the root spec — see [Project 
 ## Out of Scope
 
 - Any domain logic, entities, DTOs, or endpoints beyond `/health` (owned by domain specs).
-- Real seed data content (~10k employees) — the *mechanism* is scaffolded here; the *content* lands with [`employees.md`](./employees.md) / [`salary-structure.md`](./salary-structure.md).
+- Real seed data content is in [`chore/seed-data-india-payroll`]: 10k employees all `country=IN currency=INR`, salary structures with 5 components each, 3 completed payroll runs. The *mechanism* (seed entrypoint) is scaffolded here; the *content* lands with that branch.
 - CI pipeline configuration and deployment targets (see root Open Questions #6).
 - Finance-os domain features (auth, OAuth, chat, FMP, billing); auth/OAuth error modules; domain query hooks.
 

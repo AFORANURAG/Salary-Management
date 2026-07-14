@@ -113,6 +113,20 @@ No new top-level routes. Salary structure lives on the employee detail page.
 - [x] All non-negotiable frontend test cases pass (unit + integration + E2E).
 - [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 
+## Seed Data
+
+Every seeded employee gets one salary structure with 5 components (idempotent — skips if structures already exist):
+
+| Code | Kind | Amount |
+|---|---|---|
+| `BASIC` | `EARNING` | 40% of CTC (level-based, in paise) |
+| `HRA` | `EARNING` | 20% of CTC |
+| `FOOD_ALLOWANCE` | `EARNING` | ₹2,200 flat (220000 paise) |
+| `PROFESSIONAL_TAX` | `DEDUCTION` | ₹200 flat (20000 paise) |
+| `TDS` | `DEDUCTION` | 10% of BASIC |
+
+3 completed payroll runs: `2026-04`, `2026-05`, `2026-06`. Each run includes only employees whose `joiningDate <= period-01` (`resolvePeriodStructure` logic). Results are chunked at 500 rows per insert for performance.
+
 ## Open Questions
 
 - ~~Are component `code`s free-form per employee, or drawn from a controlled catalog?~~ **Resolved:** free-form `SCREAMING_SNAKE` string. No catalog table for MVP.
@@ -134,5 +148,6 @@ No new top-level routes. Salary structure lives on the employee detail page.
 | Store API fns + hooks + RED component specs | `feat/salary-structure-fe-pr1-hooks-red` |
 | GREEN — components + detail page wiring | `feat/salary-structure-fe-pr2-components` |
 | Integration + E2E tests | `feat/salary-structure-fe-pr3-tests` |
+| Seed salary structures + payroll runs for 10k employees | `chore/seed-data-india-payroll` |
 
 Plan: [`docs/plans/salary-structure.md`](../plans/salary-structure.md) · Trace: [`traces/salary-structure.md`](../../traces/salary-structure.md)
