@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { X } from "lucide-react";
-import { Button, useToast } from "@salary-mgmt/ui";
+import { Button } from "@salary-mgmt/ui";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@salary-mgmt/ui";
+import { toast } from "@salary-mgmt/ui/sonner";
 import { useBulkStatusChange } from "@salary-mgmt/store";
 import type { BulkStatusResponse, EmploymentStatus } from "@salary-mgmt/types";
 
@@ -25,7 +26,6 @@ const STATUS_OPTIONS: { label: string; value: EmploymentStatus }[] = [
 
 export function BulkActionToolbar({ selectedIds, onDeselect }: BulkActionToolbarProps) {
   const { mutate, isPending } = useBulkStatusChange();
-  const { toast } = useToast();
   const [pendingStatus, setPendingStatus] = useState<EmploymentStatus | null>(null);
 
   if (selectedIds.length === 0) return null;
@@ -36,18 +36,9 @@ export function BulkActionToolbar({ selectedIds, onDeselect }: BulkActionToolbar
       { ids: selectedIds, status: pendingStatus },
       {
         onSuccess: (data: BulkStatusResponse) => {
-          toast({
-            title: "Status updated",
-            description: `${data.updated} employee${data.updated !== 1 ? "s" : ""} updated.`,
-          });
+          toast.success(`${data.updated} employee${data.updated !== 1 ? "s" : ""} updated.`);
           setPendingStatus(null);
           onDeselect();
-        },
-        onError: () => {
-          toast({
-            title: "Failed to update status",
-            variant: "destructive",
-          });
         },
       },
     );

@@ -1,9 +1,12 @@
+import { Toaster } from "@salary-mgmt/ui/sonner";
+
 export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
-}): React.JSX.Element {
+}): React.ReactElement {
   return (
+    <>
     <div className="min-h-screen flex">
       {/* Left — brand panel */}
       <div className="hidden lg:flex lg:w-[480px] xl:w-[560px] flex-col justify-between bg-primary p-12 flex-shrink-0">
@@ -74,5 +77,7 @@ export default function AuthLayout({
         </p>
       </div>
     </div>
+    <Toaster position="bottom-right" richColors />
+    </>
   );
 }

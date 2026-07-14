@@ -12,6 +12,7 @@ export function useSalaryStructure(employeeId: string) {
     queryKey: queryKeys.salaryStructure.current(employeeId),
     queryFn: () => getSalaryStructure(employeeId),
     enabled: Boolean(employeeId),
+    meta: { suppressErrorToast: true },
     retry: (failureCount, error) => {
       // Don't retry 404 — employee has no active structure
       if ("status" in error && (error as { status: number }).status === 404) return false;
@@ -31,6 +32,7 @@ export function useSalaryStructureHistory(employeeId: string) {
 export function useUpsertSalaryStructure(employeeId: string) {
   const queryClient = useQueryClient();
   return useMutation<SalaryStructure, Error, UpsertSalaryStructureInput>({
+    meta: { successMessage: "Salary structure saved" },
     mutationFn: (input) => upsertSalaryStructure(employeeId, input),
     onSuccess: () => {
       void queryClient.invalidateQueries({

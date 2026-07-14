@@ -18,6 +18,7 @@ export function useSession(): SessionState {
     queryFn: getMe,
     staleTime: Infinity,
     retry: false,
+    meta: { suppressErrorToast: true },
   });
 
   return {
@@ -30,6 +31,7 @@ export function useSession(): SessionState {
 export function useLogin() {
   const queryClient = useQueryClient();
   return useMutation<void, ApiError, LoginRequest>({
+    meta: { suppressErrorToast: true },
     mutationFn: postLogin,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.session.all() });
@@ -40,6 +42,7 @@ export function useLogin() {
 export function useLogout() {
   const queryClient = useQueryClient();
   return useMutation<void, ApiError, void>({
+    meta: { suppressErrorToast: true },
     mutationFn: postLogout,
     onSuccess: () => {
       queryClient.clear();

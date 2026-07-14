@@ -1,4 +1,24 @@
-import { QueryClient } from "@tanstack/react-query";
+import { MutationCache, QueryCache, QueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { CORE_ERROR_MESSAGES } from "@salary-mgmt/errors";
+import { ApiError } from "../api/client";
+
+declare module "@tanstack/react-query" {
+  interface Register {
+    queryMeta: {
+      suppressErrorToast?: boolean;
+    };
+    mutationMeta: {
+      successMessage?: string;
+      suppressErrorToast?: boolean;
+    };
+  }
+}
+
+function toastMessage(error: unknown): string {
+  if (error instanceof ApiError) return error.message;
+  return CORE_ERROR_MESSAGES.NETWORK_ERROR;
+}
 
 /**
  * Default stale times in milliseconds.
@@ -31,6 +51,22 @@ interface QueryOverrides {
 
 export function createQueryClient(overrides?: QueryOverrides): QueryClient {
   return new QueryClient({
+    queryCache: new QueryCache({
+      onError(error, query) {
+        if (query.meta?.suppressErrorToast) return;
+        toast.error(toastMessage(error));
+      },
+    }),
+    mutationCache: new MutationCache({
+      onError(error, _vars, _ctx, mutation) {
+        if (mutation.meta?.suppressErrorToast) return;
+        toast.error(toastMessage(error));
+      },
+      onSuccess(_data, _vars, _ctx, mutation) {
+        const msg = mutation.meta?.successMessage;
+        if (msg) toast.success(msg);
+      },
+    }),
     defaultOptions: {
       queries: {
         staleTime: STALE_TIMES.DEFAULT,

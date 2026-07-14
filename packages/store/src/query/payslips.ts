@@ -16,6 +16,7 @@ export function usePayslip(employeeId: string, period: string) {
     queryKey: queryKeys.payslips.detail(employeeId, period),
     queryFn: () => getPayslip(employeeId, period),
     enabled: Boolean(employeeId) && Boolean(period),
+    meta: { suppressErrorToast: true },
     retry: (failureCount, error) => {
       if ("status" in error && (error as { status: number }).status === 404) return false;
       return failureCount < 2;

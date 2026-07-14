@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { SessionProvider, useSessionContext } from "@/components/session-provider";
 import { Sheet, SheetContent, Skeleton } from "@salary-mgmt/ui";
+import { Toaster } from "@salary-mgmt/ui/sonner";
 import { AppSidebar } from "@/components/shell/app-sidebar";
 import { AppHeader } from "@/components/shell/app-header";
 
@@ -95,6 +96,7 @@ export default function AuthenticatedLayout({
   return (
     <SessionProvider>
       <AuthGate>{children}</AuthGate>
+      <Toaster position="bottom-right" richColors />
     </SessionProvider>
   );
 }

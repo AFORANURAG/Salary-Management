@@ -28,6 +28,7 @@ export function usePayrollSummary(period: string) {
     queryKey: queryKeys.payroll.summary(period),
     queryFn: () => getPayrollSummary(period),
     enabled: Boolean(period),
+    meta: { suppressErrorToast: true },
     retry: (failureCount, error) => {
       if ("status" in error && (error as { status: number }).status === 404) return false;
       return failureCount < 2;
@@ -46,6 +47,7 @@ export function usePayrollResults(period: string, employeeId?: string) {
 export function useRunPayroll() {
   const queryClient = useQueryClient();
   return useMutation<PayrollRunSummary, Error, string>({
+    meta: { successMessage: "Payroll run started" },
     mutationFn: (period) => runPayroll(period),
     onSuccess: (data) => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.payroll.runs() });
@@ -57,6 +59,7 @@ export function useRunPayroll() {
 export function useVoidPayrollRun() {
   const queryClient = useQueryClient();
   return useMutation<PayrollRunSummary, Error, string>({
+    meta: { suppressErrorToast: true },
     mutationFn: (period) => postVoidPayrollRun(period),
     onSuccess: (data) => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.payroll.runs() });
