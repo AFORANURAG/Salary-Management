@@ -11,6 +11,7 @@ interface EmployeeFormProps {
   onSubmit: (values: EmployeeFormValues) => void;
   isPending?: boolean;
   submitLabel?: string;
+  hideEmployeeCode?: boolean;
 }
 
 export function EmployeeForm({
@@ -18,6 +19,7 @@ export function EmployeeForm({
   onSubmit,
   isPending = false,
   submitLabel = "Save",
+  hideEmployeeCode = false,
 }: EmployeeFormProps) {
   const {
     register,
@@ -31,15 +33,17 @@ export function EmployeeForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
-      <div className="space-y-1">
-        <Label htmlFor="employeeCode">Employee Code</Label>
-        <Input id="employeeCode" {...register("employeeCode")} />
-        {errors.employeeCode && (
-          <p role="alert" className="text-destructive text-xs">
-            {errors.employeeCode.message}
-          </p>
-        )}
-      </div>
+      {!hideEmployeeCode && (
+        <div className="space-y-1">
+          <Label htmlFor="employeeCode">Employee Code</Label>
+          <Input id="employeeCode" {...register("employeeCode")} />
+          {errors.employeeCode && (
+            <p role="alert" className="text-destructive text-xs">
+              {errors.employeeCode.message}
+            </p>
+          )}
+        </div>
+      )}
 
       <div className="space-y-1">
         <Label htmlFor="name">Full Name</Label>

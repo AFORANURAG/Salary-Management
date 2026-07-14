@@ -52,7 +52,6 @@ describe("EF21 – create dialog: POST intercepted; list re-fetches on success",
     // Use within(dialog) to avoid ambiguity with page-level filter controls
     const { within } = await import("@testing-library/react");
     const dialog = screen.getByRole("dialog");
-    await user.type(within(dialog).getByLabelText(/employee code/i), "EMP002");
     await user.type(within(dialog).getByLabelText(/full name/i), "Bob Jones");
     await user.type(within(dialog).getByLabelText(/email/i), "bob@example.com");
     await user.click(within(dialog).getByRole("combobox", { name: /department/i }));

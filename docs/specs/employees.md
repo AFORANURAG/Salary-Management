@@ -13,7 +13,7 @@ CRUD and discovery for employee records — the backbone entity the rest of the 
 | Field | Type | Notes |
 |---|---|---|
 | `id` | uuid (PK) | |
-| `employeeCode` | string, unique | human-facing code; indexed |
+| `employeeCode` | string, unique | human-facing code; auto-generated as `EMP-XXXXXX` (sequential, zero-padded to 6 digits) if not supplied by the client; client may provide one explicitly on CSV import; indexed |
 | `name` | string | indexed for search |
 | `email` | string, unique | indexed for search |
 | `department` | enum: `Engineering` \| `Sales` \| `Finance` \| `HR` \| `Operations` | filterable; indexed; validated at API layer |
@@ -32,7 +32,7 @@ Salary structures are **not** embedded here — they live in [`salary-structure.
 All routes are served under the `/v1` API prefix (e.g. `/v1/employees`); `/health` is excluded from versioning.
 
 ```
-POST   /v1/employees              → create
+POST   /v1/employees              → create (`employeeCode` optional — server generates `EMP-XXXXXX` if absent)
 GET    /v1/employees/:id          → fetch one
 PATCH  /v1/employees/:id          → update
 DELETE /v1/employees/:id          → soft-delete (set status, preserve history)
@@ -51,6 +51,7 @@ Response: `{ data: Employee[], page, pageSize, total }`.
 
 - Delete is a **soft delete** (status change), never a hard row removal — historical payroll references must survive.
 - `employeeCode` and `email` are unique; creation/update returns 409 on conflict.
+- `employeeCode` is optional on `POST /v1/employees`: if omitted, the server generates the next `EMP-XXXXXX` by querying `MAX` of existing codes matching the pattern. The Create Employee dialog hides the field entirely; the Edit and CSV Import forms keep it visible.
 - All list queries hit indexed columns; no full-table scans at 10k rows.
 
 ## Non-Negotiable Test Cases
@@ -58,6 +59,8 @@ Response: `{ data: Employee[], page, pageSize, total }`.
 - Search by partial name/code/email returns correct, stable, paginated results across 10k seeded rows.
 - Combined filters (department + country + status) compose correctly with search.
 - Soft-deleting an employee preserves their existing payroll/payslip records.
+- Creating an employee without `employeeCode` generates a sequential `EMP-XXXXXX` code; the generated code is unique and monotonically increasing.
+- The Create Employee dialog does not render the Employee Code field; the server always generates it.
 
 ## Success Criteria
 
@@ -186,6 +189,7 @@ Pages and components in `apps/web`. Client data layer via `@salary-mgmt/store`
 | GREEN — create/edit/delete dialogs | `feat/employees-fe-pr4-forms` |
 | Integration tests — MSW + real hooks (jsdom) | `feat/employees-fe-pr5-integration` |
 | E2E tests — Playwright against running stack | `feat/employees-fe-pr6-e2e` |
+| Employee code auto-generation (backend + form hide) | `fix/employee-code-autogenerate` |
 | Seed 10k IN/INR employees with realistic data | `chore/seed-data-india-payroll` |
 
 Plan: [`docs/plans/employees.md`](../plans/employees.md) · Frontend plan: [`docs/plans/employees-fe.md`](../plans/employees-fe.md) · Trace: [`traces/employees.md`](../../traces/employees.md)

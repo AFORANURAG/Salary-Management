@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bell, Menu } from "lucide-react";
 import { cn } from "@salary-mgmt/ui";
@@ -57,10 +58,10 @@ export function AppHeader({ onMenuClick }: AppHeaderProps): React.JSX.Element {
       )}
 
       {/* Left: logo + wordmark */}
-      <div className="flex items-center gap-2 select-none">
+      <Link href="/" className="flex items-center gap-2 select-none hover:opacity-80 transition-opacity">
         <LogoMark />
         <span className="font-semibold text-sm tracking-tight">ACME HRMS</span>
-      </div>
+      </Link>
 
       <div className="h-5 w-px bg-border" />
 

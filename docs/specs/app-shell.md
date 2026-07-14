@@ -69,7 +69,7 @@ Sections and items:
 
 ### `AppHeader`
 
-Left: sidebar toggle (mobile) + logo mark + "ACME HRMS" wordmark.  
+Left: sidebar toggle (mobile) + logo mark + "ACME HRMS" wordmark (wrapped in `<Link href="/">` — clicking navigates to the Dashboard).  
 Center: current page title (from `usePathname` mapped to a title config).  
 Right: `NotificationBell` (static icon, badge count 0 for MVP) + `UserMenu`.
 
@@ -183,5 +183,6 @@ breadcrumb renders).
 | `AuthenticatedLayout`, route groups restructure, `BreadcrumbBar` | `feat/app-shell-pr3-layout` |
 | Mobile drawer, hamburger, responsive breakpoints | `feat/app-shell-pr4-responsive` |
 | Unit + integration + E2E tests for shell | `feat/app-shell-pr5-tests` |
+| Logo → Dashboard navigation fix | `fix/app-shell-logo-nav` |
 
 Plan: [`docs/plans/app-shell.md`](../plans/app-shell.md) · Trace: [`traces/app-shell.md`](../../traces/app-shell.md)

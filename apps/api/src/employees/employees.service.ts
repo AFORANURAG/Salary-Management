@@ -44,9 +44,21 @@ export class EmployeesService {
     private readonly repo: Repository<EmployeeEntity>,
   ) {}
 
+  private async generateEmployeeCode(): Promise<string> {
+    const result = await this.repo
+      .createQueryBuilder("e")
+      .select("MAX(CAST(SUBSTRING(e.employeeCode FROM 5) AS INTEGER))", "max")
+      .where("e.employeeCode ~ '^EMP-[0-9]+$'")
+      .getRawOne<{ max: string | null }>();
+    const next = (parseInt(result?.max ?? "0", 10) || 0) + 1;
+    return `EMP-${String(next).padStart(6, "0")}`;
+  }
+
   async create(dto: CreateEmployeeDto): Promise<Employee> {
+    const employeeCode = dto.employeeCode ?? await this.generateEmployeeCode();
     const entity = this.repo.create({
       ...dto,
+      employeeCode,
       employmentStatus: dto.employmentStatus ?? "ACTIVE",
       costCenter: dto.costCenter ?? null,
     });
@@ -224,7 +236,7 @@ export class EmployeesService {
       if (existingEmails.has(dto.email.toLowerCase())) {
         failed.push({
           row: validRowIndices[i]!,
-          employeeCode: dto.employeeCode,
+          employeeCode: dto.employeeCode ?? null,
           errors: [`email '${dto.email}' already exists`],
         });
       } else {
@@ -235,8 +247,10 @@ export class EmployeesService {
     if (insertable.length > 0) {
       await this.repo.manager.transaction(async (em) => {
         for (const dto of insertable) {
+          const employeeCode = dto.employeeCode ?? await this.generateEmployeeCode();
           const entity = em.create(EmployeeEntity, {
             ...dto,
+            employeeCode,
             employmentStatus: dto.employmentStatus ?? "ACTIVE",
             costCenter: dto.costCenter ?? null,
           });

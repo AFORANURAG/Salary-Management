@@ -2,7 +2,7 @@ import { DEPARTMENTS, type Department } from "@salary-mgmt/types";
 import { z } from "zod";
 
 export const employeeSchema = z.object({
-  employeeCode: z.string().min(1, "Employee code is required"),
+  employeeCode: z.string().optional(),
   name: z.string().min(1, "Full name is required"),
   email: z.string().min(1, "Email is required").email("Invalid email address"),
   department: z.enum(DEPARTMENTS as unknown as [Department, ...Department[]], {
