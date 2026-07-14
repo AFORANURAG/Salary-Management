@@ -28,10 +28,10 @@ const componentSchema = z.object({
     .min(1, "Code is required")
     .regex(/^[A-Z][A-Z0-9_]*$/, "Must be SCREAMING_SNAKE_CASE"),
   kind: z.enum(["EARNING", "DEDUCTION"], { error: "Select a kind" }),
-  amountMinor: z
+  amountRupees: z
     .number({ error: "Amount is required" })
-    .int("Must be a whole number")
-    .min(0, "Must be ≥ 0"),
+    .min(0, "Must be ≥ 0")
+    .multipleOf(0.01, "Max 2 decimal places"),
 });
 
 const upsertSchema = z.object({
@@ -70,7 +70,7 @@ export function UpsertSalaryStructureDialog({
     defaultValues: {
       effectiveFrom: "",
       currency: "",
-      components: [{ code: "", kind: "EARNING", amountMinor: 0 }],
+      components: [{ code: "", kind: "EARNING", amountRupees: 0 }],
     },
   });
 
@@ -81,7 +81,11 @@ export function UpsertSalaryStructureDialog({
       {
         effectiveFrom: values.effectiveFrom,
         currency: values.currency,
-        components: values.components,
+        components: values.components.map((c) => ({
+          code: c.code,
+          kind: c.kind,
+          amountMinor: Math.round(c.amountRupees * 100),
+        })),
       },
       {
         onSuccess: () => {
@@ -155,7 +159,7 @@ export function UpsertSalaryStructureDialog({
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => append({ code: "", kind: "EARNING", amountMinor: 0 })}
+                onClick={() => append({ code: "", kind: "EARNING", amountRupees: 0 })}
               >
                 Add component
               </Button>
@@ -203,17 +207,18 @@ export function UpsertSalaryStructureDialog({
                 </div>
 
                 <div className="space-y-1">
-                  <Label htmlFor={`components.${i}.amountMinor`}>Amount</Label>
+                  <Label htmlFor={`components.${i}.amountRupees`}>Amount (₹)</Label>
                   <Input
-                    id={`components.${i}.amountMinor`}
+                    id={`components.${i}.amountRupees`}
                     type="number"
                     min={0}
-                    step={1}
-                    {...register(`components.${i}.amountMinor`, { valueAsNumber: true })}
+                    step={0.01}
+                    placeholder="0.00"
+                    {...register(`components.${i}.amountRupees`, { valueAsNumber: true })}
                   />
-                  {errors.components?.[i]?.amountMinor && (
+                  {errors.components?.[i]?.amountRupees && (
                     <p role="alert" className="text-destructive text-xs">
-                      {errors.components[i].amountMinor?.message}
+                      {errors.components[i].amountRupees?.message}
                     </p>
                   )}
                 </div>
