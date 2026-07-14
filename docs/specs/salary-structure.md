@@ -75,7 +75,7 @@ No new top-level routes. Salary structure lives on the employee detail page.
 |---|---|
 | `SalaryStructureCard` | Shows the active structure: `effectiveFrom`, `currency`, and a table of components (code, kind, amount). Loading skeleton and empty state (no structure yet). |
 | `SalaryStructureHistory` | Collapsible list of all past versions in chronological order. Each row shows `effectiveFrom`, `effectiveTo`, and component summary. |
-| `UpsertSalaryStructureDialog` | Form: `effectiveFrom` (date), `currency` (ISO-4217 select), dynamic component list (add/remove rows with `code`, `kind`, `amountMinor`). Client-side zod validation. Opens from "Set Salary Structure" button on detail page. |
+| `UpsertSalaryStructureDialog` | Form: `effectiveFrom` (date), `currency` (ISO-4217 select), dynamic component list (add/remove rows with `code`, `kind`, amount). Amount is entered by the user in whole currency units (e.g. ₹32,000) and multiplied ×100 to minor units (paise) on submit. Input label shows the currency symbol; `step=0.01` allows cents/paise. Client-side zod validation. Opens from "Set Salary Structure" button on detail page. |
 
 ### Data Layer (hooks in `@salary-mgmt/store`)
 
@@ -95,6 +95,7 @@ No new top-level routes. Salary structure lives on the employee detail page.
 - `UpsertSalaryStructureDialog` — submitting a valid form calls `useUpsertSalaryStructure` mutation.
 - `UpsertSalaryStructureDialog` — submitting with missing required fields shows validation errors without calling the API.
 - `UpsertSalaryStructureDialog` — adding a component row and removing it works correctly.
+- `UpsertSalaryStructureDialog` — amount field accepts whole rupee values; submitted payload contains `amountMinor` equal to the entered value × 100 (e.g. entering 32000 → `amountMinor: 3200000`).
 
 **Integration (real hooks + MSW, jsdom)**
 - Employee detail page renders `SalaryStructureCard` with data fetched via real `useSalaryStructure` hook + MSW `GET /v1/employees/:id/salary-structure`.
@@ -134,5 +135,6 @@ No new top-level routes. Salary structure lives on the employee detail page.
 | Store API fns + hooks + RED component specs | `feat/salary-structure-fe-pr1-hooks-red` |
 | GREEN — components + detail page wiring | `feat/salary-structure-fe-pr2-components` |
 | Integration + E2E tests | `feat/salary-structure-fe-pr3-tests` |
+| Amount field UX fix (rupees input, ×100 on submit) | `fix/salary-structure-amount-input` |
 
 Plan: [`docs/plans/salary-structure.md`](../plans/salary-structure.md) · Trace: [`traces/salary-structure.md`](../../traces/salary-structure.md)
