@@ -22,7 +22,8 @@
     "./lib/utils": "./src/lib/utils.ts",
     "./table": "./src/components/ui/table.tsx",
     "./select": "./src/components/ui/select.tsx",
-    "./globals.css": "./src/globals.css"
+    "./globals.css": "./src/globals.css",
+    "./sonner": "./src/sonner-toast.ts"
   },
   "scripts": {
     "build": "node -e \"process.exit(0)\"",
@@ -43,6 +44,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.469.0",
+    "sonner": "^2.0.7",
     "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {

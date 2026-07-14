@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useVoidPayrollRun } from "@salary-mgmt/store";
 import { ApiError } from "@salary-mgmt/store";
-import { useToast } from "@salary-mgmt/ui";
+import { toast } from "@salary-mgmt/ui/sonner";
 import {
   Dialog,
   DialogContent,
@@ -21,14 +21,13 @@ interface VoidConfirmModalProps {
 
 export function VoidConfirmModal({ period, open, onOpenChange }: VoidConfirmModalProps) {
   const { mutate, isPending } = useVoidPayrollRun();
-  const { toast } = useToast();
   const [inlineError, setInlineError] = useState<string | null>(null);
 
   function handleConfirm() {
     setInlineError(null);
     mutate(period, {
       onSuccess: () => {
-        toast({ title: `Payroll run ${period} has been voided.` });
+        toast.success(`Payroll run ${period} voided.`);
         onOpenChange(false);
       },
       onError: (err: Error) => {

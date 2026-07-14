@@ -3,8 +3,10 @@ import userEvent from "@testing-library/user-event";
 import { render, screen, waitFor } from "@/test/render";
 import { BulkActionToolbar } from "../bulk-action-toolbar";
 
-const mockMutate = vi.fn();
-const mockToast = vi.fn();
+const { mockMutate, mockToastSuccess } = vi.hoisted(() => ({
+  mockMutate: vi.fn(),
+  mockToastSuccess: vi.fn(),
+}));
 
 vi.mock("@salary-mgmt/store", () => ({
   useBulkStatusChange: () => ({
@@ -13,13 +15,9 @@ vi.mock("@salary-mgmt/store", () => ({
   }),
 }));
 
-vi.mock("@salary-mgmt/ui", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@salary-mgmt/ui")>();
-  return {
-    ...actual,
-    useToast: () => ({ toast: mockToast }),
-  };
-});
+vi.mock("@salary-mgmt/ui/sonner", () => ({
+  toast: { success: mockToastSuccess, error: vi.fn() },
+}));
 
 describe("BulkActionToolbar", () => {
   const onDeselect = vi.fn();
@@ -68,7 +66,7 @@ describe("BulkActionToolbar", () => {
 
     expect(mockMutate).toHaveBeenCalledWith(
       { ids: ["id1", "id2"], status: "INACTIVE" },
-      expect.objectContaining({ onSuccess: expect.any(Function), onError: expect.any(Function) }),
+      expect.objectContaining({ onSuccess: expect.any(Function) }),
     );
   });
 
@@ -93,29 +91,8 @@ describe("BulkActionToolbar", () => {
     await userEvent.click(screen.getByRole("button", { name: /confirm/i }));
 
     await waitFor(() => {
-      expect(mockToast).toHaveBeenCalledWith(
-        expect.objectContaining({ title: "Status updated" }),
-      );
+      expect(mockToastSuccess).toHaveBeenCalledWith("3 employees updated.");
       expect(onDeselect).toHaveBeenCalledOnce();
-    });
-  });
-
-  it("shows error toast when mutation fails", async () => {
-    mockMutate.mockImplementation((_body, callbacks) => {
-      callbacks.onError(new Error("network"));
-    });
-
-    render(
-      <BulkActionToolbar selectedIds={["id1"]} onDeselect={onDeselect} />,
-    );
-    await userEvent.click(screen.getByRole("button", { name: /change status/i }));
-    await userEvent.click(screen.getByText("Set Active"));
-    await userEvent.click(screen.getByRole("button", { name: /confirm/i }));
-
-    await waitFor(() => {
-      expect(mockToast).toHaveBeenCalledWith(
-        expect.objectContaining({ variant: "destructive" }),
-      );
     });
   });
 });

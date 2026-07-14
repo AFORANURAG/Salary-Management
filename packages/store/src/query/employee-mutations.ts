@@ -6,6 +6,7 @@ import { queryKeys } from "./keys";
 export function useCreateEmployee() {
   const queryClient = useQueryClient();
   return useMutation({
+    meta: { successMessage: "Employee created" },
     mutationFn: (input: CreateEmployeeInput) => createEmployee(input),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.employees.lists() });
@@ -16,6 +17,7 @@ export function useCreateEmployee() {
 export function useUpdateEmployee() {
   const queryClient = useQueryClient();
   return useMutation({
+    meta: { successMessage: "Employee updated" },
     mutationFn: ({ id, input }: { id: string; input: UpdateEmployeeInput }) =>
       updateEmployee(id, input),
     onSuccess: (_data, { id }) => {
@@ -28,6 +30,7 @@ export function useUpdateEmployee() {
 export function useDeleteEmployee() {
   const queryClient = useQueryClient();
   return useMutation({
+    meta: { successMessage: "Employee deleted" },
     mutationFn: (id: string) => deleteEmployee(id),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.employees.lists() });
@@ -38,6 +41,7 @@ export function useDeleteEmployee() {
 export function useBulkStatusChange() {
   const queryClient = useQueryClient();
   return useMutation({
+    meta: { successMessage: "Status updated" },
     mutationFn: (body: BulkStatusRequest) => postBulkStatusChange(body),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.employees.lists() });
@@ -47,6 +51,7 @@ export function useBulkStatusChange() {
 
 export function useEmployeeImport() {
   return useMutation({
+    meta: { suppressErrorToast: true },
     mutationFn: (file: File) => postEmployeeImport(file),
   });
 }
