@@ -22,8 +22,12 @@ export function sumMinor(values: readonly number[]): number {
 export function formatMinor(amountMinor: number, currency: string): string {
   const safe = assertMinorUnits(amountMinor);
   const major = safe / 100;
-  return new Intl.NumberFormat(undefined, {
-    style: "currency",
-    currency,
-  }).format(major);
+  try {
+    return new Intl.NumberFormat(undefined, {
+      style: "currency",
+      currency,
+    }).format(major);
+  } catch {
+    return `${major.toLocaleString()} ${currency}`;
+  }
 }
