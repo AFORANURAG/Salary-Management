@@ -41,6 +41,7 @@ export function CreateEmployeeDialog({ open, onOpenChange }: CreateEmployeeDialo
           onSubmit={handleSubmit}
           isPending={isPending}
           submitLabel="Create"
+          hideEmployeeCode
         />
       </DialogContent>
     </Dialog>

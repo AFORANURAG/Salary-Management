@@ -89,7 +89,7 @@ export interface Employee {
 }
 
 export interface CreateEmployeeInput {
-  readonly employeeCode: string;
+  readonly employeeCode?: string;
   readonly name: string;
   readonly email: string;
   readonly department: Department;
