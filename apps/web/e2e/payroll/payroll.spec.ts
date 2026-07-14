@@ -56,16 +56,19 @@ test.describe("Payroll — hub", () => {
 
     try {
       await page.goto("/payroll");
-      // Wait for React hydration: "Loading…" disappears once usePayrollRuns query resolves
-      await expect(page.getByText("Loading…")).not.toBeVisible({ timeout: 15_000 });
-      await page.getByRole("button", { name: /run payroll/i }).click();
+      // Wait for the run list to finish loading, then wait for the button to be stable
+      await expect(page.getByText("Loading…")).not.toBeVisible({ timeout: 30_000 });
+      const runBtn = page.getByRole("button", { name: /run payroll/i });
+      await expect(runBtn).toBeVisible({ timeout: 10_000 });
+      await expect(runBtn).toBeEnabled();
+      await runBtn.click();
 
       const dialog = page.getByRole("dialog");
       await expect(dialog).toBeVisible({ timeout: 10_000 });
       await dialog.getByLabel(/pay period/i).fill(period);
       await dialog.getByRole("button", { name: /run payroll/i }).click();
 
-      await expect(dialog).not.toBeVisible({ timeout: 15_000 });
+      await expect(dialog).not.toBeVisible({ timeout: 30_000 });
       await expect(page.getByText(period)).toBeVisible({ timeout: 10_000 });
     } finally {
       await deleteEmployee(emp.id, cookieHeader);
@@ -81,8 +84,11 @@ test.describe("Payroll — hub", () => {
 
     try {
       await page.goto("/payroll");
-      await expect(page.getByText("Loading…")).not.toBeVisible({ timeout: 15_000 });
-      await page.getByRole("button", { name: /run payroll/i }).click();
+      await expect(page.getByText("Loading…")).not.toBeVisible({ timeout: 30_000 });
+      const runBtn = page.getByRole("button", { name: /run payroll/i });
+      await expect(runBtn).toBeVisible({ timeout: 10_000 });
+      await expect(runBtn).toBeEnabled();
+      await runBtn.click();
 
       const dialog = page.getByRole("dialog");
       await expect(dialog).toBeVisible({ timeout: 10_000 });
@@ -114,10 +120,10 @@ test.describe("Payroll — detail", () => {
 
     try {
       await page.goto(`/payroll/${period}`);
-      await expect(page.getByTestId("status-badge-completed")).toBeVisible({ timeout: 15_000 });
+      await expect(page.getByTestId("status-badge-completed")).toBeVisible({ timeout: 30_000 });
 
       // PayrollSummaryCard stat labels (updated shape: Headcount replaces Processed)
-      await expect(page.getByText("Headcount", { exact: true })).toBeVisible({ timeout: 15_000 });
+      await expect(page.getByText("Headcount", { exact: true })).toBeVisible({ timeout: 30_000 });
       await expect(page.getByTestId("status-badge-completed")).toBeVisible({ timeout: 10_000 });
       await expect(page.getByText(emp.id)).toBeVisible({ timeout: 10_000 });
     } finally {
@@ -176,8 +182,8 @@ test.describe("Payroll — ops (PO30)", () => {
 
     try {
       await page.goto("/payroll");
-      await expect(page.getByText("Loading…")).not.toBeVisible({ timeout: 15_000 });
-      await expect(page.getByText(period)).toBeVisible({ timeout: 10_000 });
+      await expect(page.getByText("Loading…")).not.toBeVisible({ timeout: 20_000 });
+      await expect(page.getByText(period)).toBeVisible({ timeout: 30_000 });
       // Scope badge check to the specific row to avoid strict-mode violation (many runs in DB)
       await expect(
         page.getByRole("row", { name: new RegExp(period) }).getByTestId("status-badge-completed")
@@ -199,7 +205,7 @@ test.describe("Payroll — ops (PO30)", () => {
 
     try {
       await page.goto(`/payroll/${period}`);
-      await expect(page.getByTestId("status-badge-completed")).toBeVisible({ timeout: 15_000 });
+      await expect(page.getByTestId("status-badge-completed")).toBeVisible({ timeout: 30_000 });
       await expect(page.getByRole("button", { name: /void run/i })).toBeVisible();
 
       await page.getByRole("button", { name: /void run/i }).click();
@@ -207,7 +213,7 @@ test.describe("Payroll — ops (PO30)", () => {
       await expect(dialog).toBeVisible({ timeout: 10_000 });
       await dialog.getByRole("button", { name: /^void run$/i }).click();
 
-      await expect(dialog).not.toBeVisible({ timeout: 15_000 });
+      await expect(dialog).not.toBeVisible({ timeout: 30_000 });
       await expect(page.getByTestId("status-badge-voided")).toBeVisible({ timeout: 10_000 });
     } finally {
       await deleteEmployee(emp.id, cookieHeader);
@@ -233,7 +239,7 @@ test.describe("Payroll — ops (PO30)", () => {
     try {
       const mgrPage = await mgrContext.newPage();
       await mgrPage.goto(`/payroll/${period}`);
-      await expect(mgrPage.getByTestId("status-badge-completed")).toBeVisible({ timeout: 15_000 });
+      await expect(mgrPage.getByTestId("status-badge-completed")).toBeVisible({ timeout: 30_000 });
       await expect(mgrPage.getByRole("button", { name: /void run/i })).not.toBeVisible();
     } finally {
       await mgrContext.close();
@@ -256,14 +262,14 @@ test.describe("Payroll — ops (PO30)", () => {
 
     try {
       await page.goto("/payroll");
-      await expect(page.getByText("Loading…")).not.toBeVisible({ timeout: 15_000 });
-      await expect(page.getByText(basePeriod)).toBeVisible({ timeout: 10_000 });
+      await expect(page.getByText("Loading…")).not.toBeVisible({ timeout: 20_000 });
+      await expect(page.getByText(basePeriod)).toBeVisible({ timeout: 30_000 });
 
       // Click the diff icon button on the base period row
       await page.getByTestId(`diff-btn-${basePeriod}`).click();
 
       // Drawer should open and show totals tile
-      await expect(page.getByTestId("diff-totals")).toBeVisible({ timeout: 15_000 });
+      await expect(page.getByTestId("diff-totals")).toBeVisible({ timeout: 30_000 });
     } finally {
       await deleteEmployee(emp.id, cookieHeader);
     }
@@ -282,12 +288,12 @@ test.describe("Payroll — ops (PO30)", () => {
 
     try {
       await page.goto(`/payroll/${basePeriod}`);
-      await expect(page.getByTestId("status-badge-completed")).toBeVisible({ timeout: 15_000 });
+      await expect(page.getByTestId("status-badge-completed")).toBeVisible({ timeout: 30_000 });
 
-      await expect(page.getByRole("button", { name: /compare with previous/i })).toBeVisible({ timeout: 15_000 });
+      await expect(page.getByRole("button", { name: /compare with previous/i })).toBeVisible({ timeout: 30_000 });
       await page.getByRole("button", { name: /compare with previous/i }).click();
 
-      await expect(page.getByTestId("diff-totals")).toBeVisible({ timeout: 15_000 });
+      await expect(page.getByTestId("diff-totals")).toBeVisible({ timeout: 30_000 });
     } finally {
       await deleteEmployee(emp.id, cookieHeader);
     }

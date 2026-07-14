@@ -152,6 +152,17 @@ Pages and components in `apps/web`. Client data layer via `@salary-mgmt/store`
 - [x] `pnpm typecheck && pnpm lint && pnpm test` green from repo root.
 - [x] Playwright E2E suite passes against the running Docker stack.
 
+## Seed Data
+
+10,000 employees seeded idempotently (skips if count ≥ 10k):
+
+- All `country=IN`, `currency=INR`.
+- Departments: Engineering, Sales, Finance, HR, Operations — proportional distribution.
+- Designations matched to department (e.g. Software Engineer → Engineering).
+- Org-pyramid weighting across 6 levels: `[35, 25, 20, 12, 6, 2]%` — IC-heavy, realistic.
+- Joining dates spread across 2023–2026 to produce varied payroll new-hire deltas.
+- Employee codes in `EMP-000001` … `EMP-010000` format.
+
 ## Open Questions
 
 - Add `costCenter` field? (root Open Question #4) — currently modeled as nullable pending confirmation.
@@ -179,5 +190,6 @@ Pages and components in `apps/web`. Client data layer via `@salary-mgmt/store`
 | Integration tests — MSW + real hooks (jsdom) | `feat/employees-fe-pr5-integration` |
 | E2E tests — Playwright against running stack | `feat/employees-fe-pr6-e2e` |
 | Employee code auto-generation (backend + form hide) | `fix/employee-code-autogenerate` |
+| Seed 10k IN/INR employees with realistic data | `chore/seed-data-india-payroll` |
 
 Plan: [`docs/plans/employees.md`](../plans/employees.md) · Frontend plan: [`docs/plans/employees-fe.md`](../plans/employees-fe.md) · Trace: [`traces/employees.md`](../../traces/employees.md)

@@ -122,9 +122,9 @@ test.describe("Employees — pagination", () => {
 test.describe("Employees — create", () => {
   test("EF30: creating an employee via dialog causes new row to appear in the list", async ({ page, context }) => {
     const cookieHeader = await getSessionCookie(context);
-    const code = `CRE-${Date.now()}`;
-    const name = `Create Test ${code}`;
-    const email = `cre-${Date.now()}@example.com`;
+    const ts = Date.now();
+    const name = `Create Test ${ts}`;
+    const email = `cre-${ts}@example.com`;
 
     await page.goto("/employees");
     const addBtn = page.getByRole("button", { name: /add employee/i });
@@ -133,7 +133,7 @@ test.describe("Employees — create", () => {
     await addBtn.click();
 
     const dialog = page.getByRole("dialog");
-    await dialog.getByLabel(/employee code/i).fill(code);
+    await dialog.getByLabel(/employee code/i).fill(`EMP-${ts}`);
     await dialog.getByLabel(/full name/i).fill(name);
     await dialog.getByLabel(/email/i).fill(email);
     await dialog.getByRole("combobox", { name: /department/i }).click();
@@ -145,13 +145,15 @@ test.describe("Employees — create", () => {
 
     await dialog.getByRole("button", { name: /create/i }).click();
 
-    // Dialog closes; search by code to find the row regardless of current page
+    // Dialog closes; search by name to find the row
     await expect(dialog).not.toBeVisible({ timeout: 5000 });
-    await page.getByRole("searchbox").fill(code);
+    await page.getByRole("searchbox").fill(name);
     await expect(page.getByText(name)).toBeVisible({ timeout: 5000 });
 
     // cleanup
-    const res = await fetch(`http://localhost:3001/v1/employees?q=${code}`);
+    const res = await fetch(`http://localhost:3001/v1/employees?q=${encodeURIComponent(name)}`, {
+      headers: { Cookie: cookieHeader },
+    });
     const data = await res.json();
     if (data.data?.[0]?.id) await deleteEmployee(data.data[0].id, cookieHeader);
   });

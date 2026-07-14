@@ -79,8 +79,8 @@ test.describe("Reporting", () => {
         page.getByRole("heading", { name: "Cost Breakdown" }),
       ).toBeVisible({ timeout: 10_000 });
 
-      // Cost table shows the department row
-      await expect(page.getByText("Engineering")).toBeVisible({
+      // Cost table shows the department row (scope to cell to avoid strict-mode violation)
+      await expect(page.getByRole("cell", { name: "Engineering" }).first()).toBeVisible({
         timeout: 10_000,
       });
     } finally {
@@ -108,8 +108,8 @@ test.describe("Reporting", () => {
       await page.goto("/reporting");
       await page.getByLabel("Period").fill(period);
 
-      // Default groupBy=department: Finance row should appear
-      await expect(page.getByText("Finance")).toBeVisible({ timeout: 15_000 });
+      // Default groupBy=department: Finance row should appear (scope to cell)
+      await expect(page.getByRole("cell", { name: "Finance" }).first()).toBeVisible({ timeout: 15_000 });
 
       // Switch groupBy to Country (shadcn Select — click trigger then option)
       await page.getByLabel("Group by").click();
